@@ -1,0 +1,89 @@
+@import (reference) "theme.less";
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: @bg-color;
+    color: @font-color;
+    font: @font;
+    letter-spacing: 1px;
+}
+* {
+    box-sizing: border-box;
+
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.text-sm {
+    font-size: 14px;
+}
+
+.text-xsm {
+    font-size: 10px;
+}
+
+@import "LeftSide";
+@import "RightSide";
+@import "Center/MarketIndicator";
+@import "Center/History";
+
+.MainContainer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.centered {
+    text-align: center;
+}
+
+.text-plus {
+    color: @plus-color;
+}
+
+.text-minus {
+    color: @minus-color;
+}
+
+.text-neutral {
+    color: @neutral-color;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.center-container {
+    position: absolute;
+    left: calc(@LeftSideWidth + 2px);
+    top: 0;
+    bottom: 0;
+    width: calc((100% - @LeftSideWidth - @RightSideWidth) - 4px);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.quarter-width {
+    width: 25%;
+}
