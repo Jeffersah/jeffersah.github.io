@@ -4,10 +4,11 @@ import { Mandelbrot, Julia } from "./IIterativeFunction";
 import { Range2d, Range, Complex } from "../common";
 import { ClickDragWrapper } from "./ClickDragWrapper";
 
+
 let mandelRender: ClickDragWrapper;
 let juliaRender: ClickDragWrapper;
 
-window.addEventListener("load", () => {
+export default function Run() {
     const canvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
     const subCanvas = document.getElementById("subCanvas") as HTMLCanvasElement;
 
@@ -25,11 +26,10 @@ window.addEventListener("load", () => {
     juliaRender = new ClickDragWrapper(subCanvas, new Range2d(new Range(-1, 1), new Range(-1, 1)), new Renderer(subCanvas,  new Julia(new Complex(0,0))), (x,y)=>{});
 
     setTimeout(Tick, 0);
-});
+}
 
 function mandelbrotSelect(x: number, y: number) {
     juliaRender.renderer.func = new Julia(new Complex(x, y));
-    console.log(x +","+ y);
     juliaRender.reset();
 }
 

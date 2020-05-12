@@ -17,7 +17,7 @@ export class Renderer {
     {
         this.repainter = new ProgressiveRepaint(Const.CanvasWidth, Const.CanvasHeight);
         this.ctx = canvas.getContext("2d");
-        this.ScreenRange = new Range2d(new Range(0, 500), new Range(0, 500));
+        this.ScreenRange = new Range2d(new Range(0, canvas.offsetWidth), new Range(0, canvas.offsetHeight));
     }
 
     Paint(WindowRange: Range2d) {

@@ -11,6 +11,10 @@ export class Range2d {
         return { x: this.xRange.GetPercentage(xValue), y: this.yRange.GetPercentage(yValue) };
     }
 
+    public Shift(xAmt: number, yAmt: number) {
+        this.xRange.Shift(xAmt);
+        this.yRange.Shift(yAmt);
+    }
     public ShiftByPercentage(xShift: number, yShift: number) {
         this.xRange.ShiftByPercentage(xShift);
         this.yRange.ShiftByPercentage(yShift);

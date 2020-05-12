@@ -1,0 +1,1 @@
+export { MandelbrotComponent } from './mandelbrot/MandelbrotComponent';
