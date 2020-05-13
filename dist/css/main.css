@@ -1,3 +1,33 @@
+div.code {
+  background: #111;
+  color: #bbb;
+  font-family: 'Fira Code' monospace;
+}
+div.code .content .k {
+  color: #28f;
+}
+div.code .content .c {
+  color: #1a1;
+  font-style: italic;
+}
+div.code .content .r {
+  color: #b2b;
+  font-weight: bold;
+}
+div.code .content .n {
+  color: #beb;
+}
+div.code .content * {
+  white-space: pre;
+}
+div.code .lineNums {
+  float: left;
+  background: #111;
+  color: #4aa;
+  margin-right: 10px;
+  padding: 0 8px 0 16px;
+  text-align: right;
+}
 body {
   padding: 0;
   margin: 0;
