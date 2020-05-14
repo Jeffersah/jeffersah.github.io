@@ -8,6 +8,6 @@ export function HomeComponent() {
         <h1>Hi!</h1>
         <Link to='/projects/'>Projects</Link>
         <h2>Test below:</h2>
-        <CodeFromUrlComponent url='/dist/content/testContent.md' />
+        <CodeFromUrlComponent url='/dist/content/testContent.txt' />
     </div>;
 }

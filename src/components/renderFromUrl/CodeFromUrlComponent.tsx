@@ -15,7 +15,7 @@ export function CodeFromUrlComponent({ url }: { url: string }) {
                 .replace(keywords, "$1<span class='k'>$2</span>")
                 .replace(/%([a-zA-Z0-9])%/g, "<span class='$1'>")
                 .replace(/%%/g, "</span>");
-            const lines = asString.split('\r\n')
+            const lines = asString.split(/\r?\n/)
                 .map(l => l === '' ? ' ' : l);
             setContent(lines);
         });
