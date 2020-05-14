@@ -10,9 +10,9 @@ export function CodeFromUrlComponent({ url }: { url: string }) {
         Axios.get(url).subscribe((content) => {
             let asString = content.data as string;
             asString = asString
+                .replace(keywords, "$1<span class='k'>$2</span>")
                 .replace(/([^a-zA-Z0-9_])((0[bx])?\d+)/g, "$1<span class='n'>$2</span>")
                 .replace(/([^a-zA-Z0-9_])(return|break|continue|export|import)(?![a-zA-Z0-9_])/g, "$1<span class='r'>$2</span>")
-                .replace(keywords, "$1<span class='k'>$2</span>")
                 .replace(/%([a-zA-Z0-9])%/g, "<span class='$1'>")
                 .replace(/%%/g, "</span>");
             const lines = asString.split(/\r?\n/)

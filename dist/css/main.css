@@ -1,3 +1,4 @@
+@import url("http://fonts.googleapis.com/css?family=Fira+Code:400,600,600italic,700,700italic,900,900italic,400italic");
 div.code {
   background: #111;
   color: #bbb;
@@ -9,6 +10,12 @@ div.code .content .k {
 div.code .content .c {
   color: #1a1;
   font-style: italic;
+}
+div.code .content .c .k {
+  color: #1a1;
+}
+div.code .content .c .r {
+  color: #1a1;
 }
 div.code .content .r {
   color: #b2b;
