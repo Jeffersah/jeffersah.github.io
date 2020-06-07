@@ -53,3 +53,8 @@ body {
 .mandelbrot canvas {
   display: inline-block;
 }
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

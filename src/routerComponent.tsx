@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import { HomeComponent, ProjectsComponent } from './views';
-import { MandelbrotComponent } from "./views/projects/";
+import { MandelbrotComponent, TileBlendTest1Component } from "./views/projects/";
 import { Page } from "./page";
 
 const DEFAULT_TITLE = "Nathan's Github Pages";
@@ -11,6 +11,7 @@ export default function RouterComponent() {
         <PageRoute exact path='/' component={HomeComponent} />
         <PageRoute exact path='/projects/' component={ProjectsComponent} />
         <PageRoute path='/projects/mandelbrot' title="Mandelbrot Visualizer" component={MandelbrotComponent} />
+        <PageRoute path='/projects/tile-blend-test-1' title="TileBlend Test 1" component={TileBlendTest1Component} />
     </BrowserRouter>;
 }
 
