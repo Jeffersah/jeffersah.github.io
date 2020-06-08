@@ -1,2 +1,2 @@
-export const CanvasWidth = 800;
-export const CanvasHeight = 800;
+export const CANVAS_WIDTH = 800;
+export const CANVAS_HEIGHT = 800;

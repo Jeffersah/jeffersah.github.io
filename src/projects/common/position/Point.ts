@@ -1,6 +1,5 @@
 export default class Point {
-    constructor(public x: number, public y: number)
-    {
+    constructor(public x: number, public y: number) {
 
     }
 
@@ -43,7 +42,7 @@ export default class Point {
         this.y += ny;
         return this;
     }
-    
+
     public MultWith(x: number, y: number): this;
     public MultWith(other: Point): this;
     public MultWith(other: number|Point, y?: number): this {
@@ -53,7 +52,7 @@ export default class Point {
         this.y *= ny;
         return this;
     }
-    
+
     public SubtractWith(x: number, y: number): this;
     public SubtractWith(other: Point): this;
     public SubtractWith(other: number|Point, y?: number): this {
@@ -63,7 +62,7 @@ export default class Point {
         this.y -= ny;
         return this;
     }
-    
+
     public DivideWith(x: number, y: number): this;
     public DivideWith(other: Point): this;
     public DivideWith(other: number|Point, y?: number): this {
@@ -75,6 +74,6 @@ export default class Point {
     }
 
     public Equals(other: Point): boolean {
-        return this.x == other.x && this.y == other.y;
+        return this.x === other.x && this.y === other.y;
     }
 }

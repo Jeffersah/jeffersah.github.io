@@ -1,7 +1,7 @@
 import { Range } from './Range';
 
 export class Range2d {
-    constructor(public xRange: Range, public yRange: Range) { } 
+    constructor(public xRange: Range, public yRange: Range) { }
 
     public GetValue(xPercent: number, yPercent: number) {
         return { x: this.xRange.GetValue(xPercent), y: this.yRange.GetValue(yPercent) };
@@ -20,7 +20,7 @@ export class Range2d {
         this.yRange.ShiftByPercentage(yShift);
     }
 
-    public AspectScale(percent: number, xAnchor: number = 0.5, yAnchor: number = 0.5){
+    public AspectScale(percent: number, xAnchor = 0.5, yAnchor = 0.5) {
         return this.Scale(percent, xAnchor, percent, yAnchor);
     }
     public Scale(xPercent: number, xAnchor: number, yPercent: number, yAnchor: number) {
@@ -28,8 +28,7 @@ export class Range2d {
         this.yRange.Scale(yPercent, yAnchor);
     }
 
-    public ConvertTo(value: {x: number, y: number}, target: Range2d)
-    {
+    public ConvertTo(value: {x: number, y: number}, target: Range2d) {
         const intermediate = this.GetPercentage(value.x, value.y);
         return target.GetValue(intermediate.x, intermediate.y);
     }

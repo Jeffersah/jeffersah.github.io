@@ -1,7 +1,6 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-import { RenderFromUrlComponent } from '../../components';
-import { CodeFromUrlComponent } from "../../components";
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { RenderFromUrlComponent, CodeFromUrlComponent } from '../../components';
 
 export function HomeComponent() {
     return <div>

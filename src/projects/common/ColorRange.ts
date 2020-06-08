@@ -8,10 +8,10 @@ export class ColorRange {
         this.gRange = new Range(gMin, gMax);
         this.bRange = new Range(bMin, bMax);
     }
-    
-    public ToColor(percentage: number):string {
-        return "rgb(" + Math.floor(this.rRange.GetValue(percentage)) + ","
-                      + Math.floor(this.gRange.GetValue(percentage)) + ","
-                      + Math.floor(this.bRange.GetValue(percentage)) +")";
+
+    public ToColor(percentage: number): string {
+        return 'rgb(' + Math.floor(this.rRange.GetValue(percentage)) + ','
+                      + Math.floor(this.gRange.GetValue(percentage)) + ','
+                      + Math.floor(this.bRange.GetValue(percentage)) + ')';
     }
 }

@@ -1,4 +1,4 @@
-import Point from "./Point";
+import Point from './Point';
 
 export enum Direction {
     Up = 0,
@@ -10,7 +10,7 @@ export enum Direction {
     Left,
     UpLeft,
 }
-export const DirectionValues: Point[] = [
+export const directionValues: Point[] = [
     new Point(0, -1),
     new Point(1, -1),
     new Point(1, 0),
@@ -21,7 +21,7 @@ export const DirectionValues: Point[] = [
     new Point(-1, -1),
 ];
 
-export const AllDirections: Direction[] = [
+export const allDirections: Direction[] = [
     Direction.Up,
     Direction.UpRight,
     Direction.Right,
@@ -31,20 +31,19 @@ export const AllDirections: Direction[] = [
     Direction.Left,
     Direction.UpLeft,
 ];
-export const CardinalDirections: Direction[] = [
+export const cardinalDirections: Direction[] = [
     Direction.Up,
     Direction.Right,
     Direction.Down,
     Direction.Left
 ];
-export const DiagonalDirections: Direction[] = [
+export const diagonalDirections: Direction[] = [
     Direction.UpRight,
     Direction.DownRight,
     Direction.DownLeft,
     Direction.UpLeft,
 ];
 
-export function ToPoint(direction: Direction): Point
-{
-    return DirectionValues[direction];
+export function ToPoint(direction: Direction): Point {
+    return directionValues[direction];
 }

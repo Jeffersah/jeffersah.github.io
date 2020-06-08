@@ -13,8 +13,8 @@ export class Complex {
         this.imaginary += other.imaginary;
     }
 
-    public MultiplyWith(other: Complex){
-        let tmpReal = this.real * other.real - this.imaginary * other.imaginary;
+    public MultiplyWith(other: Complex) {
+        const tmpReal = this.real * other.real - this.imaginary * other.imaginary;
         this.imaginary = this.real * other.imaginary + other.real * this.imaginary;
         this.real = tmpReal;
     }
