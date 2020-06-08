@@ -1,2 +1,2 @@
-export { HomeComponent } from "./home/home";
-export { ProjectsComponent } from "./projects/projects";
+export { HomeComponent } from './home/home';
+export { ProjectsComponent } from './projects/projects';
