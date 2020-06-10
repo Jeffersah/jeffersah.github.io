@@ -27,4 +27,20 @@ export class SpriteSheet {
             th
         );
     }
+
+    renderCustom(ctx: CanvasRenderingContext2D, tx: number, ty: number, tw: number, th: number, srcx: number, srcy: number, twid: number, thei: number) {
+        const sx = srcx * twid;
+        const sy = srcy * thei;
+        ctx.drawImage(
+            this.image,
+            sx,
+            sy,
+            twid,
+            thei,
+            tx,
+            ty,
+            tw,
+            th
+        );
+    }
 }
