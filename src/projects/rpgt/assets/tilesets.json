@@ -1,0 +1,44 @@
+{
+    "overworld1": [
+        { 
+            "id": 0,
+            "name": "grass",
+            "pathable": true,
+            "graphics": {
+                "type": "weight_random",
+                "options": [
+                    { "w": 5, "x": 10, "y": 0 },
+                    { "w": 3, "x": 7, "y": 1},
+                    { "w": 1, "x": 10, "y": 1},
+                    { "w": 1, "x": 10, "y": 2},
+                    { "w": 1, "x": 9, "y": 2}
+                ]
+            }
+        },
+        { 
+            "id": 1,
+            "name": "rock_wall_interior",
+            "pathable": false,
+            "graphics": {
+                "type": "adjacency",
+                "conditions": {
+                    "xxx0xxxxx": {
+                        "type": "fixed",
+                        "x": 6,
+                        "y": 24
+                    },
+                    "xxxxx0xxx": {
+                        "type": "fixed",
+                        "x": 8,
+                        "y": 24
+                    },
+                    "xxxxxxxxx": {
+                        "type": "fixed",
+                        "x": 7,
+                        "y": 24
+                    }
+                }
+            }
+        }
+    ]
+}

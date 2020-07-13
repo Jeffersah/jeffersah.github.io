@@ -10,6 +10,10 @@ export enum Direction {
     Left,
     UpLeft,
 }
+
+export type ECardinalDirection = Direction.Up | Direction.Right | Direction.Down | Direction.Left;
+export type EDiagonalDirection = Direction.UpRight | Direction.DownRight | Direction.DownLeft | Direction.UpLeft;
+
 export const directionValues: Point[] = [
     new Point(0, -1),
     new Point(1, -1),

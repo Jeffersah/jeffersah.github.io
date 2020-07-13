@@ -1,9 +1,17 @@
 export class SpriteSheet {
     public image: HTMLImageElement;
-    constructor(public spriteWidth: number, public spriteHeight: number, spriteUrl: string, onload: () => void) {
+    public tilesWide: number;
+    public tilesHigh: number;
+    constructor(public spriteWidth: number, public spriteHeight: number, spriteUrl: string, private onload: () => void) {
         this.image = document.createElement('img');
         this.image.src = '/dist/' + spriteUrl;
-        this.image.addEventListener('load', onload);
+        this.image.addEventListener('load', () => this.loadFinished());
+    }
+
+    private loadFinished() {
+        this.tilesWide = this.image.width / this.spriteWidth;
+        this.tilesHigh = this.image.height / this.spriteHeight;
+        this.onload();
     }
 
     private isTuple(v: number|{x: number, y: number}): v is {x: number, y: number} {

@@ -1,4 +1,4 @@
-import KeyState from "./KeyState";
+import KeyState from './KeyState';
 
 export interface IKeyChange {
     key: string;
@@ -15,6 +15,9 @@ export default class KeyWatcher {
         }
         attachedElement.addEventListener('keydown', k => this.onKeyDown(k));
         attachedElement.addEventListener('keyup', k => this.onKeyUp(k));
+
+        this.downKeys = [];
+        this.changes = [];
     }
 
     private onKeyDown(key: KeyboardEvent) {
@@ -22,8 +25,11 @@ export default class KeyWatcher {
             // tslint:disable-next-line: no-console
             console.log(key.key);
         }
-        this.changes.push({ key: key.key, change: 'press' });
-        this.downKeys.push(key.key);
+        const idx = this.downKeys.indexOf(key.key);
+        if (idx === -1) {
+            this.changes.push({ key: key.key, change: 'press' });
+            this.downKeys.push(key.key);
+        }
     }
 
     private onKeyUp(key: KeyboardEvent) {
