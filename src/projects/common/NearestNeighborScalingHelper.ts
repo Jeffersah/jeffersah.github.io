@@ -3,14 +3,27 @@ import { ResizeCanvas } from './CanvasHelpers';
 export default class NearestNeighborScalingHelper {
 
     public scaleFactor: number;
-    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public baseWidth: number, public baseHeight: number, public onResize: (() => void)|undefined) {
+    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public baseWidth: number, public baseHeight: number, private scaleByWindowSize: boolean, public onResize: (() => void)|undefined) {
         this.Rescale();
-        window.addEventListener('resize', () => this.Rescale());
+        if (this.scaleByWindowSize) {
+            window.addEventListener('resize', () => this.Rescale());
+        }
+        else {
+            canvas.parentElement.addEventListener('resize', () => this.Rescale());
+        }
     }
 
     public Rescale() {
-        const currentWidth = window.innerWidth;
-        const currentHeight = window.innerHeight;
+        let currentWidth: number;
+        let currentHeight: number;
+        if (this.scaleByWindowSize) {
+            currentWidth = window.innerWidth;
+            currentHeight = window.innerHeight;
+        }
+        else {
+            currentWidth = this.canvas.parentElement.clientWidth;
+            currentHeight = this.canvas.parentElement.clientHeight;
+        }
         const maxXScale = currentWidth / this.baseWidth;
         const maxYScale = currentHeight / this.baseHeight;
 

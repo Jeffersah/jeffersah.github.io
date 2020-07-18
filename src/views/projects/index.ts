@@ -4,6 +4,7 @@ import { TileBlendTest1Component } from './tile-blend-test-1/TileBlendTest1Compo
 import { SpellTestComponent } from './spell-test/SpellTestComponent';
 import { QTreeConwayComponent } from './qtree-conway/QTreeConwayComponent';
 import { RpgTestComponent } from './rpgt/RpgTest';
+import { DndMechComponent } from './dndmech/DndMechComponent';
 
 export interface IProject {
     projectName: string;
@@ -41,5 +42,11 @@ export const AllProjects: IProject[] = [
         projectName: 'rpgt',
         projectTitle: 'Rpg Test',
         projectComponent: RpgTestComponent
+    },
+
+    {
+        projectName: 'dndmech',
+        projectTitle: 'D&D Mech',
+        projectComponent: DndMechComponent
     }
 ];

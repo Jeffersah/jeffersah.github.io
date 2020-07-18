@@ -11,13 +11,15 @@ import Cell from './world/Cell';
 import Rect from '../common/position/Rectangle';
 import KeyboardManager from '../common/input/KeyboardManager';
 import Point from '../common/position/Point';
+import { FileResource } from '../common/assets/FileResource';
 
 const CAMERA_SLOWDOWN_FACTOR = 3;
 
-let sprites: {
+let assets: {
     tiles: SpriteSheet,
     wizard: SpriteSheet,
-    arrows: SpriteSheet
+    arrows: SpriteSheet,
+    tilesets: FileResource<any>
 };
 
 let ctx: CanvasRenderingContext2D;
@@ -28,10 +30,11 @@ let keys: KeyboardManager;
 
 export default function Run() {
     const assetLoader = new AssetLoader();
-    sprites = {
+    assets = {
         tiles: new SpriteSheet(16, 16, tilesUrl, assetLoader.registerAssetLoadCallback()),
         wizard: new SpriteSheet(16, 16, wizardUrl, assetLoader.registerAssetLoadCallback()),
         arrows: new SpriteSheet(16, 16, arrowsUrl, assetLoader.registerAssetLoadCallback()),
+        tilesets: new FileResource('../dist/assets/rpgtest/tilesets.json', assetLoader.registerAssetLoadCallback()),
     };
     keys = new KeyboardManager(document.body);
     assetLoader.onAllFinished(assetLoadDone);
@@ -40,16 +43,16 @@ export default function Run() {
 function assetLoadDone() {
     world = new World(Const.TILES_WIDE * 2, Const.TILES_HIGH * 2, () => {
         if (Math.random() <= 0.15) {
-            return Cell.RockWall(sprites.tiles);
+            return Cell.RockWall(assets.tiles);
         }
         else {
-            return Cell.GrassFloor(sprites.tiles);
+            return Cell.GrassFloor(assets.tiles);
         }
     });
     world.updatePrerender();
     const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
     ctx = canvas.getContext('2d');
-    const scaleHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.TILE_SIZE * Const.TILES_WIDE, Const.TILE_SIZE * Const.TILES_HIGH, () => { return; });
+    const scaleHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.TILE_SIZE * Const.TILES_WIDE, Const.TILE_SIZE * Const.TILES_HIGH, true, () => { return; });
     tick();
 }
 

@@ -11,7 +11,7 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json", ".wasm", ".png"]
+        extensions: [".ts", ".tsx", ".js", ".json", ".txt", ".wasm", ".png"]
     },
 
     module: {
@@ -25,7 +25,7 @@ module.exports = {
             },
 
             {
-                test: /\.(png|svg|jpg|gif)$/,
+                test: /\.(png|svg|jpg|gif|json|txt)$/,
                 use: [
                     'file-loader',
                 ]
