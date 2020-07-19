@@ -5,11 +5,13 @@ import { SpellTestComponent } from './spell-test/SpellTestComponent';
 import { QTreeConwayComponent } from './qtree-conway/QTreeConwayComponent';
 import { RpgTestComponent } from './rpgt/RpgTest';
 import { DndMechComponent } from './dndmech/DndMechComponent';
+import { SignalrTestComponent } from './signalr-test/SignalrTestComponent';
 
 export interface IProject {
     projectName: string;
     projectTitle: string;
-    projectComponent: () => JSX.Element;
+    subCategory?: string;
+    projectComponent: React.ComponentType<{}>;
 }
 
 // tslint:disable-next-line: variable-name
@@ -48,5 +50,12 @@ export const AllProjects: IProject[] = [
         projectName: 'dndmech',
         projectTitle: 'D&D Mech',
         projectComponent: DndMechComponent
+    },
+
+    {
+        projectName: 'signalr-test',
+        projectTitle: 'SignalR Test',
+        subCategory: 'Test',
+        projectComponent: SignalrTestComponent
     }
 ];

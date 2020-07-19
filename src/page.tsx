@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export interface IPageProps {
     title: string;
-    component: () => JSX.Element;
+    component: React.ComponentType<{}>;
 }
 
 export class Page extends React.Component<IPageProps, {}> {

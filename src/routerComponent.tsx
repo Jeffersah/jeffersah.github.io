@@ -18,6 +18,6 @@ export default function RouterComponent() {
     </BrowserRouter>;
 }
 
-export function PageRoute(props: {exact?: boolean, path: string, title?: string, component: () => JSX.Element}) {
+export function PageRoute(props: {exact?: boolean, path: string, title?: string, component: React.ComponentType<{}>}) {
     return <Route exact={props.exact} path={props.path} render={p => <Page {...p} component={props.component} title={props.title || DEFAULT_TITLE} />} />;
 }
