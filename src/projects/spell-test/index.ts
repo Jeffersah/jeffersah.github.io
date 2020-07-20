@@ -18,6 +18,7 @@ export default function Run() {
 function Start(arrows: SpriteSheet) {
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    console.log(canvas);
     ResizeCanvas(canvas, 500, 500);
 
     const ctx = canvas.getContext('2d');

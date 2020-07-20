@@ -1,0 +1,120 @@
+@keyframes operational-anim {
+    from {
+        color: #eee
+    }
+    to {
+        color: #0f0
+    }
+}
+
+@keyframes ready-anim {
+    from {
+        color: #eee
+    }
+    to {
+        color: rgb(255, 196, 0)
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.main {
+    font-family: 'Share Tech Mono', monospace;
+}
+  
+.body {
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+.status {
+    width: 240px;
+    display: inline-block;
+}
+
+.status-operational {
+    animation-name: operational-anim;
+    animation-duration: 250ms;
+    animation-iteration-count: 9;
+    animation-direction: alternate;
+    animation-fill-mode: both;
+}
+
+
+.status-ready {
+    animation-name: ready-anim;
+    animation-duration: 500ms;
+    animation-timing-function: steps(2, jump-none);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-fill-mode: both;
+}
+
+.flex-col {
+    display: flex;
+    flex-flow: column;
+    flex-grow: 1;
+}
+
+.flex-fill {
+    flex-grow: 1;
+}
+
+.mech-container {
+    display: flex;
+    flex-flow: column;
+    flex-grow: 1;
+    border: 2px solid #eee;
+    padding: 0 10px 0 10px;
+    
+    align-items: stretch;
+}
+
+.fixed-col {
+    width: 30%;
+}
+
+.detail-row {
+    border: 0 solid #eee;
+    border-bottom-width: 2px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+.title-good {
+
+}
+
+@keyframes blink-yellow {
+    from { color: #eee }
+    to { color: #ff0 }
+}
+.title-damaged {
+    animation-name: blink-yellow;
+    animation-timing-function: steps(2, jump-none);
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes blink-red {
+    from { color: #eee }
+    to { color: #f00 }
+}
+.title-crit {
+    animation-name: blink-red;
+    animation-timing-function: steps(2, jump-none);
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+}
+.title-destroyed {
+    color: #666;
+}

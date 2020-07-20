@@ -20,3 +20,9 @@ export function groupBy<T>(items: T[], keySelector: (item: T) => string): { key:
     }
     return Object.keys(results).map(key => ({ key, items: results[key] }));
 }
+
+export function repeat<T>(item: T, count: number): T[] {
+    const arr = Array(count);
+    arr.fill(item);
+    return arr;
+}

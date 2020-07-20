@@ -3,11 +3,14 @@
         "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
-        "module": "commonjs",
+        "module": "esnext",
         "target": "es6",
         "lib": [ "es6", "dom" ],
         "jsx": "react",
-        "types": [ "node" ]
+        "types": [ "node" ],
+        "removeComments": false,
+        "moduleResolution": "node",
+        "esModuleInterop": true
     },
     "include": [
         "./src/**/*"

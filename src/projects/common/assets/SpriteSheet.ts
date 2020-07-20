@@ -4,7 +4,7 @@ export class SpriteSheet {
     public tilesHigh: number;
     constructor(public spriteWidth: number, public spriteHeight: number, spriteUrl: string, private onload: () => void) {
         this.image = document.createElement('img');
-        this.image.src = '/dist/' + spriteUrl;
+        this.image.src = spriteUrl;
         this.image.addEventListener('load', () => this.loadFinished());
     }
 

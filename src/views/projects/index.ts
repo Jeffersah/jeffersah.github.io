@@ -6,6 +6,7 @@ import { QTreeConwayComponent } from './qtree-conway/QTreeConwayComponent';
 import { RpgTestComponent } from './rpgt/RpgTest';
 import { DndMechComponent } from './dndmech/DndMechComponent';
 import { SignalrTestComponent } from './signalr-test/SignalrTestComponent';
+import { DndMech2Wrapper } from './dndmech2/DndMech2Wrapper';
 
 export interface IProject {
     projectName: string;
@@ -50,6 +51,12 @@ export const AllProjects: IProject[] = [
         projectName: 'dndmech',
         projectTitle: 'D&D Mech',
         projectComponent: DndMechComponent
+    },
+
+    {
+        projectName: 'dndmech2',
+        projectTitle: 'D&D Mech 2',
+        projectComponent: DndMech2Wrapper
     },
 
     {

@@ -1,9 +1,14 @@
 import * as React from 'react';
-import Run from '../../../projects/spell-test';
 
 export function SpellTestComponent() {
     React.useEffect(() => {
-        Run();
+        import(
+            /* webpackChunkName: "spellTest" */
+            /* webpackMode: "lazy" */
+            '../../../projects/spell-test').then(({ default: Run }) => {
+            console.log('Loaded!');
+            Run();
+        });
     }, []);
     return <div className='full_body center'>
         <canvas id='canvas'></canvas>

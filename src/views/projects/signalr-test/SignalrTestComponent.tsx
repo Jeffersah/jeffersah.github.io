@@ -30,7 +30,7 @@ export class SignalrTestComponent extends React.Component<ISignalRTestComponentP
         // Bind signalr
         const hubConnection = new signalR.HubConnectionBuilder()
             .configureLogging(signalR.LogLevel.Trace)
-            .withUrl(window.prompt('Enter server URL:'))
+            .withUrl(window.prompt('Enter server'))
             .build();
 
         this.setState({ connection: hubConnection });

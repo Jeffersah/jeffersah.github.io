@@ -1,10 +1,20 @@
+const path = require('path');
+
 module.exports = {
     entry: "./src/index.tsx",
     output: {
 		webassemblyModuleFilename: "[hash].wasm",
-        filename: "bundle.js",
-        path: __dirname + "/dist"
+        // filename: "bundle.js",
+        chunkFilename: '[name].bundle.js',
+        path: path.resolve(__dirname, "dist"),
+        publicPath: "/dist/",
     },
+
+    // optimization: {
+    //     splitChunks: {
+    //         chunks: 'all',
+    //     },
+    // },
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
@@ -22,6 +32,18 @@ module.exports = {
                 use: {
                     loader: 'wasm-loader'
                 }
+            },
+
+            {
+                test: /\.css$/i,
+                use: [
+                    'style-loader',
+                    "@teamsupercell/typings-for-css-modules-loader",
+                    {
+                        loader: "css-loader",
+                        options: { modules: true }
+                    }
+                  ]
             },
 
             {
@@ -49,7 +71,6 @@ module.exports = {
         "react": "React",
         "react-dom": "ReactDOM"
     },
-
 
     watch: true,
     watchOptions: {

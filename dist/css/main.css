@@ -58,3 +58,35 @@ body {
   align-items: center;
   justify-content: center;
 }
+.center-col {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+.flow-row {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+.flex-grow {
+  flex-grow: 1;
+}
+.border {
+  border: 1px solid black;
+}
+.Dropdown-control {
+  color: #eee !important;
+  background-color: #222 !important;
+}
+.Dropdown-option {
+  color: #eee !important;
+  background-color: #222 !important;
+}
+.full_body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

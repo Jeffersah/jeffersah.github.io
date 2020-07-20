@@ -1,9 +1,13 @@
 import * as React from 'react';
-import Run from '../../../projects/rpgt';
 
 export function RpgTestComponent() {
     React.useEffect(() => {
-        Run();
+        import(
+            /* webpackChunkName: "rpgTest" */
+            /* webpackMode: "lazy" */
+            '../../../projects/rpgt').then(({ default: Run }) => {
+            Run();
+        });
     }, []);
     return <div className='rpgt rpgt_body full_body center'>
         <canvas id='mainCanvas'></canvas>
