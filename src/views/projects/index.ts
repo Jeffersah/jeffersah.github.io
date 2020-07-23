@@ -7,6 +7,7 @@ import { RpgTestComponent } from './rpgt/RpgTest';
 import { DndMechComponent } from './dndmech/DndMechComponent';
 import { SignalrTestComponent } from './signalr-test/SignalrTestComponent';
 import { DndMech2Wrapper } from './dndmech2/DndMech2Wrapper';
+import { TechRenderComponent } from './tech-render/TechRenderComponent';
 
 export interface IProject {
     projectName: string;
@@ -64,5 +65,12 @@ export const AllProjects: IProject[] = [
         projectTitle: 'SignalR Test',
         subCategory: 'Test',
         projectComponent: SignalrTestComponent
+    },
+
+    {
+        projectName: 'tech-render',
+        projectTitle: 'Tech Render Test',
+        subCategory: 'Test',
+        projectComponent: TechRenderComponent
     }
 ];

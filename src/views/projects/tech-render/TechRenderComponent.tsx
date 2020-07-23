@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-export function SpellTestComponent() {
+export function TechRenderComponent() {
     React.useEffect(() => {
         import(
-            /* webpackChunkName: "spellTest" */
+            /* webpackChunkName: "techRender" */
             /* webpackMode: "lazy" */
-            '../../../projects/spell-test').then(({ default: Run }) => {
+            '../../../projects/tech-render').then(({ default: Run }) => {
             Run();
         });
     }, []);

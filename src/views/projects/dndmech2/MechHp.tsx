@@ -91,7 +91,7 @@ function createArmorIndicator(key: number, dx: number, type: 'break' | 'armor' |
     const innerElement =
         type === 'break' ? <polyline vectorEffect='non-scaling-stroke' points='0.5,0 0.25,0.25 0.75,0.75 0.5,1' width='1' height='1' style={{ fill: 'none', stroke: 'black', strokeWidth: 2 }} /> : <></>;
     return <svg key={key} x={dx} width={1} height={1} onClick={() => handleArmorClick(key)}>
-        <path vectorEffect='non-scaling-stroke' d='M 0.2,0 L0.8,0 L1,0.5 L0.8,1 L0.2,1 L0,0.5 Z' width='1' height='1' style={{ fill: type === 'break' ? 'red' : type === 'armor' ? '#58d1cd' : 'purple', stroke: 'black', strokeWidth: 1 }}></path>
+        <path vectorEffect='non-scaling-stroke' d='M 0.2,0 L0.8,0 L1,0.5 L0.8,1 L0.2,1 L0,0.5 Z' width='1' height='1' style={{ fill: type === 'break' ? '#a11' : type === 'armor' ? '#58d1cd' : 'purple', stroke: 'black', strokeWidth: 1 }}></path>
         {innerElement}
     </svg>;
 }
