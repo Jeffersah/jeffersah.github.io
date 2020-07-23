@@ -34,11 +34,11 @@ export default function MechHp(props: IMechHpProps) {
 
     const includeArmorRow = props.maxArmor > 0 || props.permArmor > 0;
 
-    const hpWide = shouldUseTwoRows ? totalHp / 2 : totalHp;
+    const hpWide = shouldUseTwoRows ? Math.ceil(totalHp / 2) : totalHp;
     const hpTall = (shouldUseTwoRows ? 2 : 1) + (includeArmorRow ? 1 : 0);
 
     if (shouldUseTwoRows) {
-        const halfHp = totalHp / 2;
+        const halfHp = Math.ceil(totalHp / 2);
         cells[0] = allTypes.slice(0, halfHp).map((type, i) => ({ key: i, type, active: i >= missingHp }));
         cells[1] = allTypes.slice(halfHp).map((type, i) => ({ key: i, type, active: (i + halfHp) >= missingHp }));
     }
@@ -74,12 +74,12 @@ export default function MechHp(props: IMechHpProps) {
         {cells.map((row, y) =>
             <svg key={y} y={y}>
                 {row.map((item, dx) =>
-                    createSvgCell(item.key, item.type, item.active, dx, dx + y * (totalHp / 2), onHpIndicatorClicked)
+                    createSvgCell(item.key, item.type, item.active, dx + ((totalHp % 2 === 1) && (y === 1) ? 0.5 : 0), dx + y * hpWide, onHpIndicatorClicked)
                 )}
             </svg>
         )}
         {includeArmorRow ?
-            <svg y={hpTall - 1} x={hpWide - armorIndicators.length}>
+            <svg y={hpTall - 1} x={hpWide - armorIndicators.length - ((totalHp % 2 === 1) && shouldUseTwoRows ? 0.5 : 0)}>
                 {armorIndicators.map((indicatorType, i) =>
                     createArmorIndicator(i, i, indicatorType, onArmorIndicatorClicked))}
             </svg>
@@ -89,9 +89,9 @@ export default function MechHp(props: IMechHpProps) {
 
 function createArmorIndicator(key: number, dx: number, type: 'break' | 'armor' | 'permanent', handleArmorClick: (i: number) => void) {
     const innerElement =
-        type === 'break' ? makeStroke(true) : <></>;
-    return <svg key={key} x={dx} width={1} height={1} onClick={() => handleArmorClick(dx)}>
-        <path vectorEffect='non-scaling-stroke' d='M 0,0 L 1,0 L 0.8,1 L 0.2,1 Z' width='1' height='1' style={{ fill: type === 'break' ? 'red' : type === 'armor' ? '#58d1cd' : 'purple', stroke: 'black', strokeWidth: 1 }}></path>
+        type === 'break' ? <polyline vectorEffect='non-scaling-stroke' points='0.5,0 0.25,0.25 0.75,0.75 0.5,1' width='1' height='1' style={{ fill: 'none', stroke: 'black', strokeWidth: 2 }} /> : <></>;
+    return <svg key={key} x={dx} width={1} height={1} onClick={() => handleArmorClick(key)}>
+        <path vectorEffect='non-scaling-stroke' d='M 0.2,0 L0.8,0 L1,0.5 L0.8,1 L0.2,1 L0,0.5 Z' width='1' height='1' style={{ fill: type === 'break' ? 'red' : type === 'armor' ? '#58d1cd' : 'purple', stroke: 'black', strokeWidth: 1 }}></path>
         {innerElement}
     </svg>;
 }

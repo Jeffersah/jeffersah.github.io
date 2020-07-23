@@ -12,7 +12,7 @@ export default function NaniteArmor(props: IMechCustomComponentProps) {
     return <div>
         <div className='flow-row' style={{ justifyContent: 'space-between' }}>
             <span>Permanent:</span>
-            <Dropdown options={componentOptions} value={permArmor} onChange={(changeTo) => {
+            <Dropdown options={except(except(componentOptions, bonus2), bonus1)} value={permArmor} onChange={(changeTo) => {
                 if (permArmor !== undefined) {
                     props.addComponentBonus({ component: permArmor, permArmor: -1 });
                 }
@@ -22,7 +22,7 @@ export default function NaniteArmor(props: IMechCustomComponentProps) {
         </div>
         <div className='flow-row' style={{ justifyContent: 'space-between' }}>
             <span>Bonus Armor:</span>
-            <Dropdown options={except(componentOptions, permArmor)} value={bonus1} onChange={(changeTo) => {
+            <Dropdown options={except(except(componentOptions, permArmor), bonus2)} value={bonus1} onChange={(changeTo) => {
                 if (bonus1 !== undefined) {
                     props.addComponentBonus({ component: bonus1, armor: -1 });
                 }

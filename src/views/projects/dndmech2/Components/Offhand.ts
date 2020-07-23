@@ -5,10 +5,10 @@ import { armor } from '../../../../projects/dndmech/SymbolDefinitions';
 export const offhandComponents: IMechComponent[] = [
 {
     name: '“Ablator” flare system',
-    description: 'When you are targeted by a ranged attack, your attacker takes a -1 to the attack roll',
+    description: 'When you are targeted by a ranged attack, your attacker takes a -1 to the attack roll. Disabled if the offhand damage penalty exceeds -3',
 }, {
     name: 'Weapon Stabilizer',
-    description: '+1 to all attack rolls'
+    description: '+1 to all attack rolls. Disabled if the offhand damage penalty exceeds -3'
 }, {
     name: 'Heavy Shield',
     description: 'Grants +1 permanent armor and 2 HP to your offhand arm. If your arm is not broken, whenever you take an attack, you may roll 1d4. On a 3-4, the attack hits your offhand arm instead of its original target.',
@@ -16,8 +16,8 @@ export const offhandComponents: IMechComponent[] = [
     onDeselect: props => props.addComponentBonus({ component: 'larm', permArmor: -1, hp: -2}),
 }, {
     name: 'Sword',
-    description: 'It’s a sword. Your melee attacks now do 3 Damage.'
+    description: 'It’s a sword. Your melee attacks now do 3 Damage. Disabled if the offhand damage penalty exceeds -3'
 }, {
     name: 'Hammer',
-    description: 'It’s a hammer. Your melee attacks now do 2 Damage and 1 Break.'
+    description: 'It’s a hammer. Your melee attacks now do 2 Damage and 1 Break. Disabled if the offhand damage penalty exceeds -3'
 }];
