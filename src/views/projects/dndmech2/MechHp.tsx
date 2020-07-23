@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as css from './css/dndmech2.css';
 import { repeat } from '../../../LinqLike';
+import useUpdateState from '../../../hooks/useUpdateState';
 
 const HP_CELL_SIZE = 30;
 
@@ -14,13 +15,11 @@ export interface IMechHpProps {
 export default function MechHp(props: IMechHpProps) {
     const totalHp = props.hpSteps.good + props.hpSteps.damaged + props.hpSteps.crit;
 
-    const [currentHp, setCurrentHp] = React.useState(totalHp);
-    const setAndNotifyHp = (hp: number) => {
-        setCurrentHp(hp);
+    const [currentHp, setCurrentHp] = useUpdateState(totalHp, (hp: number) => {
         if (props.onDamageStatusChange !== undefined) {
             props.onDamageStatusChange(hp === 0 ? 'destroyed' : hp <= props.hpSteps.crit ? 'crit' : hp <= props.hpSteps.crit + props.hpSteps.damaged ? 'damaged' : 'good');
         }
-    };
+    });
 
     const missingHp = totalHp - currentHp;
 
@@ -63,10 +62,10 @@ export default function MechHp(props: IMechHpProps) {
 
     const onHpIndicatorClicked = (index: number) => {
         if (index < missingHp) {
-            setAndNotifyHp(totalHp - index);
+            setCurrentHp(totalHp - index);
         }
         else if (index < totalHp) {
-            setAndNotifyHp(totalHp - index - 1);
+            setCurrentHp(totalHp - index - 1);
         }
     };
 

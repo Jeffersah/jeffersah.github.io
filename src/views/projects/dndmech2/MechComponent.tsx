@@ -4,6 +4,7 @@ import MechHp from './MechHp';
 import { IComponentHp } from './Chassis';
 import IMechComponent, { IMechCustomComponentProps } from './Components/IMechComponent';
 import Dropdown from 'react-dropdown';
+import useUpdateState from '../../../hooks/useUpdateState';
 
 export interface IMechComponentProps {
     name: string;
@@ -19,16 +20,14 @@ const flows = { left: 'row', right: 'row-reverse', center: 'column' };
 
 export default function MechComponent(props: IMechComponentProps & IMechCustomComponentProps) {
 
-    const [component, setComponent] = React.useState<IMechComponent>(undefined);
-    const customSetComponent = (newComp: IMechComponent) => {
-        if (component !== undefined && component.onDeselect !== undefined) {
+    const [component, setComponent] = useUpdateState<IMechComponent>(undefined, (newComp: IMechComponent, oldComp?: IMechComponent) => {
+        if (oldComp !== undefined && oldComp.onDeselect !== undefined) {
             component.onDeselect(props);
         }
         if (newComp.onSelect !== undefined) {
             newComp.onSelect(props);
         }
-        setComponent(newComp);
-    };
+    });
 
     return <div className={css['mech-container']}>
         <div style={{ display: 'flex', flexFlow: flows[props.align], justifyContent: 'space-between', alignItems: 'center' }}>
@@ -40,7 +39,7 @@ export default function MechComponent(props: IMechComponentProps & IMechCustomCo
         {props.componentOptions.length > 0 ?
             <div className='flow-row'>
                 <div>Component: </div>
-                <Dropdown className='flex-grow' options={props.componentOptions.map(c => c.name)} placeholder='CHOOSE' value={component === undefined ? undefined : component.name} onChange={chng => customSetComponent(props.componentOptions.find(item => item.name === chng.value))} />
+                <Dropdown className='flex-grow' options={props.componentOptions.map(c => c.name)} placeholder='CHOOSE' value={component === undefined ? undefined : component.name} onChange={chng => setComponent(props.componentOptions.find(item => item.name === chng.value))} />
             </div>
             : <></>}
         {component !== undefined ?
