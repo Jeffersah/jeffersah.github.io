@@ -26,3 +26,10 @@ export function repeat<T>(item: T, count: number): T[] {
     arr.fill(item);
     return arr;
 }
+
+export function first<T>(items: T[], predicate: (item: T) => boolean): T {
+    for (const item of items) {
+        if (predicate(item)) return item;
+    }
+    return undefined;
+}

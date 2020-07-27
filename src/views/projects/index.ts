@@ -8,6 +8,9 @@ import { DndMechComponent } from './dndmech/DndMechComponent';
 import { SignalrTestComponent } from './signalr-test/SignalrTestComponent';
 import { DndMech2Wrapper } from './dndmech2/DndMech2Wrapper';
 import { TechRenderComponent } from './tech-render/TechRenderComponent';
+import { ProjectsComponent } from './projects';
+import SortVisComponent from './sortVis/SortVisComponent';
+import BulletsComponent from './bullets/BulletsComponent';
 
 export interface IProject {
     projectName: string;
@@ -58,6 +61,18 @@ export const AllProjects: IProject[] = [
         projectName: 'dndmech2',
         projectTitle: 'D&D Mech 2',
         projectComponent: DndMech2Wrapper
+    },
+
+    {
+        projectName: 'bullets',
+        projectTitle: 'Bullets!',
+        projectComponent: BulletsComponent
+    },
+
+    {
+        projectName: 'sortvis',
+        projectTitle: 'Sort Visualizer',
+        projectComponent: SortVisComponent
     },
 
     {
