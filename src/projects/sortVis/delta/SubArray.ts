@@ -5,6 +5,7 @@ import SortState from '../SortState';
 
 export class CreateSubArray implements IDelta {
     complexity: EComplexity;
+    type = 'createSubArray';
     constructor(public array: SortArray, public startingSize: number, public offset: number) {
         this.complexity = EComplexity.Get;
     }
@@ -20,6 +21,7 @@ export class CreateSubArray implements IDelta {
 // tslint:disable-next-line: max-classes-per-file
 export class DeleteSubArray implements IDelta {
     complexity: EComplexity;
+    type = 'deleteSubArray';
     constructor(public array: SortArray, private endingData: number[]) {
         this.complexity = EComplexity.Get;
     }

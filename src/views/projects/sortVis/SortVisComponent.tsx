@@ -7,9 +7,11 @@ import { first } from '../../../LinqLike';
 import SortVisPlaybackComponent from './SortVisPlaybackComponent';
 import BarDisplay from '../../../projects/sortVis/paints/BarDisplay';
 import IPaint from '../../../projects/sortVis/paints/IPaint';
+import HeapSort from '../../../projects/sortVis/sorts/heapSort';
 
 const allSortingAlgorithms: ISort[] = [
     new SelectionSort(),
+    new HeapSort(),
 ];
 
 export default function SortVisComponent() {

@@ -5,6 +5,7 @@ import SortArray from '../SortArray';
 
 export class Get implements IDelta {
     complexity: EComplexity;
+    type = 'get';
     constructor(public array: SortArray, public index: number) {
         this.complexity = EComplexity.Get;
     }
@@ -15,6 +16,7 @@ export class Get implements IDelta {
 // tslint:disable-next-line: max-classes-per-file
 export class Compare implements IDelta {
     complexity: EComplexity;
+    type = 'compare';
     constructor(public array1: SortArray, public index1: number, public array2: SortArray, public index2: number) {
         this.complexity = EComplexity.Get;
     }
@@ -25,6 +27,7 @@ export class Compare implements IDelta {
 // tslint:disable-next-line: max-classes-per-file
 export class Set implements IDelta {
     complexity: EComplexity;
+    type = 'set';
     constructor(public array: SortArray, public index: number, private oldValue: number, private newValue: number) {
         this.complexity = EComplexity.Set;
     }
@@ -38,6 +41,7 @@ export class Set implements IDelta {
 
 // tslint:disable-next-line: max-classes-per-file
 export class Copy implements IDelta {
+    type = 'copy';
     complexity: EComplexity;
     constructor(public srcArray: SortArray, public srcIndex: number, public tgtArray: SortArray, public tgtIndex: number, private replacedValue: number) {
         this.complexity = EComplexity.Set;
@@ -52,6 +56,7 @@ export class Copy implements IDelta {
 
 // tslint:disable-next-line: max-classes-per-file
 export class Swap implements IDelta {
+    type = 'swap';
     complexity: EComplexity;
     constructor(public srcArray: SortArray, public srcIndex: number, public tgtArray: SortArray, public tgtIndex: number) {
         this.complexity = EComplexity.Swap;
