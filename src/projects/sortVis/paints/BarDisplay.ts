@@ -34,7 +34,7 @@ export default class BarDisplay implements IPaint {
         ctx.fillStyle = 'white';
         for (let i = 0; i < arr.length(); i++) {
             const { x, y, height } = coordsFrom(i, arr.internalGet(i).value);
-            ctx.fillRect(x, canvas.height - height, dx, dx);
+            ctx.fillRect(x, canvas.height - height - dx, dx, dx);
         }
 
         ctx.strokeStyle = '#B00';

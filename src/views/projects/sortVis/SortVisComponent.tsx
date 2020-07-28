@@ -5,13 +5,13 @@ import SelectionSort from '../../../projects/sortVis/sorts/selectionSort';
 import SortState from '../../../projects/sortVis/SortState';
 import { first } from '../../../LinqLike';
 import SortVisPlaybackComponent from './SortVisPlaybackComponent';
-import BarDisplay from '../../../projects/sortVis/paints/BarDisplay';
-import IPaint from '../../../projects/sortVis/paints/IPaint';
 import HeapSort from '../../../projects/sortVis/sorts/heapSort';
+import QuickSort from '../../../projects/sortVis/sorts/quickSort';
 
 const allSortingAlgorithms: ISort[] = [
     new SelectionSort(),
     new HeapSort(),
+    new QuickSort(),
 ];
 
 export default function SortVisComponent() {
