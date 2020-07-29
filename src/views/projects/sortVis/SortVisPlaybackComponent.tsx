@@ -9,12 +9,14 @@ import { first } from '../../../LinqLike';
 import IPaint from '../../../projects/sortVis/paints/IPaint';
 import EComplexity from '../../../projects/sortVis/delta/EComplexity';
 import useAutoplayHook from './useAutoplay';
+import RadialDisplay from '../../../projects/sortVis/paints/RadialDisplay';
 
 const allPainters: IPaint[] = [
     new BarDisplay(),
+    new RadialDisplay()
 ];
 
-const MaxUpdatesPerTick = 20;
+const MaxUpdatesPerTick = 75;
 
 const CVS_WIDTH = 1024;
 const CVS_HEIGHT = 800;
@@ -43,13 +45,13 @@ export default function SortVisPlaybackComponent(props: { state: SortState }) {
 
     // Autoplay effect
     useAutoplayHook(() => {
-        if (currentSpeed <= 0.5) {
+        if (currentSpeed <= 0.25) {
             const deltas = props.state.applyUntil(10, EComplexity.Compare);
             updateDeltaIndex();
             repaint(props.state, deltas, painter);
         }
         else {
-            const speedPerc = (currentSpeed - 0.5) * 2;
+            const speedPerc = (currentSpeed - 0.25) * (1 / .75);
             const numTicks = Math.floor(speedPerc * MaxUpdatesPerTick);
             const allDeltas = [];
             for (let i = 0; i < numTicks; i++) {

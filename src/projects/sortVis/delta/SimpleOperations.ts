@@ -18,7 +18,7 @@ export class Compare implements IDelta {
     complexity: EComplexity;
     type = 'compare';
     constructor(public array1: SortArray, public index1: number, public array2: SortArray, public index2: number) {
-        this.complexity = EComplexity.Get;
+        this.complexity = EComplexity.Compare;
     }
     apply(state: SortState): void { return; }
     rollback(state: SortState): void { return; }

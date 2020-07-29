@@ -7,11 +7,15 @@ import { first } from '../../../LinqLike';
 import SortVisPlaybackComponent from './SortVisPlaybackComponent';
 import HeapSort from '../../../projects/sortVis/sorts/heapSort';
 import QuickSort from '../../../projects/sortVis/sorts/quickSort';
+import CycleSort from '../../../projects/sortVis/sorts/CycleSort';
+import QuickDualPivot from '../../../projects/sortVis/sorts/quickDualPivot';
 
 const allSortingAlgorithms: ISort[] = [
     new SelectionSort(),
+    new CycleSort(),
     new HeapSort(),
     new QuickSort(),
+    new QuickDualPivot(),
 ];
 
 export default function SortVisComponent() {
@@ -27,6 +31,7 @@ export default function SortVisComponent() {
         }
         const sortState = new SortState(initialValues);
         currentAlgo.sort(sortState, sortState.getArray(0));
+        sortState.seekTo(0);
         setSortState(sortState);
     }
 

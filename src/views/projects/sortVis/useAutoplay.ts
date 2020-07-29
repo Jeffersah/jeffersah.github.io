@@ -2,7 +2,7 @@ import useInterval from '../../../hooks/useInterval';
 import useAnimationFrame from '../../../hooks/useAnimationFrame';
 import { useEffect, useRef } from 'react';
 
-const MAX_DELAY_TIME = 3000;
+const MAX_DELAY_TIME = 1000;
 const MIN_DELAY_BEFORE_FRAMES = 60;
 
 export default function useAutoplayHook(callback: () => void, enable: boolean, speed: number) {
@@ -23,9 +23,9 @@ export default function useAutoplayHook(callback: () => void, enable: boolean, s
         }
 
         function triggerTick() {
-            if (speed <= 0.5) {
+            if (speed <= 0.25) {
                 const frameRange = MAX_DELAY_TIME - MIN_DELAY_BEFORE_FRAMES;
-                const sleepPercent = 1 - (speed * 2);
+                const sleepPercent = 1 - (speed * 4);
                 const sleepTime = Math.floor(frameRange * sleepPercent) + MIN_DELAY_BEFORE_FRAMES;
                 waitId.current = setTimeout(tick, sleepTime);
                 waitIdIsAnimationFrame.current = false;

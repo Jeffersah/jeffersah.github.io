@@ -37,7 +37,7 @@ export default class BarDisplay implements IPaint {
             ctx.fillRect(x, canvas.height - height - dx, dx, dx);
         }
 
-        ctx.strokeStyle = '#B00';
+        ctx.strokeStyle = '#D00';
         ctx.lineWidth = 1;
         for (const delta of deltas.filter(d => d.type === 'compare')) {
             const d = delta as Compare;

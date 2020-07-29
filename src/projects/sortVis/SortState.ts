@@ -9,8 +9,10 @@ export default class SortState {
     private nextArrayId: number;
     public currentDeltaIndex: number;
     public maxValue: number;
+    private initialValue: number[];
 
     constructor(data: number[]) {
+        this.initialValue = data;
         this.deltas = [];
         this.arrays = [
             new SortArray(this, 0, data)
@@ -45,6 +47,27 @@ export default class SortState {
     }
 
     seekTo(tgt: number) {
+        const deltaHere = Math.abs(tgt - this.currentDeltaIndex);
+        const deltaStart = tgt;
+        const deltaEnd = this.deltas.length - tgt;
+
+        if (deltaStart <= deltaEnd && deltaStart <= deltaHere) {
+            // Skip to start, seek from there
+            this.arrays = [
+                this.arrays[0]
+            ];
+            this.arrays[0].internalFill(this.initialValue);
+            this.currentDeltaIndex = 0;
+        }
+        else if (deltaEnd <= deltaStart && deltaEnd <= deltaHere) {
+            // Skip to end, seek from there
+            // (Can't currently seek to end - save the terminal state?)
+        }
+
+        this.seekToInternal(tgt);
+    }
+
+    private seekToInternal(tgt: number) {
         while (tgt > this.currentDeltaIndex) this.apply();
         while (tgt < this.currentDeltaIndex) this.rollback();
     }

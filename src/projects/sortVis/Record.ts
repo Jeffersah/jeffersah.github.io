@@ -9,6 +9,7 @@ export default class Record {
 
     public compare(other: Record): number {
         this.state.pushDelta(new Compare(this.array, this.index, other.array, other.index));
-        return this.value - other.value;
+        const v = this.value - other.value;
+        return v === 0 ? 0 : v < 0 ? -1 : 1;
     }
 }
