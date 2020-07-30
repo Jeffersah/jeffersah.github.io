@@ -11,6 +11,11 @@ export default class QuickDualPivot implements ISort {
 
     recurse(arr: SortArray, min: number, max: number) {
         if (max - min <= 1) return;
+
+        // Use a random-element pivot
+        const pivLocation = Math.floor(min + Math.random() * (max - min));
+        arr.swap(min, pivLocation);
+
         const pivot = arr.get(min);
         let lp = min + 1;
         let mp = min + 1;
