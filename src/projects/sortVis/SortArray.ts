@@ -5,7 +5,7 @@ import { Get, Swap, Copy as Copy } from './delta/SimpleOperations';
 
 export default class SortArray {
     private data: Record[];
-    constructor(private state: SortState, public arrayId: number, data: number[]) {
+    constructor(private state: SortState, public arrayId: number, public offset: number, data: number[]) {
         this.data = [];
         for (let i = 0; i < data.length; i++) {
             this.data.push(new Record(state, this, data[i], i));

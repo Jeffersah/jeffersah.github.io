@@ -10,7 +10,7 @@ export class CreateSubArray implements IDelta {
         this.complexity = EComplexity.Get;
     }
     apply(state: SortState): void {
-        this.array.internalFill([]);
+        this.array.internalFill(new Array(this.startingSize));
         state.internalCreateArray(this.array);
     }
     rollback(state: SortState): void {

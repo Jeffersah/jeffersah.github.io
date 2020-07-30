@@ -73,10 +73,12 @@ export default function SortVisPlaybackComponent(props: { state: SortState }) {
         p.repaint(canvas, ctx, state, deltas);
     }
 
-    return <div className='flex-row'>
+    return <div className='flex row'>
         <canvas id='canvas'></canvas>
-        <div className='flex-col'>
-            <div className='flex-row'> Display:<Dropdown
+        <div className='flex col'>
+            <div className='flex row'>
+                <span>Display:</span>
+                <Dropdown
                     options={allPainters.map(algo => algo.name)}
                     value={painter.name}
                     onChange={ch => setCurrentPainter(first(allPainters, algo => algo.name === ch.value))} />
@@ -87,16 +89,16 @@ export default function SortVisPlaybackComponent(props: { state: SortState }) {
                 repaint(props.state, [], painter);
             }} />
             <span>Step {deltaIndex} / {props.state.totalDeltas()}</span>
-            <div className='flex-row'>
+            <div className='flex row'>
                 <button onClick={() => { props.state.seekTo(0); updateDeltaIndex(); repaint(props.state, [], painter); }}>&lt;&lt;&lt;</button>
-                <button onClick={() => { const deltas = props.state.rollbackUntil(-1, EComplexity.Swap); updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&lt;&lt;</button>
+                <button onClick={() => { const deltas = props.state.rollbackUntil(-1, EComplexity.Set); updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&lt;&lt;</button>
                 <button onClick={() => { const deltas = [props.state.rollback()]; updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&lt;</button>
                 <button onClick={() => { const deltas = [props.state.apply()]; updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&gt;</button>
-                <button onClick={() => { const deltas = props.state.applyUntil(-1, EComplexity.Swap); updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&gt;&gt;</button>
+                <button onClick={() => { const deltas = props.state.applyUntil(-1, EComplexity.Set); updateDeltaIndex(); repaint(props.state, deltas, painter); }}>&gt;&gt;</button>
                 <button onClick={() => { props.state.seekTo(props.state.totalDeltas()); updateDeltaIndex(); repaint(props.state, [], painter); }}>&gt;&gt;&gt;</button>
             </div>
             <span>Autoplay:</span>
-            <div className='flex-row'>
+            <div className='flex row'>
                 <span>Speed: </span>
                 <input type='range' min={0} max={1} step={0.01} value={currentSpeed} onChange={ev => setCurrentSpeed(ev.target.valueAsNumber)} />
                 <button onClick={() => setAutoplaying(!autoplaying)}>{autoplaying ? 'Pause' : 'Play'}</button>

@@ -10,12 +10,15 @@ export default class SortState {
     public currentDeltaIndex: number;
     public maxValue: number;
     private initialValue: number[];
+    private nextDecoratorId: number;
+    private requiresMemoryAllocation: boolean;
+    public allArrayInfo: {arrId: number, offset: number, length: number}[];
 
     constructor(data: number[]) {
         this.initialValue = data;
         this.deltas = [];
         this.arrays = [
-            new SortArray(this, 0, data)
+            new SortArray(this, 0, 0, data)
         ];
         this.maxValue = 0;
         for (const d of data) {
@@ -23,6 +26,13 @@ export default class SortState {
         }
         this.nextArrayId = 1;
         this.currentDeltaIndex = 0;
+        this.nextDecoratorId = 0;
+        this.requiresMemoryAllocation = false;
+        this.allArrayInfo = [{
+            arrId: 0,
+            offset: 0,
+            length: data.length
+        }];
     }
 
     pushDelta(delta: IDelta) {
@@ -110,10 +120,12 @@ export default class SortState {
         return this.arrays[index];
     }
 
-    createArray(): SortArray {
-        const newArr = new SortArray(this, this.nextArrayId++, []);
+    createArray(length?: number, offset?: number): SortArray {
+        this.requiresMemoryAllocation = true;
+        this.allArrayInfo.push({arrId: this.nextArrayId, offset: offset === undefined ? 0 : offset, length: length === undefined ? 0 : length});
+        const newArr = new SortArray(this, this.nextArrayId++, offset === undefined ? 0 : offset, new Array(length === undefined ? 0 : length));
         this.arrays.push(newArr);
-        this.deltas.push(new CreateSubArray(newArr, 0, 0));
+        this.deltas.push(new CreateSubArray(newArr, length, offset));
         return newArr;
     }
 
@@ -133,5 +145,9 @@ export default class SortState {
                 return;
             }
         }
+    }
+
+    doesRequireMemory(): boolean {
+        return this.requiresMemoryAllocation;
     }
 }
