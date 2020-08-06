@@ -33,3 +33,25 @@ export function first<T>(items: T[], predicate: (item: T) => boolean): T {
     }
     return undefined;
 }
+
+export function zip<TA, TB, TO>(a: TA[], b: TB[], zipper: (a: TA, b: TB) => TO): TO[] {
+    const results = [];
+    for (let i = 0; i < a.length && i < b.length; i++) {
+        results.push(zipper(a[i], b[i]));
+    }
+    return results;
+}
+
+export function all<T>(items: T[], op: (item: T) => boolean) {
+    for (const item of items) {
+        if (!op(item))return false;
+    }
+    return true;
+}
+
+export function any<T>(items: T[], op: (item: T) => boolean) {
+    for (const item of items) {
+        if (op(item))return true;
+    }
+    return false;
+}

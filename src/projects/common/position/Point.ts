@@ -76,4 +76,21 @@ export default class Point {
     public Equals(other: Point): boolean {
         return this.x === other.x && this.y === other.y;
     }
+
+    static Add(a: Point, b: Point): Point {
+        return new Point(a.x + b.x, a.y + b.y);
+    }
+
+    static Multiply(a: Point, s: number, sy?: number): Point;
+    static Multiply(a: Point, b: Point): Point;
+    static Multiply(a: Point, b: Point|number, sy ?: number): Point {
+        if (sy !== undefined) {
+            return new Point(a.x * (b as number), a.y * sy);
+        }
+        else if ((b as any).x !== undefined) {
+            return new Point(a.x * (b as Point).x, a.y * (b as Point).y);
+        } else {
+            return new Point(a.x * (b as number), a.y * (b as number));
+        }
+    }
 }

@@ -1,3 +1,5 @@
+import { RotTransformCanvas } from "../CanvasHelpers";
+
 export class SpriteSheet {
     public image: HTMLImageElement;
     public tilesWide: number;
@@ -34,6 +36,23 @@ export class SpriteSheet {
             tw,
             th
         );
+    }
+
+    rotrender(
+            ctx: CanvasRenderingContext2D,
+            tx: number,
+            ty: number,
+            tw: number,
+            th: number,
+            srcx: number,
+            srcy: number,
+            rot: number,
+            originx: number,
+            originy: number) {
+        ctx.save();
+        RotTransformCanvas(ctx, tx, ty, originx, originy, rot);
+        ctx.drawImage(this.image, srcx * this.spriteWidth, srcy * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0, 0, tw, th);
+        ctx.restore();
     }
 
     renderCustom(ctx: CanvasRenderingContext2D, tx: number, ty: number, tw: number, th: number, srcx: number, srcy: number, twid: number, thei: number) {

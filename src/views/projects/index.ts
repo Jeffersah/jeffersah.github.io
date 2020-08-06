@@ -11,6 +11,7 @@ import { TechRenderComponent } from './tech-render/TechRenderComponent';
 import { ProjectsComponent } from './projects';
 import BulletsComponent from './bullets/BulletsComponent';
 import { SortVisWrapper } from './sortVis/SortVisWrapper';
+import { CoreWarComponent } from './corewar/CoreWarComponent';
 
 export interface IProject {
     projectName: string;
@@ -73,6 +74,12 @@ export const AllProjects: IProject[] = [
         projectName: 'sortvis',
         projectTitle: 'Sort Visualizer',
         projectComponent: SortVisWrapper
+    },
+
+    {
+        projectName: 'corewar',
+        projectTitle: 'Core War',
+        projectComponent: CoreWarComponent
     },
 
     {

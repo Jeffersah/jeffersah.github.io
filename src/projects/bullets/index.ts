@@ -1,38 +1,64 @@
 import AssetLoader from '../common/assets/AssetLoader';
 import Const from './const';
 import NearestNeighborScalingHelper from '../common/NearestNeighborScalingHelper';
-import { NearestNeighborScaling } from '../common/CanvasHelpers';
+import { NearestNeighborScaling, RotTransformCanvas } from '../common/CanvasHelpers';
+import { SpriteSheet } from '../common/assets/SpriteSheet';
+import entitySheetUrl from './assets/bullets_entities.png';
+import playerUrl from './assets/bullets_ship.png';
+import ImageLoader from '../common/assets/ImageLoader';
+import Player from './Player';
+import KeyboardManager from '../common/input/KeyboardManager';
+import KeyState from '../common/input/KeyState';
+import Point from '../common/position/Point';
 
 let scalingHelper: NearestNeighborScalingHelper;
 
 export default function Run() {
+    const assetLoader = new AssetLoader();
+    const entitySheet = new SpriteSheet(8, 16, entitySheetUrl, assetLoader.registerAssetLoadCallback());
+
+    assetLoader.onAllFinished(() => onLoadDone(entitySheet));
+}
+
+function onLoadDone(entitySheet: SpriteSheet) {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
     scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.Width, Const.Height, true, () => { return; });
     NearestNeighborScaling(ctx);
-    repaintLoop(canvas, ctx);
+
+    const keys = new KeyboardManager(document.body, false);
+    const player = new Player(entitySheet);
+
+    repaintLoop(player, keys, canvas, ctx);
 }
 
-function repaintLoop(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-    repaint(canvas, ctx);
-    requestAnimationFrame(() => repaintLoop(canvas, ctx));
+function repaintLoop(player: Player, keys: KeyboardManager, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    keys.update();
+    player.tick(keys);
+    repaint(player, canvas, ctx);
+    requestAnimationFrame(() => repaintLoop(player, keys, canvas, ctx));
 }
 
-function repaint(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = '#BBB';
-    ctx.globalCompositeOperation = 'multiply';
+function repaint(player: Player, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    NearestNeighborScaling(ctx);
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, Const.Width, Const.Height);
+    ctx.save();
 
+    const focusPoint = Point.Add(player.position, Point.Multiply(player.velocity, 10));
 
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = '#888';
-    for (let y = 0; y < Const.Height; y += 2) {
-        let density = y / Const.Height;
-        density = density * density;
-        for (let x = 0; x < Const.Width; x += 2) {
-            if (Math.random() < density) {
-                ctx.fillRect(x, y, 2, 2);
-            }
-        }
+    ctx.translate(-(focusPoint.x - Const.Width / 2), -(focusPoint.y - Const.Height / 2));
+    ctx.fillStyle = 'gray';
+
+    // Render some bg lines so we can see motion
+    for (let ty = Math.floor((focusPoint.y - Const.Height / 2) / 100) * 100; ty <= Math.floor((focusPoint.y + Const.Height / 2) / 100) * 100; ty += 100) {
+        ctx.fillRect(focusPoint.x - Const.Width / 2, ty, Const.Width, 1);
     }
+
+    for (let tx = Math.floor((focusPoint.x - Const.Width / 2) / 100) * 100; tx <= Math.floor((focusPoint.x + Const.Width / 2) / 100) * 100; tx += 100) {
+        ctx.fillRect(tx, focusPoint.y - Const.Height / 2, 1, Const.Height);
+    }
+
+    player.render(ctx);
+    ctx.restore();
 }
