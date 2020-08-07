@@ -7,9 +7,9 @@ import Angle from '../common/position/Angle';
 
 const PHYS = {
     acceleration: 0.2,
-    maxvelocity: 120,
+    maxvelocity: 20,
     vFricMin: 0.998,
-    vFricMax: 0.98,
+    vFricMax: 0.99,
 
     engineAdjSpeed: 0.06,
 
@@ -77,18 +77,20 @@ export default class Player {
             this.velocity.y += PHYS.acceleration * Math.sin(this.rotation);
         }
 
-        let vTotal = this.velocity.LengthSq();
+        let vTotal = this.velocity.Length();
+        let vAngle = this.velocity.Direction();
+
         if (vTotal >= PHYS.maxvelocity) {
-            const mult = PHYS.maxvelocity / vTotal;
-            this.velocity.MultWith(mult, mult);
             vTotal = PHYS.maxvelocity;
         }
 
-        let anglePullAmt = -Math.sin(diffDir);
+        let anglePullAmt = Math.sin(diffDir);
         anglePullAmt *= Math.min(vTotal / PHYS.turnPullMaxV, 1);
         anglePullAmt *= PHYS.turnPullMax;
 
-        this.angularVelocity += anglePullAmt;
+        vAngle += anglePullAmt;
+        this.velocity.x = Math.cos(vAngle) * vTotal;
+        this.velocity.y = Math.sin(vAngle) * vTotal;
 
 
         this.position.AddWith(this.velocity);

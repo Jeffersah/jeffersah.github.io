@@ -33,6 +33,11 @@ export default class Point {
         return Point.Dot(this, other);
     }
 
+
+    public Direction(): number {
+        return Math.atan2(this.y, this.x);
+    }
+
     public AddWith(x: number, y: number): this;
     public AddWith(other: Point): this;
     public AddWith(other: number|Point, y?: number): this {

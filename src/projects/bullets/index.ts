@@ -50,13 +50,15 @@ function repaint(player: Player, canvas: HTMLCanvasElement, ctx: CanvasRendering
     ctx.translate(-(focusPoint.x - Const.Width / 2), -(focusPoint.y - Const.Height / 2));
     ctx.fillStyle = 'gray';
 
+    const bg_line_size = 400;
+
     // Render some bg lines so we can see motion
-    for (let ty = Math.floor((focusPoint.y - Const.Height / 2) / 100) * 100; ty <= Math.floor((focusPoint.y + Const.Height / 2) / 100) * 100; ty += 100) {
-        ctx.fillRect(focusPoint.x - Const.Width / 2, ty, Const.Width, 1);
+    for (let ty = Math.floor((focusPoint.y - Const.Height / 2) / bg_line_size) * bg_line_size; ty <= Math.floor((focusPoint.y + Const.Height / 2) / bg_line_size) * bg_line_size; ty += bg_line_size) {
+        ctx.fillRect(focusPoint.x - Const.Width / 2, ty, Const.Width, 3);
     }
 
-    for (let tx = Math.floor((focusPoint.x - Const.Width / 2) / 100) * 100; tx <= Math.floor((focusPoint.x + Const.Width / 2) / 100) * 100; tx += 100) {
-        ctx.fillRect(tx, focusPoint.y - Const.Height / 2, 1, Const.Height);
+    for (let tx = Math.floor((focusPoint.x - Const.Width / 2) / bg_line_size) * bg_line_size; tx <= Math.floor((focusPoint.x + Const.Width / 2) / bg_line_size) * bg_line_size; tx += bg_line_size) {
+        ctx.fillRect(tx, focusPoint.y - Const.Height / 2, 3, Const.Height);
     }
 
     player.render(ctx);
