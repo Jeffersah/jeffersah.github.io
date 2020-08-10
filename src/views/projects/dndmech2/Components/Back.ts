@@ -16,5 +16,5 @@ export const backComponents: IMechComponent[] = [
 }, {
     name: 'Nanite Armor System',
     description: 'Grant +1 Permanent armor to any component, and grant +1 armor to two other components',
-    getCustomComponent: NaniteArmor,
+    getCustomComponent: NaniteArmor
 }];
