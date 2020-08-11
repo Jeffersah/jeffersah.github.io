@@ -1,16 +1,19 @@
 import { ResizeCanvas } from '../common/CanvasHelpers';
 import { mat4 } from 'gl-matrix';
 import DistanceEstimateBuilder from './debuilder/DistanceEstimateBuilder';
-import { BoundingBoxDE, SphereDE, BoxDE } from './debuilder/DistanceEstimatePrimitives';
+import { BoundingBoxDE, SphereDE, BoxDE, MengerSpongeDE } from './debuilder/DistanceEstimatePrimitives';
 import KeyboardManager from '../common/input/KeyboardManager';
+import Quaternion from '../common/3d/Quaternion';
+import Vector from '../common/3d/Vector';
 
 // TODO: Use asset loader to load these?
 
 const distanceFunc: DistanceEstimateBuilder =
-    new DistanceEstimateBuilder(new BoundingBoxDE(0.3, 0.3, 0.3, 0.05))
-        .repeat(2.2, 3, 3)
-        .rXt()
-        .rZt();
+    new DistanceEstimateBuilder(new MengerSpongeDE(3, new Vector(1.01, 1, 1), 100, 10))
+        .symAxis(1, 0.2, 0)
+        .symAxis(-1, .2, 0)
+        .rXt(0.1)
+        .rYt(0.01);
 
 const dglsl = distanceFunc.emitGlsl();
 
@@ -30,10 +33,11 @@ precision mediump float;
 
 uniform vec2 WindowSize;
 uniform vec3 cam_pos;
+uniform vec4 cam_orient;
 uniform float t;
 
-const int MaximumRaySteps = 300;
-const float MinimumDistance = 0.01;
+const int MaximumRaySteps = 50;
+const float MinimumDistance = 0.001;
 const float MaxFogDist = 100.0;
 
 const float nscale = 0.001;
@@ -42,6 +46,53 @@ const vec3 ydir = vec3(0.0, 1.0, 0.0);
 const vec3 zdir = vec3(0.0, 0.0, 1.0);
 const vec3 lightdir = normalize(vec3(1.0, 0.0, -1.0));
 
+const float scale = 3.0;
+const vec3 C = vec3(1, 1, 1);
+const int MI = 100;
+const float bailout = 10.0;
+
+vec4 qInverse(vec4 q) {
+    float denom = dot(q, q);
+    return q / denom;
+}
+
+vec4 qMult(vec4 a, vec4 b) {
+    vec4 res = vec4(0.0, 0.0, 0.0, 0.0);
+    res.x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
+    res.y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
+    res.z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
+    res.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
+    return res;
+}
+
+vec4 qTransform(vec4 f, vec4 pt) {
+    return qMult(f, qMult(pt, qInverse(f)));
+}
+
+// float dist(vec3 p) {
+//     float r = dot(p, p);
+//     int numi = 0;
+//     for(int i = 0; i < MI; i++){
+//         numi = i;
+//         if(r >= bailout) break;
+
+//         // Rotate 1
+        
+//         p = abs(p);
+//         if(p.x - p.y < 0.0){ float x1=p.y; p.y=p.x; p.x=x1;}
+//         if(p.x - p.z < 0.0){ float x1=p.z; p.z=p.x; p.x=x1;}
+//         if(p.y - p.z < 0.0){ float y1=p.z; p.z=p.y; p.y=y1;}
+ 
+//         // Rotate 2
+
+//         p.xy = scale * p.xy - C.xy * (scale-1.0);
+//         p.z=scale*p.z;
+//         if(p.z>0.5*C.z*(scale-1.0)) p.z-=C.z*(scale-1.0);
+       
+//         r = dot(p, p);
+//     }
+//     return (length(p)-2.0)*pow(scale,-float(numi));
+// }
 ${dglsl}
 
 vec3 trace(vec3 from, vec3 direction) {
@@ -70,7 +121,8 @@ void main() {
 
     float losx = (gl_FragCoord.x / WindowSize.x) * 2.0 - 1.0;
     float losy = (gl_FragCoord.y / WindowSize.y) * 2.0 - 1.0;
-    vec3 dir = normalize(vec3(losx, losy, 1.0));
+    vec3 losFwd = normalize(vec3(losx, losy, 1));
+    vec3 dir = qTransform(cam_orient, vec4(losFwd.x, losFwd.y, losFwd.z, 0)).xyz;
 
     vec3 colis = trace(cam_pos, dir);
 
@@ -100,7 +152,8 @@ const camMove = 0.1;
 const cam = {x: 0, y: 0, z: -2};
 let keys: KeyboardManager;
 let repaintCount = 0;
-let repaintTLoop = 60;
+let camRotation: Quaternion = new Quaternion(1, 0, 0, 0);
+
 const moveKeys: [string, {x: number, y: number, z: number}][] = [
     ['w', {x: 0, y: 0, z: 1}],
     ['a', {x: -1, y: 0, z: 0}],
@@ -108,6 +161,14 @@ const moveKeys: [string, {x: number, y: number, z: number}][] = [
     ['d', {x: 1, y: 0, z: 0}],
     ['q', {x: 0, y: 1, z: 0}],
     ['z', {x: 0, y: -1, z: 0}],
+];
+
+const camTurnRate = Math.PI / 60;
+const lookKeys: [string, Vector][] = [
+    ['ArrowUp', new Vector(1, 0, 0)],
+    ['ArrowDown', new Vector(-1, 0, 0)],
+    ['ArrowLeft', new Vector(0, 1, 0)],
+    ['ArrowRight', new Vector(0, -1, 0)],
 ];
 
 export default function main() {
@@ -147,6 +208,12 @@ function renderLoop(gl: WebGLRenderingContext, program: WebGLProgram, buffers: {
             cam.y += dir.y * camMove;
             cam.z += dir.z * camMove;
             doRepaint = true;
+        }
+    }
+
+    for (const [key, axis] of lookKeys) {
+        if (keys.isKeyDown(key)) {
+            camRotation = Quaternion.multiply(Quaternion.axisRotation(axis, camTurnRate), camRotation);
         }
     }
 
@@ -191,8 +258,9 @@ function drawScene(gl: WebGLRenderingContext, program: WebGLProgram, buffers: { 
     gl.useProgram(program);
     gl.uniform2fv(gl.getUniformLocation(program, 'WindowSize'), [canvas.width, canvas.height]);
     gl.uniform3fv(gl.getUniformLocation(program, 'cam_pos'), [cam.x, cam.y, cam.z]);
-    gl.uniform1f(gl.getUniformLocation(program, 't'), (repaintCount / repaintTLoop));
-    repaintCount = (repaintCount + 1) % repaintTLoop;
+    gl.uniform4fv(gl.getUniformLocation(program, 'cam_orient'), [camRotation.i, camRotation.j, camRotation.k, camRotation.real]);
+    gl.uniform1f(gl.getUniformLocation(program, 't'), repaintCount);
+    repaintCount = (repaintCount + 1);
     {
       const offset = 0;
       const vertexCount = 4;

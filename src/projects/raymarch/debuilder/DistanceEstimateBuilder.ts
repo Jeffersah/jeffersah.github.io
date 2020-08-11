@@ -1,4 +1,4 @@
-import IDEPrimitive, { glslVec3Const, glslFloatConst } from './DistanceEstimatePrimitives';
+import IDEPrimitive, { glslVec3Const, glslFloatConst, glslUnitVec3Const } from './DistanceEstimatePrimitives';
 
 export default class DistanceEstimateBuilder {
     private glsl: string;
@@ -18,43 +18,62 @@ export default class DistanceEstimateBuilder {
     }
 
     public repeat(xd: number, yd: number, zd: number): DistanceEstimateBuilder {
-        const glsl_c = glslVec3Const(xd, yd, zd);
-        this.glsl += `p = mod(p+0.5*${glsl_c},${glsl_c})-0.5*${glsl_c};\r\n`;
+        const glslc = glslVec3Const(xd, yd, zd);
+        this.glsl += `p = mod(p+0.5*${glslc},${glslc})-0.5*${glslc};\r\n`;
         return this;
     }
 
     public symX(): DistanceEstimateBuilder {
-        this.glsl += `p = vec3(abs(p.x), p.y, p.z);\r\n`;
+        this.glsl += `p.x = abs(p.x);\r\n`;
         return this;
     }
 
-    public rXt(): DistanceEstimateBuilder {
+    public symY(): DistanceEstimateBuilder {
+        this.glsl += `p.y = abs(p.y);\r\n`;
+        return this;
+    }
+
+    public symZ(): DistanceEstimateBuilder {
+        this.glsl += `p.z = abs(p.z);\r\n`;
+        return this;
+    }
+
+    public symAxis(normalX: number, normalY: number, normalZ: number) {
+        const glslc = glslUnitVec3Const(normalX, normalY, normalZ);
+        this.glsl += `p -= 2.0 * min(0.00, dot(p, ${glslc})) * ${glslc};\r\n`;
+        return this;
+    }
+
+    public rXt(rate: number): DistanceEstimateBuilder {
         const mtx = this.getTempVarName();
+        const radians = 'PI * t/30.0 * ' + glslFloatConst(rate);
         this.glsl += `mat3 ${mtx} = mat3(
             1.0, 0.0, 0.0,
-            0.0, cos(PI * t), sin(PI * t),
-            0.0, -sin(PI * t), cos(PI * t)
+            0.0, cos(${radians}), sin(${radians}),
+            0.0, -sin(${radians}), cos(${radians})
         );
         p = ${mtx} * p;\r\n`;
         return this;
     }
 
-    public rYt(): DistanceEstimateBuilder {
+    public rYt(rate: number): DistanceEstimateBuilder {
         const mtx = this.getTempVarName();
+        const radians = 'PI * t/30.0 * ' + glslFloatConst(rate);
         this.glsl += `mat3 ${mtx} = mat3(
-            cos(PI * t), 0.0, -sin(PI * t),
+            cos(${radians}), 0.0, -sin(${radians}),
             0.0, 1.0, 0.0,
-            sin(PI * t), 0.0, cos(PI * t)
+            sin(${radians}), 0.0, cos(${radians})
         );
         p = ${mtx} * p;\r\n`;
         return this;
     }
 
-    public rZt(): DistanceEstimateBuilder {
+    public rZt(rate: number): DistanceEstimateBuilder {
         const mtx = this.getTempVarName();
+        const radians = 'PI * t/30.0 * ' + glslFloatConst(rate);
         this.glsl += `mat3 ${mtx} = mat3(
-            cos(PI * t), sin(PI * t), 0.0,
-            -sin(PI * t), cos(PI * t), 0.0,
+            cos(${radians}), sin(${radians}), 0.0,
+            -sin(${radians}), cos(${radians}), 0.0,
             0.0, 0.0, 1.0
         );
         p = ${mtx} * p;\r\n`;
@@ -66,8 +85,13 @@ export default class DistanceEstimateBuilder {
         return this;
     }
 
+    public customGlsl(glsl: string) {
+        this.glsl += glsl;
+        return this;
+    }
+
     public emitGlsl(): string {
-        this.glsl += this.primitive.emitGlsl('p');
+        this.glsl += this.primitive.emitGlsl();
         this.glsl += '}';
         return this.glsl;
     }
