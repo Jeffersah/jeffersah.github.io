@@ -53,7 +53,7 @@ const float bailout = 10.0;
 
 vec4 qInverse(vec4 q) {
     float denom = dot(q, q);
-    return q / denom;
+    return vec4(-q.x / denom, -q.y / denom, -q.z / denom, q.w / denom);
 }
 
 vec4 qMult(vec4 a, vec4 b) {
@@ -69,30 +69,6 @@ vec4 qTransform(vec4 f, vec4 pt) {
     return qMult(f, qMult(pt, qInverse(f)));
 }
 
-// float dist(vec3 p) {
-//     float r = dot(p, p);
-//     int numi = 0;
-//     for(int i = 0; i < MI; i++){
-//         numi = i;
-//         if(r >= bailout) break;
-
-//         // Rotate 1
-        
-//         p = abs(p);
-//         if(p.x - p.y < 0.0){ float x1=p.y; p.y=p.x; p.x=x1;}
-//         if(p.x - p.z < 0.0){ float x1=p.z; p.z=p.x; p.x=x1;}
-//         if(p.y - p.z < 0.0){ float y1=p.z; p.z=p.y; p.y=y1;}
- 
-//         // Rotate 2
-
-//         p.xy = scale * p.xy - C.xy * (scale-1.0);
-//         p.z=scale*p.z;
-//         if(p.z>0.5*C.z*(scale-1.0)) p.z-=C.z*(scale-1.0);
-       
-//         r = dot(p, p);
-//     }
-//     return (length(p)-2.0)*pow(scale,-float(numi));
-// }
 ${dglsl}
 
 vec3 trace(vec3 from, vec3 direction) {
@@ -128,7 +104,7 @@ void main() {
 
     if(colis.z == 0.0)
     {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(0, 0, 0, 1.0);
     }
     else
     {
@@ -142,8 +118,8 @@ void main() {
         float fog = 1.0 - min(1.0, colis.x / MaxFogDist);
         float cplx = colis.y;
 
-        float brightness = max(dot(n, lightdir), 0.1) * fog * cplx;
-        gl_FragColor = vec4(brightness, brightness, brightness, 1.0);
+        float brightness = max(dot(n, lightdir), 0.1) * fog;
+        gl_FragColor = vec4(brightness * cplx, brightness * cplx, brightness, 1.0);
     }
 }
 `;
@@ -154,16 +130,16 @@ let keys: KeyboardManager;
 let repaintCount = 0;
 let camRotation: Quaternion = new Quaternion(1, 0, 0, 0);
 
-const moveKeys: [string, {x: number, y: number, z: number}][] = [
-    ['w', {x: 0, y: 0, z: 1}],
-    ['a', {x: -1, y: 0, z: 0}],
-    ['s', {x: 0, y: 0, z: -1}],
-    ['d', {x: 1, y: 0, z: 0}],
-    ['q', {x: 0, y: 1, z: 0}],
-    ['z', {x: 0, y: -1, z: 0}],
+const moveKeys: [string, Vector][] = [
+    ['w', new Vector(0, 0, 1)],
+    ['a', new Vector(-1, 0, 0)],
+    ['s', new Vector(0, 0, -1)],
+    ['d', new Vector(1, 0, 0)],
+    ['q', new Vector(0, 1, 0)],
+    ['z', new Vector(0, -1, 0)],
 ];
 
-const camTurnRate = Math.PI / 60;
+const camTurnRate = -Math.PI / 120;
 const lookKeys: [string, Vector][] = [
     ['ArrowUp', new Vector(1, 0, 0)],
     ['ArrowDown', new Vector(-1, 0, 0)],
@@ -204,16 +180,17 @@ function renderLoop(gl: WebGLRenderingContext, program: WebGLProgram, buffers: {
 
     for (const [key, dir] of moveKeys) {
         if (keys.isKeyDown(key)) {
-            cam.x += dir.x * camMove;
-            cam.y += dir.y * camMove;
-            cam.z += dir.z * camMove;
+            const rel = camRotation.applyTransform(dir);
+            cam.x += rel.x * camMove;
+            cam.y += rel.y * camMove;
+            cam.z += rel.z * camMove;
             doRepaint = true;
         }
     }
 
     for (const [key, axis] of lookKeys) {
         if (keys.isKeyDown(key)) {
-            camRotation = Quaternion.multiply(Quaternion.axisRotation(axis, camTurnRate), camRotation);
+            camRotation = Quaternion.multiply(camRotation, Quaternion.axisRotation(axis, camTurnRate));
         }
     }
 
