@@ -84,3 +84,49 @@ for(int i = 0; i < MI; i++){
 return (length(p)-2.0)*pow(scale,-float(numi));\r\n`;
     }
 }
+
+
+// tslint:disable-next-line: max-classes-per-file
+export class RotaryMengerSpongeDE implements IDEPrimitive {
+    constructor(private scale: number, private c: Vector, private maxIterations: number, private bailoutRange: number, private rRate: number) {
+
+    }
+
+    emitGlsl() {
+        const radians = 'PI * t/30.0 * ' + glslFloatConst(this.rRate);
+        return `
+mat3 mx = mat3(
+    cos(${radians}), 0.0, -sin(${radians}),
+    0.0, 1.0, 0.0,
+    sin(${radians}), 0.0, cos(${radians})
+);
+
+const float bailout = ${glslFloatConst(this.bailoutRange)};
+const vec3 C = ${glslVec3Const(this.c.x, this.c.y, this.c.z)};
+const float scale = ${glslFloatConst(this.scale)};
+const int MI = ${this.maxIterations};
+float r = dot(p, p);
+int numi = 0;
+for(int i = 0; i < MI; i++){
+    numi = i;
+    if(r >= bailout) break;
+
+    // Rotate 1
+    p = mx * p;
+    
+    p = abs(p);
+    if(p.x - p.y < 0.0){ float x1=p.y; p.y=p.x; p.x=x1;}
+    if(p.x - p.z < 0.0){ float x1=p.z; p.z=p.x; p.x=x1;}
+    if(p.y - p.z < 0.0){ float y1=p.z; p.z=p.y; p.y=y1;}
+
+    // Rotate 2
+
+    p.xy = scale * p.xy - C.xy * (scale-1.0);
+    p.z=scale*p.z;
+    if(p.z>0.5*C.z*(scale-1.0)) p.z-=C.z*(scale-1.0);
+    
+    r = dot(p, p);
+}
+return (length(p)-2.0)*pow(scale,-float(numi));\r\n`;
+    }
+}

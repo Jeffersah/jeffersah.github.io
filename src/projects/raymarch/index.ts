@@ -1,7 +1,7 @@
 import { ResizeCanvas } from '../common/CanvasHelpers';
 import { mat4 } from 'gl-matrix';
 import DistanceEstimateBuilder from './debuilder/DistanceEstimateBuilder';
-import { BoundingBoxDE, SphereDE, BoxDE, MengerSpongeDE } from './debuilder/DistanceEstimatePrimitives';
+import { BoundingBoxDE, SphereDE, BoxDE, MengerSpongeDE, RotaryMengerSpongeDE } from './debuilder/DistanceEstimatePrimitives';
 import KeyboardManager from '../common/input/KeyboardManager';
 import Quaternion from '../common/3d/Quaternion';
 import Vector from '../common/3d/Vector';
@@ -9,11 +9,15 @@ import Vector from '../common/3d/Vector';
 // TODO: Use asset loader to load these?
 
 const distanceFunc: DistanceEstimateBuilder =
-    new DistanceEstimateBuilder(new MengerSpongeDE(3, new Vector(1.01, 1, 1), 100, 10))
-        .symAxis(1, 0.2, 0)
-        .symAxis(-1, .2, 0)
-        .rXt(0.1)
-        .rYt(0.01);
+    new DistanceEstimateBuilder(new MengerSpongeDE(3, new Vector(1, 1, 1), 100, 100))
+        .symAxis(.8, 0.2, 0)
+        .symAxis(-.8, .2, 0)
+        .symAxis(.4, 0.6, 0)
+        .symAxis(-.4, .6, 0)
+        .rXt(0.01)
+        .rYt(0.001)
+        .rZt(-.0003)
+        ;
 
 const dglsl = distanceFunc.emitGlsl();
 
@@ -28,7 +32,7 @@ void main() {
 `;
 
 const fragmentShaderSource = `
-precision mediump float;
+precision highp float;
 #define PI 3.1415926538
 
 uniform vec2 WindowSize;
@@ -37,14 +41,19 @@ uniform vec4 cam_orient;
 uniform float t;
 
 const int MaximumRaySteps = 50;
-const float MinimumDistance = 0.001;
-const float MaxFogDist = 100.0;
+const float MinimumDistance = 0.0001;
+const float MaxFogDist = 20.0;
 
 const float nscale = 0.001;
 const vec3 xdir = vec3(1.0, 0.0, 0.0);
 const vec3 ydir = vec3(0.0, 1.0, 0.0);
 const vec3 zdir = vec3(0.0, 0.0, 1.0);
 const vec3 lightdir = normalize(vec3(1.0, 0.0, -1.0));
+const vec3 lightsrc = lightdir * 10.0;
+const vec3 amblight = vec3(0.1, 0.1, 0.1);
+const vec3 normlight = vec3(1, .95, .9);
+const float ambocc = 0.2;
+const float shadowLightness = .3;
 
 const float scale = 3.0;
 const vec3 C = vec3(1, 1, 1);
@@ -109,22 +118,31 @@ void main() {
     else
     {
         vec3 pos = cam_pos + colis.x * dir;
+        vec3 dlight = 1.0 - amblight;
         vec3 n = normalize(vec3(
             dist(pos+xdir*nscale)-dist(pos-xdir*nscale),
             dist(pos+ydir*nscale)-dist(pos-ydir*nscale),
             dist(pos+zdir*nscale)-dist(pos-zdir*nscale)
         ));
+
+        vec3 lightCastSrc = pos + n * MinimumDistance * 2.0;
+        vec3 lcolis = trace(lightCastSrc, normalize(lightsrc - lightCastSrc));
+
+        float shadow = 1.0 - lcolis.z;
+        shadow = min(shadow + shadowLightness, 1.0);
+
+        float normalLightAmt = clamp(dot(n, lightdir), 0.0, 1.0);
                         
         float fog = 1.0 - min(1.0, colis.x / MaxFogDist);
         float cplx = colis.y;
 
-        float brightness = max(dot(n, lightdir), 0.1) * fog;
-        gl_FragColor = vec4(brightness * cplx, brightness * cplx, brightness, 1.0);
+        vec3 color = (amblight + (1.0 - amblight) * normlight * normalLightAmt * (1.0 - ambocc + ambocc * colis.y)) * fog * shadow;
+        gl_FragColor = vec4(color.x, color.y, color.z, 1.0);
     }
 }
 `;
 
-const camMove = 0.1;
+const camMove = 0.05;
 const cam = {x: 0, y: 0, z: -2};
 let keys: KeyboardManager;
 let repaintCount = 0;
