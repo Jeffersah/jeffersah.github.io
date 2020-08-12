@@ -80,6 +80,43 @@ export default class DistanceEstimateBuilder {
         return this;
     }
 
+    
+    public rX(rad: number): DistanceEstimateBuilder {
+        const mtx = this.getTempVarName();
+        const radians = glslFloatConst(rad);
+        this.glsl += `mat3 ${mtx} = mat3(
+            1.0, 0.0, 0.0,
+            0.0, cos(${radians}), sin(${radians}),
+            0.0, -sin(${radians}), cos(${radians})
+        );
+        p = ${mtx} * p;\r\n`;
+        return this;
+    }
+
+    public rY(rad: number): DistanceEstimateBuilder {
+        const mtx = this.getTempVarName();
+        const radians = glslFloatConst(rad);
+        this.glsl += `mat3 ${mtx} = mat3(
+            cos(${radians}), 0.0, -sin(${radians}),
+            0.0, 1.0, 0.0,
+            sin(${radians}), 0.0, cos(${radians})
+        );
+        p = ${mtx} * p;\r\n`;
+        return this;
+    }
+
+    public rZ(rad: number): DistanceEstimateBuilder {
+        const mtx = this.getTempVarName();
+        const radians = glslFloatConst(rad);
+        this.glsl += `mat3 ${mtx} = mat3(
+            cos(${radians}), sin(${radians}), 0.0,
+            -sin(${radians}), cos(${radians}), 0.0,
+            0.0, 0.0, 1.0
+        );
+        p = ${mtx} * p;\r\n`;
+        return this;
+    }
+
     public translate(x: number, y: number, z: number): DistanceEstimateBuilder {
         this.glsl += `p = p-${glslVec3Const(x, y, z)};\r\n`;
         return this;

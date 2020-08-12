@@ -142,7 +142,8 @@ void main() {
 }
 `;
 
-const camMove = 0.05;
+const fastCamMove = 0.05;
+const camMove = 0.005;
 const cam = {x: 0, y: 0, z: -2};
 let keys: KeyboardManager;
 let repaintCount = 0;
@@ -188,7 +189,7 @@ export default function main() {
     // Draw the scene
     drawScene(gl, shaderProgram, buffers, canvas);
 
-    keys = new KeyboardManager(document.body, false);
+    keys = new KeyboardManager(document.body, true);
     renderLoop(gl, shaderProgram, buffers, canvas);
 }
 
@@ -198,10 +199,11 @@ function renderLoop(gl: WebGLRenderingContext, program: WebGLProgram, buffers: {
 
     for (const [key, dir] of moveKeys) {
         if (keys.isKeyDown(key)) {
+            const speed = keys.isKeyDown('Shift') ? fastCamMove : camMove;
             const rel = camRotation.applyTransform(dir);
-            cam.x += rel.x * camMove;
-            cam.y += rel.y * camMove;
-            cam.z += rel.z * camMove;
+            cam.x += rel.x * speed;
+            cam.y += rel.y * speed;
+            cam.z += rel.z * speed;
             doRepaint = true;
         }
     }
