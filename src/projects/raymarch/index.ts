@@ -5,18 +5,20 @@ import { BoundingBoxDE, SphereDE, BoxDE, MengerSpongeDE, RotaryMengerSpongeDE } 
 import KeyboardManager from '../common/input/KeyboardManager';
 import Quaternion from '../common/3d/Quaternion';
 import Vector from '../common/3d/Vector';
+import { GlslSin, GlslCos } from './debuilder/GlslValue';
 
 // TODO: Use asset loader to load these?
 
 const distanceFunc: DistanceEstimateBuilder =
     new DistanceEstimateBuilder(new MengerSpongeDE(3, new Vector(1, 1, 1), 100, 100))
-        .symAxis(.8, 0.2, 0)
+        .symAxis(GlslSin(0.03), GlslCos(0.03), GlslCos(1, -.01, .01))
         .symAxis(-.8, .2, 0)
         .symAxis(.4, 0.6, 0)
         .symAxis(-.4, .6, 0)
-        .rXt(0.01)
-        .rYt(0.001)
-        .rZt(-.0003)
+        .rXt(0.03)
+        .rYt(0.003)
+        .rZt(-.0009)
+        .translate(GlslSin(0.1, -.4, .4), GlslCos(0.2, -.2, .2), 0)
         ;
 
 const dglsl = distanceFunc.emitGlsl();
@@ -32,7 +34,7 @@ void main() {
 `;
 
 const fragmentShaderSource = `
-precision highp float;
+precision mediump float;
 #define PI 3.1415926538
 
 uniform vec2 WindowSize;
@@ -41,7 +43,7 @@ uniform vec4 cam_orient;
 uniform float t;
 
 const int MaximumRaySteps = 50;
-const float MinimumDistance = 0.0001;
+const float MinimumDistance = 0.001;
 const float MaxFogDist = 20.0;
 
 const float nscale = 0.001;
@@ -189,7 +191,7 @@ export default function main() {
     // Draw the scene
     drawScene(gl, shaderProgram, buffers, canvas);
 
-    keys = new KeyboardManager(document.body, true);
+    keys = new KeyboardManager(document.body, false);
     renderLoop(gl, shaderProgram, buffers, canvas);
 }
 

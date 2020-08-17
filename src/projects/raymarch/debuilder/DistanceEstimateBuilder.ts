@@ -1,4 +1,5 @@
-import IDEPrimitive, { glslVec3Const, glslFloatConst, glslUnitVec3Const } from './DistanceEstimatePrimitives';
+import IDEPrimitive, { glslVec3Const, glslUnitVec3Const } from './DistanceEstimatePrimitives';
+import { GlslConstant, glslFloatConst } from './GlslValue';
 
 export default class DistanceEstimateBuilder {
     private glsl: string;
@@ -38,7 +39,7 @@ export default class DistanceEstimateBuilder {
         return this;
     }
 
-    public symAxis(normalX: number, normalY: number, normalZ: number) {
+    public symAxis(normalX: GlslConstant, normalY: GlslConstant, normalZ: GlslConstant) {
         const glslc = glslUnitVec3Const(normalX, normalY, normalZ);
         this.glsl += `p -= 2.0 * min(0.00, dot(p, ${glslc})) * ${glslc};\r\n`;
         return this;
@@ -80,7 +81,7 @@ export default class DistanceEstimateBuilder {
         return this;
     }
 
-    
+
     public rX(rad: number): DistanceEstimateBuilder {
         const mtx = this.getTempVarName();
         const radians = glslFloatConst(rad);
@@ -117,8 +118,8 @@ export default class DistanceEstimateBuilder {
         return this;
     }
 
-    public translate(x: number, y: number, z: number): DistanceEstimateBuilder {
-        this.glsl += `p = p-${glslVec3Const(x, y, z)};\r\n`;
+    public translate(x: GlslConstant, y: GlslConstant, z: GlslConstant): DistanceEstimateBuilder {
+        this.glsl += `p = p-vec3(${glslFloatConst(x)},${glslFloatConst(y)},${glslFloatConst(z)});\r\n`;
         return this;
     }
 

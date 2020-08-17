@@ -1,22 +1,16 @@
 import Vector from "../../common/3d/Vector";
+import { glslFloatConst, GlslConstant } from "./GlslValue";
 
 export default interface IDEPrimitive {
     emitGlsl(): string;
 }
 
-export function glslFloatConst(n: number) {
-    const asstr = n.toString();
-    if (asstr.indexOf('.') === -1) return asstr + '.0';
-    return asstr;
-}
-
-export function glslVec3Const(x: number, y: number, z: number) {
+export function glslVec3Const(x: GlslConstant, y: GlslConstant, z: GlslConstant) {
     return 'vec3(' + glslFloatConst(x) + ',' + glslFloatConst(y) + ',' + glslFloatConst(z)+')';
 }
 
-export function glslUnitVec3Const(x: number, y: number, z: number) {
-    const len = Math.sqrt(x * x + y * y + z * z);
-    return 'vec3(' + glslFloatConst(x / len) + ',' + glslFloatConst(y / len) + ',' + glslFloatConst(z / len) + ')';
+export function glslUnitVec3Const(x: GlslConstant, y: GlslConstant, z: GlslConstant) {
+    return 'normalize(vec3(' + glslFloatConst(x) + ',' + glslFloatConst(y) + ',' + glslFloatConst(z) + '))';
 }
 
 export class SphereDE implements IDEPrimitive {
