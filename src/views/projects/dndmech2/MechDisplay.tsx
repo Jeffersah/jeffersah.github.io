@@ -32,6 +32,8 @@ function getAnimation(status: 'good' | 'damaged' | 'crit' | 'destroyed') {
 }
 
 export default function MechDisplay(props: IMechDisplayProps) {
+    const [coreState, setCoreState] = React.useState<'good' | 'damaged' | 'crit' | 'destroyed'>('good');
+
     return <div style={{ flexGrow: 1, marginTop: '10px' }} className='center-col'>
         <svg viewBox='0 0 10 12' height='200px'>
             {/* Head */}
@@ -76,7 +78,16 @@ export default function MechDisplay(props: IMechDisplayProps) {
         </svg>
         <div style={{ marginBottom: '20px', marginTop: '10px' }} className='center-col'>
             <h3>CORE</h3>
-            <MechHp maxArmor={0} permArmor={0} hpSteps={{ good: props.coreMaxHp, damaged: 0, crit: 0 }}></MechHp>
+            <MechHp maxArmor={0} permArmor={0} hpSteps={{ good: props.coreMaxHp, damaged: 0, crit: 0 }} onDamageStatusChange={state => setCoreState(state)}></MechHp>
         </div>
+        {coreState === 'destroyed' ?
+        <div className={css['eject-bar'] + ' flex col justify-space-between'}>
+            <div className={css['eject-bar-frame']} />
+            <div className={css['eject-bar-middle'] + ' flex col justify-center align-center'}>
+                <span className={css['eject-text']}>EJECT</span>
+                <span className={css['eject-text-sub']}>CORE IMPLOSION IMMINENT</span>
+            </div>
+            <div className={css['eject-bar-frame'] + ' ' + css['reverse']} />
+        </div> : <></>}
     </div>;
 }

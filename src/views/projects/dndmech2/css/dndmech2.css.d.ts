@@ -4,6 +4,13 @@ declare namespace Dndmech2CssNamespace {
     "blink-yellow": string;
     body: string;
     "detail-row": string;
+    "eject-bar": string;
+    "eject-bar-frame": string;
+    "eject-bar-frame-anim": string;
+    "eject-bar-middle": string;
+    "eject-color": string;
+    "eject-text": string;
+    "eject-text-sub": string;
     "fade-in": string;
     "fixed-col": string;
     "flex-col": string;
@@ -12,6 +19,7 @@ declare namespace Dndmech2CssNamespace {
     "mech-container": string;
     "operational-anim": string;
     "ready-anim": string;
+    reverse: string;
     status: string;
     "status-operational": string;
     "status-ready": string;

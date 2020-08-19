@@ -12,7 +12,7 @@ import { ProjectsComponent } from './projects';
 import BulletsComponent from './bullets/BulletsComponent';
 import { SortVisWrapper } from './sortVis/SortVisWrapper';
 import { CoreWarComponent } from './corewar/CoreWarComponent';
-import { RaymarchComponent } from './raymarch/RaymarchComponent';
+import RaymarchComponentWrapper from './raymarch/RaymarchComponentWrapper';
 
 export interface IProject {
     projectName: string;
@@ -101,6 +101,6 @@ export const AllProjects: IProject[] = [
         projectName: 'raymarch',
         projectTitle: 'Raymarch/GLSL',
         subCategory: 'Test',
-        projectComponent: RaymarchComponent
+        projectComponent: RaymarchComponentWrapper
     }
 ];

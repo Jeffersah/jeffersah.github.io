@@ -118,3 +118,71 @@
 .title-destroyed {
     color: #666;
 }
+
+@keyframes eject-color {
+    0% {
+        background-color: #d00f;
+    }
+    50% {
+        background-color: #d00a;
+    }
+    100% {
+        background-color: #d00f;
+    }
+}
+
+.eject-bar {
+    pointer-events: none;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 50%;
+    transform: translateY(50%);
+    z-index: 100;
+}
+
+.eject-bar-middle {
+    width: 100%;
+    height: 100%;
+    background-color: #d00;
+    animation-name: eject-color;
+    animation-timing-function: linear;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes eject-bar-frame-anim {
+    from {
+        background-position: 0, 0;
+    }
+    to {
+        background-position: 104%, 0;
+    } 
+}
+
+.eject-bar-frame {
+    width: 100%;
+    height: 10%;
+    background-size: 200%, 100%;
+    animation-name: eject-bar-frame-anim;
+    animation-timing-function: linear;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    background-image: repeating-linear-gradient(45deg, red 0%,red 2%, black 2%, black 4%);
+}
+
+.eject-bar-frame.reverse {
+    transform: scaleX(-100%)
+}
+
+.eject-text {
+    font-weight: 800;
+    font-size: 400%;
+    font-stretch: expanded;
+}
+.eject-text-sub {
+    font-weight: 800;
+    font-size: 200%;
+}
