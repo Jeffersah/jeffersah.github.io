@@ -5,6 +5,7 @@ import { IComponentHp } from './Chassis';
 import IMechComponent, { IMechCustomComponentProps } from './Components/IMechComponent';
 import Dropdown from 'react-dropdown';
 import { IDamageStatus } from './DndMech2Component';
+import shoeUrl from './assets/shoecrop.png';
 
 // 'head'|'body'|'rarm'|'larm'|'rhand'|'lhand'|'rleg'|'lleg'
 export interface IMechDisplayProps {
@@ -31,8 +32,31 @@ function getAnimation(status: 'good' | 'damaged' | 'crit' | 'destroyed') {
     }
 }
 
+const SHOE_CMD_TEXT = 'shoe';
+
 export default function MechDisplay(props: IMechDisplayProps) {
     const [coreState, setCoreState] = React.useState<'good' | 'damaged' | 'crit' | 'destroyed'>('good');
+    const [showShoe, setShowShoe] = React.useState<boolean>(false);
+    const shoeCmdIndex = React.useRef(0);
+
+    function onKeyDownListen(ev: KeyboardEvent) {
+        if (ev.key === SHOE_CMD_TEXT[shoeCmdIndex.current]) {
+            shoeCmdIndex.current++;
+            if (shoeCmdIndex.current === SHOE_CMD_TEXT.length) {
+                shoeCmdIndex.current = 0;
+                setShowShoe(!showShoe);
+                console.log('SHOE: ' + (!showShoe));
+            }
+        }
+        else {
+            shoeCmdIndex.current = 0;
+        }
+    }
+
+    React.useEffect(() => {
+        window.addEventListener('keydown', onKeyDownListen);
+        return () => window.removeEventListener('keydown', onKeyDownListen);
+    }, [onKeyDownListen]);
 
     return <div style={{ flexGrow: 1, marginTop: '10px' }} className='center-col'>
         <svg viewBox='0 0 10 12' height='200px'>
@@ -75,6 +99,12 @@ export default function MechDisplay(props: IMechDisplayProps) {
             <path fill={colorFromStatus(props.damageStatus.lleg)} d='M 5.7,8 L7,8 L7,12 L5.7,12 Z'>
                 {getAnimation(props.damageStatus.lleg)}
             </path>
+
+            {showShoe ?
+            <>
+                <image href={shoeUrl} x={5.1} y={9.5} width={5} height={3}></image>
+                <image href={shoeUrl} x={5.1} y={9.5} width={5} height={3} transform='scale(-1, 1)' transform-origin='center'></image>
+            </> : <></>}
         </svg>
         <div style={{ marginBottom: '20px', marginTop: '10px' }} className='center-col'>
             <h3>CORE</h3>
