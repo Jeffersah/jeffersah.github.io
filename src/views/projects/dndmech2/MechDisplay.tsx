@@ -117,7 +117,7 @@ export default function MechDisplay(props: IMechDisplayProps) {
                 <span className={css['eject-text']}>EJECT</span>
                 <span className={css['eject-text-sub']}>CORE IMPLOSION IMMINENT</span>
             </div>
-            <div className={css['eject-bar-frame'] + ' ' + css['reverse']} />
+            <div className={css['eject-bar-frame'] + ' ' + css.reverse} />
         </div> : <></>}
     </div>;
 }

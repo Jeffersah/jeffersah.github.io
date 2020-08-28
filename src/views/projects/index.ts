@@ -13,6 +13,8 @@ import BulletsComponent from './bullets/BulletsComponent';
 import { SortVisWrapper } from './sortVis/SortVisWrapper';
 import { CoreWarComponent } from './corewar/CoreWarComponent';
 import RaymarchComponentWrapper from './raymarch/RaymarchComponentWrapper';
+import { RpgTextEngineComponent } from './rpg-text-engine/RpgTextEngineComponent';
+import { Chess3dComponent } from './chess3d/Chess3dComponent';
 
 export interface IProject {
     projectName: string;
@@ -68,7 +70,8 @@ export const AllProjects: IProject[] = [
     {
         projectName: 'bullets',
         projectTitle: 'Bullets!',
-        projectComponent: BulletsComponent
+        projectComponent: BulletsComponent,
+        subCategory: 'Maybe some day'
     },
 
     {
@@ -80,7 +83,14 @@ export const AllProjects: IProject[] = [
     {
         projectName: 'corewar',
         projectTitle: 'Core War',
-        projectComponent: CoreWarComponent
+        projectComponent: CoreWarComponent,
+        subCategory: 'Maybe some day'
+    },
+
+    {
+        projectName: 'chess3d',
+        projectTitle: '3D Chess',
+        projectComponent: Chess3dComponent
     },
 
     {
@@ -102,5 +112,12 @@ export const AllProjects: IProject[] = [
         projectTitle: 'Raymarch/GLSL',
         subCategory: 'Test',
         projectComponent: RaymarchComponentWrapper
+    },
+
+    {
+        projectName: 'rpg-text-engine',
+        projectTitle: 'RpgTextEngine',
+        subCategory: 'Test',
+        projectComponent: RpgTextEngineComponent
     }
 ];

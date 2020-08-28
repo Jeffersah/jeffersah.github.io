@@ -5,12 +5,12 @@ export class Julia implements IIterativeFunction {
 
     private radius: number;
     constructor(private c: Complex) {
-        this.radius = (Math.sqrt(4 * c.Abs() + 1) + 1) / 2;
+        this.radius = (Math.sqrt(4 * c.abs() + 1) + 1) / 2;
     }
 
     Iterate(rolling: Complex, original: Complex): Complex {
-        rolling.MultiplyWith(rolling);
-        rolling.AddWith(this.c);
+        rolling.multiplyWith(rolling);
+        rolling.addWith(this.c);
         return rolling;
     }
 

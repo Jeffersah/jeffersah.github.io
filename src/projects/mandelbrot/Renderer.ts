@@ -37,12 +37,12 @@ export class Renderer {
         let rolling = new Complex(coords.x, coords.y);
         let iter = 0;
 
-        while (iter < MAX_DEPTH && rolling.AbsSq() < this.func.MaxAbsSq()) {
+        while (iter < MAX_DEPTH && rolling.absSq() < this.func.MaxAbsSq()) {
             rolling = this.func.Iterate(rolling, original);
             iter++;
         }
 
-        if (rolling.AbsSq() < this.func.MaxAbsSq()) {
+        if (rolling.absSq() < this.func.MaxAbsSq()) {
             return 'white';
         }
 

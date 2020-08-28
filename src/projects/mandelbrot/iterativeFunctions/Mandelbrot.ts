@@ -3,8 +3,8 @@ import { Complex } from '../../common';
 
 export class Mandelbrot implements IIterativeFunction {
     Iterate(rolling: Complex, original: Complex): Complex {
-        rolling.MultiplyWith(rolling);
-        rolling.AddWith(original);
+        rolling.multiplyWith(rolling);
+        rolling.addWith(original);
         return rolling;
     }
 
