@@ -1,5 +1,4 @@
-import { Complex } from '../common';
-import { isComplex } from '../common/Complex';
+import { Complex, isComplex } from '../../../../projects/common/Complex';
 
 export const sqCoords = [
     new Complex(-1, -1),

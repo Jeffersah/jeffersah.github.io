@@ -14,7 +14,7 @@ import { SortVisWrapper } from './sortVis/SortVisWrapper';
 import { CoreWarComponent } from './corewar/CoreWarComponent';
 import RaymarchComponentWrapper from './raymarch/RaymarchComponentWrapper';
 import { RpgTextEngineComponent } from './rpg-text-engine/RpgTextEngineComponent';
-import { Chess3dComponent } from './chess3d/Chess3dComponent';
+import Chess3dComponent from './chess3d/Chess3dComponent';
 
 export interface IProject {
     projectName: string;

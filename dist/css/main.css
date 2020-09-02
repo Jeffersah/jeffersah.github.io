@@ -155,3 +155,16 @@ body {
 .flex.content-space-evenly {
   align-content: space-evenly;
 }
+.fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.full-width {
+  width: 100%;
+}
+.full-height {
+  height: 100%;
+}

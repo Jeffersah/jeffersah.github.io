@@ -4,6 +4,13 @@ declare module '*.png'
     export default url;
 }
 
+declare module '*.svg'
+{
+    export let url: string
+    export default url;
+}
+
+
 declare module '*.json'
 {
     export let url: string

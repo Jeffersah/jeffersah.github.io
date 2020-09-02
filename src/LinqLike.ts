@@ -55,3 +55,11 @@ export function any<T>(items: T[], op: (item: T) => boolean) {
     }
     return false;
 }
+
+export function range(start: number, count: number) {
+    const result = [];
+    for (let i = 0; i < count; i++) {
+        result.push(start + i);
+    }
+    return result;
+}
