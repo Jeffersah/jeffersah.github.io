@@ -7,6 +7,8 @@ import Knight from './DefaultPieces/Knight';
 import Queen from './DefaultPieces/Queen';
 import King from './DefaultPieces/King';
 import Pawn from './DefaultPieces/Pawn';
+import BishopPlus from './ExtendedPieces/BishopPlus';
+import KnightCross from './ExtendedPieces/KnightCross';
 
 export default class Board {
     pieces: (IPiece | undefined)[][][];
@@ -70,7 +72,7 @@ export default class Board {
     }
 }
 
-const defaultLayout: (undefined|IPieceType)[][] = [
+export const defaultLayout: (undefined|IPieceType)[][] = [
     [undefined, undefined, undefined, undefined, undefined],
     [Rook, Knight, Queen, Knight, Rook],
     [Bishop, Bishop, King, Bishop, Bishop],
@@ -78,17 +80,28 @@ const defaultLayout: (undefined|IPieceType)[][] = [
     [undefined, undefined, undefined, undefined, undefined],
 ];
 
+export const plusLayout: (undefined|IPieceType)[][] = [
+    [Rook, Bishop, KnightCross, Bishop, Rook],
+    [Bishop, Knight, Queen, Knight, Bishop],
+    [Bishop, BishopPlus, King, BishopPlus, Bishop],
+    [Bishop, Knight, Queen, Knight, Bishop],
+    [Rook, Bishop, KnightCross, Bishop, Rook],
+];
+
 export function populateDefaultLayout(board: Board) {
-    if (board.size !== 5) {
-        throw new Error('BAD: Default layout must be used on a 5x5x5 board');
-    }
-    for (let dx = 0; dx < defaultLayout.length; dx++) {
-        for (let dy = 0; dy < defaultLayout[dx].length; dy++) {
-            if (defaultLayout[dx][dy] === undefined) continue;
-            board.pieces[dx][dy][0] = { team: 'white', type: defaultLayout[dx][dy] };
+    populateLayout(board, defaultLayout);
+}
+
+export function populateLayout(board: Board, layout: (undefined|IPieceType)[][]) {
+    const layoutSize = layout.length;
+    if (board.size < layoutSize) throw new Error('Board too small');
+    for (let dx = 0; dx < layout.length; dx++) {
+        for (let dy = 0; dy < layout[dx].length; dy++) {
+            if (layout[dx][dy] === undefined) continue;
+            board.pieces[dx][dy][0] = { team: 'white', type: layout[dx][dy] };
             board.pieces[dx][dy][1] = { team: 'white', type: Pawn };
             board.pieces[dx][dy][board.size - 2] = { team: 'black', type: Pawn };
-            board.pieces[dx][dy][board.size - 1] = { team: 'black', type: defaultLayout[dx][dy] };
+            board.pieces[dx][dy][board.size - 1] = { team: 'black', type: layout[dx][dy] };
         }
     }
 }

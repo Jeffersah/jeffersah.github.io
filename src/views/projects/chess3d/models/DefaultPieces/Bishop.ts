@@ -3,7 +3,7 @@ import Team from '../Team';
 import { IMove } from '../IMove';
 import Point3, { cardinalPoints, diagonalPoints } from '../../position/Point3';
 import IBoard from '../IBoard';
-import { seekMove } from './MoveHelpers';
+import { seekMove } from '../MoveHelpers';
 
 class Bishop {
     name = 'Bishop';

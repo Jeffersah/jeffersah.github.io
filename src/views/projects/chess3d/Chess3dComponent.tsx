@@ -1,7 +1,7 @@
 import * as React from 'react';
 import BoardStackRendererComponent from './BoardStackRendererComponent';
 import css from './css/componentCss.css';
-import Board, { populateDefaultLayout } from './models/IBoard';
+import Board, { populateDefaultLayout, populateLayout, plusLayout } from './models/IBoard';
 import { IState } from './models/State';
 import Update from './update/Update';
 import useInterval from '../../../hooks/useInterval';
@@ -15,12 +15,11 @@ export interface IGeneralProps {
 }
 
 const minAngularVelocity = 0.0001;
-const spinAmt = 0.1;
 const spinFriction = 0.98;
 
 function Chess3dComponent(props: {width: number, height: number}) {
     const board = new Board(5);
-    populateDefaultLayout(board);
+    populateLayout(board, plusLayout);
     const [state, setState] = React.useState<IState>({ board, turn: 'black', selected: undefined });
     const [rotation, setRotation] = React.useState(0);
     const [angularVel, setAngularVel] = React.useState(0);
@@ -45,9 +44,7 @@ function Chess3dComponent(props: {width: number, height: number}) {
         <div className='flex row justify-center full-height'>
             <BoardStackRendererComponent rotation={rotation} innerRotate={false} state={state} apply={apply} />
             <div className='flex col' style={{ width: interiorWidth }}>
-                <Chess3dDisplay state={state} apply={apply} angle={rotation}></Chess3dDisplay>
-                <button onClick={() => setAngularVel(angularVel - spinAmt)}>&lt;</button>
-                <button onClick={() => setAngularVel(angularVel + spinAmt)}>&gt;</button>
+                <Chess3dDisplay state={state} apply={apply} angle={rotation} addAngularVel={delta => setAngularVel(angularVel + delta)}></Chess3dDisplay>
             </div>
             <BoardStackRendererComponent rotation={rotation} innerRotate={true} state={state} apply={apply} />
         </div>

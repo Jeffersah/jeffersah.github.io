@@ -1,6 +1,6 @@
-import IBoard from '../IBoard';
-import Point3 from '../../position/Point3';
-import { IMove } from '../IMove';
+import IBoard from './IBoard';
+import Point3 from '../position/Point3';
+import { IMove } from './IMove';
 
 export function seekMove(board: IBoard, start: Point3, delta: Point3, allowCapture?: boolean, allowMove?: boolean): IMove[] {
     allowCapture = allowCapture ?? true;
