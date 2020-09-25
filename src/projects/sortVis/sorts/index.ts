@@ -5,14 +5,16 @@ import HeapSort from './heapSort';
 import QuickSort from './quickSort';
 import QuickDualPivot from './quickDualPivot';
 import MergeSort from './mergeSort';
+import WeakHeapSort from './weakHeapSort';
 
 const allSortingAlgorithms: ISort[] = [
     new SelectionSort(),
     new CycleSort(),
     new HeapSort(),
+    new WeakHeapSort(),
     new QuickSort(),
     new QuickDualPivot(),
-    new MergeSort()
+    new MergeSort(),
 ];
 
 export default allSortingAlgorithms;
