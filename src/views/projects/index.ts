@@ -2,19 +2,19 @@
 import { MandelbrotComponent } from './mandelbrot/MandelbrotComponent';
 import { TileBlendTest1Component } from './tile-blend-test-1/TileBlendTest1Component';
 import { SpellTestComponent } from './spell-test/SpellTestComponent';
-import { QTreeConwayComponent } from './qtree-conway/QTreeConwayComponent';
 import { RpgTestComponent } from './rpgt/RpgTest';
 import { DndMechComponent } from './dndmech/DndMechComponent';
 import { SignalrTestComponent } from './signalr-test/SignalrTestComponent';
 import { DndMech2Wrapper } from './dndmech2/DndMech2Wrapper';
 import { TechRenderComponent } from './tech-render/TechRenderComponent';
-import { ProjectsComponent } from './projects';
 import BulletsComponent from './bullets/BulletsComponent';
 import { SortVisWrapper } from './sortVis/SortVisWrapper';
 import { CoreWarComponent } from './corewar/CoreWarComponent';
 import RaymarchComponentWrapper from './raymarch/RaymarchComponentWrapper';
 import { RpgTextEngineComponent } from './rpg-text-engine/RpgTextEngineComponent';
 import Chess3dComponent from './chess3d/Chess3dComponent';
+import { SpriteComponent } from './sprite/SpriteComponent';
+import { GravitationComponent } from './gravitation/GravitationComponent';
 
 export interface IProject {
     projectName: string;
@@ -80,6 +80,13 @@ export const AllProjects: IProject[] = [
         projectComponent: SortVisWrapper
     },
 
+    
+    {
+        projectName: 'gravitation',
+        projectTitle: 'Gravitation',
+        projectComponent: GravitationComponent
+    },
+
     {
         projectName: 'corewar',
         projectTitle: 'Core War',
@@ -119,5 +126,12 @@ export const AllProjects: IProject[] = [
         projectTitle: 'RpgTextEngine',
         subCategory: 'Test',
         projectComponent: RpgTextEngineComponent
-    }
+    },
+    
+    {
+        projectName: 'sprite',
+        projectTitle: 'Sprite Editor',
+        projectComponent: SpriteComponent,
+        subCategory: 'Maybe some day'
+    },
 ];

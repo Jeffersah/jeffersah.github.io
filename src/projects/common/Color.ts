@@ -13,10 +13,22 @@ export class Color {
         }
     }
 
+    /**
+     * Generate an RGB color
+     * @param r Red component [0, 1]
+     * @param g Green component [0, 1]
+     * @param b Blue component [0, 1]
+     */
     public static rgb(r: number, g: number, b: number): Color {
         return new Color({ r, g, b });
     }
 
+    /**
+     * Generate an HSV color
+     * @param r Hue component [0, 1]
+     * @param g Saturation component [0, 1]
+     * @param b Value component [0, 1]
+     */
     public static hsv(h: number, s: number, v: number): Color {
         return new Color({ h, s, v });
     }
