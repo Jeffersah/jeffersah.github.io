@@ -60,7 +60,10 @@ function tick(ctx: CanvasRenderingContext2D) {
         }
     }
 
+    let heaviest = rocks.reduce((m, c) => m.Mass >= c.Mass ? m : c);
+
     rocks.forEach(rock => {
+        rock.Position = rock.Position.subtract(heaviest.Position);
         rock.finishTick();
     });
     rocks.sort((a, b) => a.Position.z - b.Position.z);

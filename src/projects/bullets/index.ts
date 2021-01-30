@@ -10,6 +10,14 @@ import Player from './Player';
 import KeyboardManager from '../common/input/KeyboardManager';
 import KeyState from '../common/input/KeyState';
 import Point from '../common/position/Point';
+import GameState from './GameState';
+import { SingleExplosion } from './Effects/SingleExplosion';
+import { Interpolated } from '../common/interpolation/Interpolated';
+import { TimingFunctions } from '../common/interpolation/TimingFunction';
+import { Color } from '../common/Color';
+import { EvenlySpacedKeyframes, Keyframes } from '../common/interpolation/Keyframes';
+import { Explosion } from './Effects/Explosion';
+import { Range } from '../common';
 
 let scalingHelper: NearestNeighborScalingHelper;
 
@@ -29,17 +37,38 @@ function onLoadDone(entitySheet: SpriteSheet) {
     const keys = new KeyboardManager(document.body, false);
     const player = new Player(entitySheet);
 
-    repaintLoop(player, keys, canvas, ctx);
+    const gs = new GameState(player);
+
+    gs.Effects.push(new SingleExplosion(
+        new Point(0, 0),
+        new Interpolated<number>(EvenlySpacedKeyframes(0, 30), TimingFunctions.linear),
+        new Interpolated<number>(EvenlySpacedKeyframes(-10, 30), TimingFunctions.fastOut),
+        new Interpolated<Color>(EvenlySpacedKeyframes(Color.rgb(1, 1, 0.5), Color.rgb(1, 0, 0), Color.rgb(0.2, 0.2, 0)), TimingFunctions.linear),
+        120
+    ));
+
+    gs.Effects.push(new Explosion(
+        new Point(100, 0),
+        new Range(-30, 30),
+        new Range(-30, 30),
+        new Range(30, 30),
+        4,
+        new Range(20, 40),
+        new Range(20, 60)));
+
+    repaintLoop(gs, player, keys, canvas, ctx);
 }
 
-function repaintLoop(player: Player, keys: KeyboardManager, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+
+function repaintLoop(gameState: GameState, player: Player, keys: KeyboardManager, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     keys.update();
+    gameState.tick();
     player.tick(keys);
-    repaint(player, canvas, ctx);
-    requestAnimationFrame(() => repaintLoop(player, keys, canvas, ctx));
+    repaint(gameState, player, canvas, ctx);
+    requestAnimationFrame(() => repaintLoop(gameState, player, keys, canvas, ctx));
 }
 
-function repaint(player: Player, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+function repaint(gameState: GameState, player: Player, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     NearestNeighborScaling(ctx);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, Const.Width, Const.Height);
@@ -62,5 +91,8 @@ function repaint(player: Player, canvas: HTMLCanvasElement, ctx: CanvasRendering
     }
 
     player.render(ctx);
+
+    gameState.draw(ctx);
+
     ctx.restore();
 }
