@@ -3,6 +3,10 @@ export default class Point {
 
     }
 
+    public static fromAngle(angle: number, distance?: number) : Point {
+        return new Point(Math.cos(angle) * (distance ?? 1), Math.sin(angle) * (distance ?? 1));
+    }
+
     public LengthSq(): number {
         return Point.Dot(this, this);
     }
@@ -41,8 +45,7 @@ export default class Point {
     public AddWith(x: number, y: number): this;
     public AddWith(other: Point): this;
     public AddWith(other: number|Point, y?: number): this {
-        const nx = y === undefined ? (other as Point).x : other as number;
-        const ny = y === undefined ? (other as Point).y : y;
+        const {x: nx, y: ny} = splitArgs(other, y);
         this.x += nx;
         this.y += ny;
         return this;
@@ -51,8 +54,7 @@ export default class Point {
     public MultWith(x: number, y: number): this;
     public MultWith(other: Point): this;
     public MultWith(other: number|Point, y?: number): this {
-        const nx = y === undefined ? (other as Point).x : other as number;
-        const ny = y === undefined ? (other as Point).y : y;
+        const {x: nx, y: ny} = splitArgs(other, y);
         this.x *= nx;
         this.y *= ny;
         return this;
@@ -61,8 +63,7 @@ export default class Point {
     public SubtractWith(x: number, y: number): this;
     public SubtractWith(other: Point): this;
     public SubtractWith(other: number|Point, y?: number): this {
-        const nx = y === undefined ? (other as Point).x : other as number;
-        const ny = y === undefined ? (other as Point).y : y;
+        const {x: nx, y: ny} = splitArgs(other, y);
         this.x -= nx;
         this.y -= ny;
         return this;
@@ -71,8 +72,7 @@ export default class Point {
     public DivideWith(x: number, y: number): this;
     public DivideWith(other: Point): this;
     public DivideWith(other: number|Point, y?: number): this {
-        const nx = y === undefined ? (other as Point).x : other as number;
-        const ny = y === undefined ? (other as Point).y : y;
+        const {x: nx, y: ny} = splitArgs(other, y);
         this.x /= nx;
         this.y /= ny;
         return this;
@@ -82,8 +82,19 @@ export default class Point {
         return this.x === other.x && this.y === other.y;
     }
 
-    static Add(a: Point, b: Point): Point {
-        return new Point(a.x + b.x, a.y + b.y);
+    
+    static add(src: Point, x: number, y: number): Point;
+    static add(src: Point, other: Point): Point;
+    static add(src: Point, other: number|Point, y?: number): Point {
+        const {x: nx, y: ny} = splitArgs(other, y);
+        return new Point(src.x + nx, src.y + ny);
+    }
+
+    static subtract(src: Point, x: number, y: number): Point;
+    static subtract(src: Point, other: Point): Point;
+    static subtract(src: Point, other: number|Point, y?: number): Point {
+        const {x: nx, y: ny} = splitArgs(other, y);
+        return new Point(src.x - nx, src.y - ny);
     }
 
     static Multiply(a: Point, s: number, sy?: number): Point;
@@ -98,4 +109,9 @@ export default class Point {
             return new Point(a.x * (b as number), a.y * (b as number));
         }
     }
+}
+
+function splitArgs(x: Point|number, y ?: number): {x: number, y: number} {
+    if(y === undefined) return { x: (<Point>x).x, y: (<Point>x).y };
+    return {x: <number>x, y};
 }

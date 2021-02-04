@@ -4,7 +4,11 @@ import GameState from "./GameState";
 
 export default interface IEntity {
     
-    tick(keys: KeyboardManager, gameState: GameState): void;
+    /**
+     * Update an entity
+     * @returns whether this entity is still alive
+     */
+    tick(keys: KeyboardManager, gameState: GameState): boolean;
     render(ctx: CanvasRenderingContext2D): void;
 
     getTeam(): ETeam;
