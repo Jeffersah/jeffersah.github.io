@@ -46,11 +46,13 @@ export default function FibvisComponent() {
     let parseResult = tryParse(seed, modulo);
     let parseSucceed = isSuccess(parseResult);
 
-    function goButtonClicked() {
-        const modulo = (parseResult as RenderArgs).modulo;
-        const series = generator.generateSeries((parseResult as RenderArgs).seed, modulo);
-        setRenderState({ animate, visualizer: visualizer.generate(modulo, series), animationDuration: animationTime });
-    }
+    React.useEffect(()=>{
+        if(parseSucceed) {
+            const modulo = (parseResult as RenderArgs).modulo;
+            const series = generator.generateSeries((parseResult as RenderArgs).seed, modulo);
+            setRenderState({ animate, visualizer: visualizer.generate(modulo, series), animationDuration: animationTime });
+        }
+    }, [animate, parseSucceed, (parseResult as RenderArgs).modulo, visualizer, generator, animationTime, JSON.stringify((parseResult as RenderArgs).seed)]);
 
     return <div className='flex col align-center'>
         <div className='flex col' style={{ maxWidth:'800px' }}>
@@ -80,8 +82,6 @@ export default function FibvisComponent() {
                     <label>Visualizer: </label>
                     <ObjDropdownComponent<VisualizerDef> options={Visualizers} getName={(v) => v.name} value={visualizer} onChange={(c) => setVisualizer(c)} />
                 </div>
-
-                <button disabled={!parseSucceed} onClick={goButtonClicked}>Go</button>
         </div>
         {RenderState !== null ? <RenderStateComponent {...RenderState} /> : <></>}
         </div>  ;
