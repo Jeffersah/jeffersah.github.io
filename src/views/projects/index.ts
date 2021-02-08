@@ -15,6 +15,7 @@ import { RpgTextEngineComponent } from './rpg-text-engine/RpgTextEngineComponent
 import Chess3dComponent from './chess3d/Chess3dComponent';
 import { SpriteComponent } from './sprite/SpriteComponent';
 import { GravitationComponent } from './gravitation/GravitationComponent';
+import FibvisComponentWrapper from './fibvis/FibvisComponentWrapper';
 
 export interface IProject {
     projectName: string;
@@ -59,6 +60,13 @@ export const AllProjects: IProject[] = [
         projectName: 'dndmech',
         projectTitle: 'D&D Mech',
         projectComponent: DndMechComponent
+    },
+
+    
+    {
+        projectName: 'fibvis',
+        projectTitle: 'Fibonacci Vis',
+        projectComponent: FibvisComponentWrapper
     },
 
     {

@@ -109,6 +109,22 @@ export default class Point {
             return new Point(a.x * (b as number), a.y * (b as number));
         }
     }
+
+    static interpolate(a: Point, b: Point, p: number): Point {
+        return new Point(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p);
+    }
+
+    static componentMin(a: Point, b: Point): Point {
+        if(a.x <= b.x && a.y <= b.y) return a;
+        if(b.x <= a.x && b.y <= a.y) return b;
+        return new Point(Math.min(a.x, b.x), Math.min(a.y, b.y));
+    }
+    
+    static componentMax(a: Point, b: Point): Point {
+        if(a.x >= b.x && a.y >= b.y) return a;
+        if(b.x >= a.x && b.y >= a.y) return b;
+        return new Point(Math.max(a.x, b.x), Math.max(a.y, b.y));
+    }
 }
 
 function splitArgs(x: Point|number, y ?: number): {x: number, y: number} {
