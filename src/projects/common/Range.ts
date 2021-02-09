@@ -35,11 +35,20 @@ export class Range {
         this.max += deltaRange * (1 - anchor);
     }
 
+    Contains(value: number) {
+        const perc = this.GetPercentage(value);
+        return perc >= 0 && perc < 1;
+    }
+
     ConvertTo(value: number, targetRange: Range) {
         return targetRange.GetValue(this.GetPercentage(value));
     }
     ConvertFrom(value: number, targetRange: Range) {
         return targetRange.ConvertTo(value, this);
+    }
+
+    static Intersects(a: Range, b:Range): boolean {
+        return a.Contains(b.min) || a.Contains(b.max) || b.Contains(a.min);
     }
 }
 export const unitRange: Range = new Range(0, 1);

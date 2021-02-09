@@ -10,13 +10,6 @@ declare module '*.svg'
     export default url;
 }
 
-
-declare module '*.json'
-{
-    export let url: string
-    export default url;
-}
-
 declare module '*.css' {
     interface IClassNames {
         [className: string]: string

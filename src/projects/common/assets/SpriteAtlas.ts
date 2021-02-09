@@ -1,5 +1,5 @@
-import { RotTransformCanvas } from "../CanvasHelpers";
 import Point from "../position/Point";
+import { SpriteAnimation } from "./SpriteAnimation";
 
 export class SpriteAtlas {
     public image: HTMLImageElement;
@@ -15,6 +15,10 @@ export class SpriteAtlas {
 
     getSprite(sourceOffset: Point, sourceSize: Point, origin?: Point, sourceRotation?: number) {
         return new AtlasSprite(this, sourceOffset, sourceSize, origin, sourceRotation);
+    }
+
+    getAnimation(offset: Point, sourceSize: Point, origin: Point, frameCount: number) {
+        return new SpriteAnimation(this, offset, sourceSize, frameCount, origin);
     }
 }
 

@@ -37,6 +37,10 @@ export default class Point {
         return Point.Dot(this, other);
     }
 
+    public normalize(): Point {
+        let len = this.Length();
+        return Point.Multiply(this, 1 / len);
+    }
 
     public Direction(): number {
         return Math.atan2(this.y, this.x);
@@ -124,6 +128,12 @@ export default class Point {
         if(a.x >= b.x && a.y >= b.y) return a;
         if(b.x >= a.x && b.y >= a.y) return b;
         return new Point(Math.max(a.x, b.x), Math.max(a.y, b.y));
+    }
+
+    rotate(theta: number): Point {
+        const angle = Math.atan2(this.y, this.x);
+        const len = this.Length();
+        return Point.fromAngle(angle + theta, len);
     }
 }
 

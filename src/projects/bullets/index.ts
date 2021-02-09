@@ -5,6 +5,7 @@ import { NearestNeighborScaling, RotTransformCanvas } from '../common/CanvasHelp
 import { SpriteSheet } from '../common/assets/SpriteSheet';
 import entitySheetUrl from './assets/bullets_entities.png';
 import shipSheetUrl from './assets/Ships.png';
+import flareSheetUrl from './assets/Flares.png';
 import playerUrl from './assets/bullets_ship.png';
 import ImageLoader from '../common/assets/ImageLoader';
 import Player from './Player';
@@ -20,17 +21,19 @@ import { EvenlySpacedKeyframes, Keyframes } from '../common/interpolation/Keyfra
 import { Explosion } from './Effects/Explosion';
 import { Range } from '../common';
 import { AtlasSprite, SpriteAtlas } from '../common/assets/SpriteAtlas';
-import { buildAllDefinitions } from './AllShipDefinitions';
+import { buildAllDefinitions } from './ShipDefinitions/AllShipDefinitions';
 import { ETeam } from './ETeam';
 
 let scalingHelper: NearestNeighborScalingHelper;
 let shipAtlas: SpriteAtlas;
+let flareAtlas: SpriteAtlas;
 let shipSprite: AtlasSprite;
 
 export default function Run() {
     const assetLoader = new AssetLoader();
     const entitySheet = new SpriteSheet(8, 16, entitySheetUrl, assetLoader.registerAssetLoadCallback());
     shipAtlas = new SpriteAtlas(shipSheetUrl, assetLoader.registerAssetLoadCallback());
+    flareAtlas = new SpriteAtlas(flareSheetUrl, assetLoader.registerAssetLoadCallback());
 
     assetLoader.onAllFinished(() => onLoadDone(entitySheet));
 }
@@ -41,9 +44,9 @@ function onLoadDone(entitySheet: SpriteSheet) {
     scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.Width, Const.Height, true, () => { return; });
     NearestNeighborScaling(ctx);
 
-    shipSprite = shipAtlas.getSprite(new Point(96, 0), new Point(32, 48), new Point(0.5, 0.5));
+    shipSprite = shipAtlas.getSprite(new Point(96, 0), new Point(32, 48), new Point(0.5, 1));
 
-    let definitions = buildAllDefinitions(shipAtlas);
+    let definitions = buildAllDefinitions(shipAtlas, flareAtlas);
 
     const keys = new KeyboardManager(document.body, false);
     const player = new Player(entitySheet);
@@ -67,16 +70,14 @@ function onLoadDone(entitySheet: SpriteSheet) {
         new Range(20, 40),
         new Range(20, 60)));
 
-    gs.Entities[ETeam.ally].push(definitions.fighter[0].buildShip(ETeam.ally, new Point(-100, 0), Math.PI / 2));
+    for(let i = 0; i < definitions.length; i++){
+        gs.Entities[ETeam.ally].push(definitions[i].buildShip(ETeam.ally, new Point(-100 * (i+1), 0), Math.PI / 2 + Math.random() * Math.PI));
+    }
 
     repaintLoop(gs, player, keys, canvas, ctx);
 }
 
-
-let rot = 0;
-
 function repaintLoop(gameState: GameState, player: Player, keys: KeyboardManager, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-    rot += Math.PI / 60;
     keys.update();
     gameState.tick();
     player.tick(keys);
@@ -108,11 +109,7 @@ function repaint(gameState: GameState, player: Player, canvas: HTMLCanvasElement
 
     player.render(ctx);
 
-    shipSprite.draw(ctx, new Point(100,0), new Point(64, 96), rot);
-
     gameState.draw(ctx);
-
-    
 
     ctx.restore();
 }
