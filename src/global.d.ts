@@ -18,6 +18,10 @@ declare module '*.css' {
     export = classNames;
 }
 
+declare module "*.json" {
+    const value: any;
+    export default value;
+}
 // declare module '*.css' {
 //     const css: any;
 //     export default css;

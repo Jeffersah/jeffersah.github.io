@@ -2,7 +2,6 @@ import { AtlasSprite, SpriteAtlas } from "../../common/assets/SpriteAtlas";
 import Point from "../../common/position/Point";
 import FigherAI from "../ai/FighterAI";
 import { ShipDefinition } from "./ShipDefinition";
-import jsonData from "../data/shipDefinitions.json";
 import IShipDefinitionsFile, { IJsonShipDefinition, IJsonAnimationDefinition, IJsonWeaponGroup, IJsonWeapon } from "../data/IJsonShipDefinition";
 import { SpriteAnimation } from "../../common/assets/SpriteAnimation";
 import { FlareDefinition } from "./FlareDefinition";
@@ -10,8 +9,7 @@ import { AllAIGenerators } from "../ai/IShipAI";
 import { IWeaponArgs } from "../weapons/Weapon";
 import { IWeaponGroupArgs } from "../weapons/WeaponGroup";
 
-export function buildAllDefinitions(sprites: SpriteAtlas, flares: SpriteAtlas): ShipDefinition[] {
-    const json = <IShipDefinitionsFile><any>jsonData;
+export function buildAllDefinitions(json: IShipDefinitionsFile, sprites: SpriteAtlas, flares: SpriteAtlas): ShipDefinition[] {
     const animationData: { [key:string]: SpriteAnimation } = <any>{};
     for(let key in json.animations) {
         animationData[key] = parseAnimation(flares, json.animations[key]);

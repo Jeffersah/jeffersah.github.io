@@ -23,6 +23,8 @@ import { Range } from '../common';
 import { AtlasSprite, SpriteAtlas } from '../common/assets/SpriteAtlas';
 import { buildAllDefinitions } from './ShipDefinitions/AllShipDefinitions';
 import { ETeam } from './ETeam';
+import IShipDefinitionsFile from './data/IJsonShipDefinition';
+import { ShipDefinition } from './ShipDefinitions/ShipDefinition';
 
 let scalingHelper: NearestNeighborScalingHelper;
 let shipAtlas: SpriteAtlas;
@@ -35,10 +37,21 @@ export default function Run() {
     shipAtlas = new SpriteAtlas(shipSheetUrl, assetLoader.registerAssetLoadCallback());
     flareAtlas = new SpriteAtlas(flareSheetUrl, assetLoader.registerAssetLoadCallback());
 
-    assetLoader.onAllFinished(() => onLoadDone(entitySheet));
+    assetLoader.onAllFinished(() => loadJson(entitySheet));
 }
 
-function onLoadDone(entitySheet: SpriteSheet) {
+function loadJson(entitySheet: SpriteSheet){
+    import(
+        /* webpackChunkName: "bullets-ship-definitions" */
+        './data/shipDefinitions.json'
+    ).then(value => {
+        console.log('Got shipDefinitions.json');
+        const definitions = buildAllDefinitions(<IShipDefinitionsFile><any>value, shipAtlas, flareAtlas);
+        onLoadDone(entitySheet, definitions);
+    });
+}
+
+function onLoadDone(entitySheet: SpriteSheet, definitions: ShipDefinition[]) {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
     scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.Width, Const.Height, true, () => { return; });
@@ -46,7 +59,11 @@ function onLoadDone(entitySheet: SpriteSheet) {
 
     shipSprite = shipAtlas.getSprite(new Point(96, 0), new Point(32, 48), new Point(0.5, 1));
 
-    let definitions = buildAllDefinitions(shipAtlas, flareAtlas);
+    import('./data/shipDefinitions.json').then(value => {
+        console.log('Lazy loaded JSON:');
+        console.log(value);
+        const definitions = buildAllDefinitions(<IShipDefinitionsFile><any>value, shipAtlas, flareAtlas);
+    });
 
     const keys = new KeyboardManager(document.body, false);
     const player = new Player(entitySheet);
