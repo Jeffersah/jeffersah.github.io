@@ -1,54 +1,102 @@
-import { SpriteAtlas } from "../../common/assets/SpriteAtlas";
+import { AtlasSprite, SpriteAtlas } from "../../common/assets/SpriteAtlas";
 import Point from "../../common/position/Point";
 import FigherAI from "../ai/FighterAI";
-import { parseShipDefinition, ShipDefinition } from "./ShipDefinition";
+import { ShipDefinition } from "./ShipDefinition";
 import jsonData from "../data/shipDefinitions.json";
-import IJsonShipDefinition from "../data/IJsonShipDefinition";
+import IShipDefinitionsFile, { IJsonShipDefinition, IJsonAnimationDefinition, IJsonWeaponGroup, IJsonWeapon } from "../data/IJsonShipDefinition";
+import { SpriteAnimation } from "../../common/assets/SpriteAnimation";
+import { FlareDefinition } from "./FlareDefinition";
+import { AllAIGenerators } from "../ai/IShipAI";
+import { IWeaponArgs } from "../weapons/Weapon";
+import { IWeaponGroupArgs } from "../weapons/WeaponGroup";
 
-export type ShipType = 'interceptor' | 'fighter';
 export function buildAllDefinitions(sprites: SpriteAtlas, flares: SpriteAtlas): ShipDefinition[] {
-    const json = <IJsonShipDefinition[]>jsonData;
-    return json.map(def => 
-        parseShipDefinition(def, sprites, flares)
+    const json = <IShipDefinitionsFile><any>jsonData;
+    const animationData: { [key:string]: SpriteAnimation } = <any>{};
+    for(let key in json.animations) {
+        animationData[key] = parseAnimation(flares, json.animations[key]);
+    }
+    return json.ships.map(def => 
+        parseShipDefinition(def, animationData, sprites, flares)
     );
-/*
+}
+
+function jsonPoint(json: [number, number]):Point {
+    return new Point(json[0], json[1]);
+}
+
+function parseAnimation(flares: SpriteAtlas, anim: IJsonAnimationDefinition){
+    return flares.getAnimation(
+        jsonPoint(anim.imgOffset),
+        jsonPoint(anim.frameSize),
+        jsonPoint(anim.origin),
+        anim.numFrames
+    );
+}
+
+function parseWeaponGroupDefinition(weaponAtlas: SpriteAtlas, json: IJsonWeaponGroup): IWeaponGroupArgs {
     return {
-        interceptor: [
-            new ShipDefinition(sprites, 
-                new Point(16, 16),
-                new Point(64, 32),
-                new Point(16, 16),
-                new Point(0.5, 0.5),
-                5, 1, 1, 6, 0.001, Math.PI / 128, 
-                [],
-                () => new FigherAI()),
-            new ShipDefinition(sprites, 
-                new Point(16, 16),
-                new Point(64, 128),
-                new Point(16, 16),
-                new Point(0.5, 0.5),
-                5, 1, 1, 6, 0.001, Math.PI / 128, 
-                [],
-                () => new FigherAI())
-        ],
-        fighter: [
-            new ShipDefinition(sprites, 
-                new Point(32, 32),
-                new Point(64, 64),
-                new Point(32, 32),
-                new Point(0.5, 0.5),
-                5, 0.1, 0.01, 8, 0.001, Math.PI / 64,
-                [],
-                () => new FigherAI()),
-            new ShipDefinition(sprites, 
-                new Point(32, 32),
-                new Point(64, 160),
-                new Point(32, 32),
-                new Point(0.5, 0.5),
-                5, 1, 1, 6, 0.001, Math.PI / 128,
-                [],
-                () => new FigherAI())
-        ]
+        timer: json.timer,
+        weapons: json.weapons.map(weaponJson => parseWeaponDefinition(weaponAtlas, weaponJson)),
+        burstAll: json.burstAll
+    }
+}
+
+function parseWeaponDefinition(weaponAtlas: SpriteAtlas, json: IJsonWeapon) : IWeaponArgs{
+    let sprite: AtlasSprite | undefined = undefined;
+    if(json.sprite !== undefined) {
+        sprite = weaponAtlas.getSprite(
+            jsonPoint(json.sprite.imgOffset),
+            jsonPoint(json.sprite.imgSize),
+            jsonPoint(json.sprite.origin)
+        );
+    }
+    return {
+        offset: jsonPoint(json.offset),
+        sprite: sprite,
+        rotation: json.rotation,
+        turret: json.turret,
+        acquisitionAngle: json.acquisitionAngle,
+        minRange: json.minRange,
+        range: json.range
     };
-    */
+}
+
+function parseShipDefinition(def: IJsonShipDefinition, anims: { [key:string]: SpriteAnimation }, ships: SpriteAtlas, flares: SpriteAtlas): ShipDefinition {
+    const parsedFlares: FlareDefinition[] = [];
+    for(let i = 0; i < def.flares.length; i++)
+    {
+        const flare = def.flares[i];
+        const animation = typeof(flare.animation) === 'string' ? anims[flare.animation] : parseAnimation(flares, flare.animation);
+
+        parsedFlares.push(new FlareDefinition(
+            animation,
+            jsonPoint(flare.offset),
+            flare.rotation,
+            flare.condition,
+            flare.minTrigger,
+            flare.rotPerTurn
+        ));
+    }
+
+    const aiFunc = AllAIGenerators[def.ai];
+    const aiGen = () => aiFunc(def.aiParams);
+
+    return new ShipDefinition(
+        ships,
+        jsonPoint(def.size),
+        jsonPoint(def.imgOffset),
+        jsonPoint(def.size),
+        jsonPoint(def.origin),
+        def.hp,
+        def.maxAccel,
+        def.maxDeccel,
+        def.maxSpeed,
+        def.turnAccel,
+        def.maxTurnSpeed,
+        parsedFlares,
+        def.weaponGroups.map(group => 
+            parseWeaponGroupDefinition(flares, group)),
+        aiGen
+    );
 }

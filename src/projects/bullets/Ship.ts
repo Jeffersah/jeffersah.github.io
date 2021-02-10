@@ -8,6 +8,7 @@ import GameState from "./GameState";
 import IEntity from "./IEntity";
 import { FlareDefinition } from "./ShipDefinitions/FlareDefinition";
 import { ShipDefinition } from "./ShipDefinitions/ShipDefinition";
+import { WeaponGroup } from "./weapons/WeaponGroup";
 
 export class Ship implements IEntity{
     
@@ -23,7 +24,8 @@ export class Ship implements IEntity{
         public position: Point,
         public rotation: number,
         public ai: IShipAI,
-        private team: ETeam) {
+        private team: ETeam,
+        private weaponGroups: WeaponGroup[]) {
             this.Velocity = 0;
             this.lastAccel = this.lastDeccel = this.lastTurn = 0;
             this.currentHp = this.definition.maxHp;
@@ -76,6 +78,8 @@ export class Ship implements IEntity{
         }
 
         this.definition.sprite.draw(ctx, this.position, this.definition.size, this.rotation);
+
+        this.ai.debugDraw(ctx, this);
     }
 
     getTeam() {

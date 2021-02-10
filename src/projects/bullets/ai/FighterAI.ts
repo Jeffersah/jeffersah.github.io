@@ -1,9 +1,13 @@
 import Angle from "../../common/Angle";
 import GameState from "../GameState";
 import { Ship } from "../Ship";
-import { IShipAI } from "./IShipAI";
+import { ShipAI } from "./ShipAI";
 
-export default class FigherAI implements IShipAI {
+export default class FigherAI extends ShipAI {
+    constructor() {
+        super();
+    }
+
     TickAI(gs: GameState, ship: Ship): { tgtVel: number; tgtHeading: number; } {
         const player = gs.Player;
         const tgtHeading = Angle.angleBetween(ship.position, player.position);

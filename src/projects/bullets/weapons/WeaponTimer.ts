@@ -13,7 +13,6 @@ export class WeaponTimer implements IWeaponTimingArgs {
     public burstDelay: number; 
     public shotsPerBurst: number;
 
-
     private currentlyShooting: boolean;
 
     public currentReload: number;
