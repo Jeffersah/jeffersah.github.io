@@ -1,4 +1,5 @@
 {
+    "$schema": "./shipDefinitions.schema.json",
     "animations": {
         "tiny_flare": {
             "imgOffset": [0, 0],

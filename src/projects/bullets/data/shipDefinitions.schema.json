@@ -1,0 +1,137 @@
+{
+    "$id": "https://jeffersah.github.io/shipDefinition.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Schema for the shipDefinitions file",
+    "type":"object",
+    "properties": {
+        "animations": {
+            "type":"object",
+            "description": "Animations which can be referenced later",
+            "additionalProperties": { "$ref": "#/definitions/animation" }
+        },
+        "ships": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "A definition for a ship",
+                "required": ["name", "size", "imgOffset", "origin", "hp", "maxAccel", "maxDeccel", "maxSpeed", "turnAccel", "maxTurnSpeed", "flares", "ai", "weaponGroups"],
+                "additionalProperties": false,
+                "properties": {
+                    "name": { "type": "string", "description": "Name of this ship" },
+                    "size": { "$ref": "#/definitions/point", "description": "Size of this ship, in pixels" },
+                    "imgOffset": { "$ref": "#/definitions/point", "description": "Offset of this ships image in the atlas" },
+                    "origin": { "$ref": "#/definitions/point", "description": "Offset of the ship image, in range [0,1]" },
+                    "hp": { "type":"number", "description": "Max HP for this ship" },
+                    "maxAccel": { "type":"number", "description": "Max Acceleration speed" },
+                    "maxDeccel": { "type":"number", "description": "Max Deceleration speed" },
+                    "maxSpeed": { "type":"number", "description": "Max Speed" },
+                    "turnAccel": { "type":"number", "description": "NOT CURRENTLY USED" },
+                    "maxTurnSpeed": { "type":"number", "description": "Max turn rate, in rad/tick" },
+                    "flares": { "type": "array", "items": { "$ref": "#/definitions/flare" }},
+                    "weaponGroups": {
+                        "type": "array",
+                        "description": "An array of weapon groups",
+                        "items": { "$ref": "#/definitions/weaponGroup" }
+                    },
+                    "ai": { "type":"string", "description": "AI definition name" },
+                    "aiParams": { "type":"object", "description": "AI Parameters. Definition depends on chosen AI" }
+                }
+            }
+        }
+    },
+
+    "definitions": {
+        "point": {
+            "type": "array",
+            "description": "A 2D Point",
+            "items": [
+                { "type": "number", "description": "x coordinate" },
+                { "type": "number", "description": "y coordinate" }
+            ]
+        },
+        "animation": {
+            "type": "object",
+            "required": ["imgOffset", "frameSize", "origin", "numFrames"],
+            "additionalProperties": false,
+            "properties": {
+                "imgOffset": { "$ref": "#/definitions/point", "description": "X/Y coordinates of the first frame"},
+                "frameSize": { "$ref": "#/definitions/point", "description": "Size of each frame"},
+                "origin": { "$ref": "#/definitions/point", "description": "Origin location of the animation in each frame, in range [0, 1]"},
+                "numFrames": { "type": "number", "description": "Length of the animation in frames"}
+            }
+        },
+        "flare": {
+            "type": "object",
+            "description": "A single engine flare",
+            "required": ["animation", "offset", "rotation", "condition"],
+            "additionalProperties": false,
+            "properties": {
+                "animation": {
+                    "oneOf": [
+                        { "type": "string", "description": "Animation specified in the 'animations' section"},
+                        { "$ref": "#/definitions/animation", "description": "Animation for this flare" }
+                    ]
+                },
+                "offset": { "$ref": "#/definitions/point", "description": "Anchor position (x,y) on the ship, relative to the top-left corner"},
+                "rotation": { "type":"number", "description": "Anchor rotation"},
+                "condition": {
+                    "oneOf": [
+                        { "$ref": "#/definitions/flareCondition", "description": "What action triggers this flare to render?" },
+                        { "type": "array", "items": { "$ref":"#/definitions/flareCondition", "description": "What actions trigger this flare to render?" }}
+                    ]
+                },
+                "rotPerTurn": { "type": "number", "description": "If specified, the rotation will change depending on turn rate. Measured in radians at max turn"},
+                "minTrigger": { "type": "number", "description": "Minimum value to trigger this flare, in [0,1]"}
+            }
+        },
+        "flareCondition": {
+            "type":"string",
+            "enum": ["accel", "deccel", "turnLeft", "turnRight"]
+        },
+        "weaponGroup": {
+            "type": "object",
+            "additionalItems": false,
+            "required": ["timer", "weapons"],
+            "properties": {
+                "timer": {
+                    "type": "object",
+                    "additionalItems": false,
+                    "required": ["reloadTime", "burstCount", "burstDelay", "shotsPerBurst"],
+                    "properties": {
+                        "reloadTime": { "type": "number", "description": "Reload time, in ticks" },
+                        "burstCount": { "type": "number", "description": "Number of shots in each burst" },
+                        "burstDelay": { "type": "number", "description": "Time between shots in each burst" },
+                        "shotsPerBurst": { "type": "number", "description": "Projectiles fired by each shot in each burst" }
+                    }
+                },
+                "weapons": {
+                    "type": "array",
+                    "description": "Weapons in this weapon group",
+                    "items": { "$ref": "#/definitions/weapon" }
+                },
+                "burstAll": { "type":"boolean", "description": "If true, all weapons fire on burst. If false, each weapon fires sequentially" }
+            }
+        },
+        "weapon": {
+            "type": "object",
+            "additionalItems": false,
+            "required": ["offset", "rotation", "acquisitionAngle", "range"],
+            "properties": {
+                "offset": { "$ref": "#/definitions/point", "description": "Anchor location of the weapon on the ship, relative to the top-left corner"},
+                "rotation": { "type": "number", "description": "Anchor rotation" },
+                "acquisitionAngle": { "type": "number", "description": "The weapon will consider a target acquired if the delta angle is less than this value" },
+                "range": { "type": "number", "description": "Maximum weapon range" },
+                "minRange": { "type": "number", "description": "Minimum weapon range" },
+                "turret": {
+                    "maxAngle": { "type": "number", "description": "Maximum range of this turrets aiming arc in each direction, from [0, PI]"},
+                    "turnRate": { "type": "number", "description": "Turret turn rate, in rad/tick" }
+                },
+                "sprite": {
+                    "imgSize": { "$ref": "#/definitions/point", "description": "Size of this weapon sprite, in pixels" },
+                    "imgOffset": { "$ref": "#/definitions/point", "description": "Offset of this weapons image in the atlas" },
+                    "origin": { "$ref": "#/definitions/point", "description": "Offset of the weapon image, in range [0,1]" }
+                }
+            }
+        }
+    }
+}
