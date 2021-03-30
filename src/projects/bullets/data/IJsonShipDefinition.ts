@@ -1,6 +1,8 @@
+import INamedCollection from "../../common/INamedCollection";
 import { EFlareConditions } from "../ShipDefinitions/FlareDefinition";
 import { IWeaponArgs } from "../weapons/Weapon";
 import { IWeaponTimingArgs } from "../weapons/WeaponTimer";
+import { IJsonWeaponGroup, IJsonWeaponStats } from "./IJsonWeapon";
 
 export default interface IShipDefinitionsFile {
     animations: { 
@@ -12,8 +14,7 @@ export default interface IShipDefinitionsFile {
 export interface IJsonShipDefinition {
     name: string;
     size: [number, number];
-    imgOffset: [number, number];
-    origin: [number, number];
+    sprite: IJsonSpriteDefinition;
     hp: number,
     maxAccel: number,
     maxDeccel: number,
@@ -22,7 +23,8 @@ export interface IJsonShipDefinition {
     maxTurnSpeed: number,
     flares: IJsonFlareDefinition[],
     ai: string,
-    aiParams?: { [key: string]: any }
+    aiParams?: { [key: string]: any },
+    weaponDefinitions?: INamedCollection<IJsonWeaponStats>;
     weaponGroups: IJsonWeaponGroup[]
 }
 
@@ -36,33 +38,16 @@ export interface IJsonFlareDefinition {
 }
 
 export interface IJsonAnimationDefinition {
+    file: string;
     imgOffset: [number, number];
     frameSize: [number, number];
     numFrames: number;
     origin: [number, number];
 }
 
-export interface IJsonWeaponGroup {
-    timer: IWeaponTimingArgs,
-    weapons: IJsonWeapon[],
-    burstAll?: boolean
-}
-
-export interface IJsonWeapon {
-    offset: [number, number];
-    sprite?: {
-        imgOffset: [number, number];
-        imgSize: [number, number];
-        origin: [number, number];
-    };
-    rotation: number;
-
-    turret?: {
-        maxAngle: number;
-        turnRate: number;
-    }
-
-    acquisitionAngle: number;
-    minRange?: number;
-    range: number;
+export interface IJsonSpriteDefinition {
+    file: string;
+    srcOffset: [number, number];
+    srcSize: [number, number];
+    origin: [number, number];
 }

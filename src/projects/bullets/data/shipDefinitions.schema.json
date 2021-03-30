@@ -14,13 +14,12 @@
             "items": {
                 "type": "object",
                 "description": "A definition for a ship",
-                "required": ["name", "size", "imgOffset", "origin", "hp", "maxAccel", "maxDeccel", "maxSpeed", "turnAccel", "maxTurnSpeed", "flares", "ai", "weaponGroups"],
+                "required": ["name", "size", "sprite", "hp", "maxAccel", "maxDeccel", "maxSpeed", "turnAccel", "maxTurnSpeed", "flares", "ai", "weaponGroups"],
                 "additionalProperties": false,
                 "properties": {
                     "name": { "type": "string", "description": "Name of this ship" },
                     "size": { "$ref": "#/definitions/point", "description": "Size of this ship, in pixels" },
-                    "imgOffset": { "$ref": "#/definitions/point", "description": "Offset of this ships image in the atlas" },
-                    "origin": { "$ref": "#/definitions/point", "description": "Offset of the ship image, in range [0,1]" },
+                    "sprite": { "$ref": "#/definitions/sprite", "description": "Base sprite for this ship"},
                     "hp": { "type":"number", "description": "Max HP for this ship" },
                     "maxAccel": { "type":"number", "description": "Max Acceleration speed" },
                     "maxDeccel": { "type":"number", "description": "Max Deceleration speed" },
@@ -28,6 +27,11 @@
                     "turnAccel": { "type":"number", "description": "NOT CURRENTLY USED" },
                     "maxTurnSpeed": { "type":"number", "description": "Max turn rate, in rad/tick" },
                     "flares": { "type": "array", "items": { "$ref": "#/definitions/flare" }},
+                    "weaponDefinitions": {
+                        "type": "object",
+                        "description": "Weapon stats which can be referenced by name in weapon groups",
+                        "additionalProperties": { "$ref": "#/definitions/weaponStats" }
+                    },
                     "weaponGroups": {
                         "type": "array",
                         "description": "An array of weapon groups",
@@ -51,14 +55,32 @@
         },
         "animation": {
             "type": "object",
-            "required": ["imgOffset", "frameSize", "origin", "numFrames"],
+            "required": ["imgOffset", "frameSize", "origin", "numFrames", "file"],
             "additionalProperties": false,
             "properties": {
+                "file": { "type": "string", "description": "File name of the file this animation is found in"},
                 "imgOffset": { "$ref": "#/definitions/point", "description": "X/Y coordinates of the first frame"},
                 "frameSize": { "$ref": "#/definitions/point", "description": "Size of each frame"},
                 "origin": { "$ref": "#/definitions/point", "description": "Origin location of the animation in each frame, in range [0, 1]"},
                 "numFrames": { "type": "number", "description": "Length of the animation in frames"}
             }
+        },
+        "sprite": {
+            "type": "object",
+            "required": ["srcOffset", "srcSize", "origin", "file"],
+            "additionalProperties": false,
+            "properties": {
+                "file": { "type": "string", "description": "File name of the file this sprite is found in"},
+                "srcOffset": { "$ref": "#/definitions/point", "description": "X/Y coordinates of the sprite in the atlas"},
+                "srcSize": { "$ref": "#/definitions/point", "description": "Size of the sprite in the atlas"},
+                "origin": { "$ref": "#/definitions/point", "description": "Origin location of the sprite, in range [0, 1]"}
+            }
+        },
+        "spriteOrAnimation": {
+            "oneOf": [
+                { "$ref": "#/definitions/sprite" },
+                { "$ref": "#/definitions/animation" }
+            ]
         },
         "flare": {
             "type": "object",
@@ -104,34 +126,70 @@
                         "shotsPerBurst": { "type": "number", "description": "Projectiles fired by each shot in each burst" }
                     }
                 },
-                "weapons": {
+                "weapons": { 
                     "type": "array",
-                    "description": "Weapons in this weapon group",
-                    "items": { "$ref": "#/definitions/weapon" }
+                    "items": {
+                        "oneOf": [
+                            { "$ref": "#/definitions/weapon" },
+                            { "$ref": "#/definitions/weaponReference" }
+                        ]
+                    }    
                 },
                 "burstAll": { "type":"boolean", "description": "If true, all weapons fire on burst. If false, each weapon fires sequentially" }
             }
         },
-        "weapon": {
+        "weaponReference": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "additionalItems": false,
+                    "required": ["definition"],
+                    "properties": {
+                        "definition": { "type": "string", "description": "Name of the weapon definition" }
+                    }
+                },
+                { "$ref": "#/definitions/weaponAnchor" }
+            ]
+        },
+        "weaponStats": {
             "type": "object",
             "additionalItems": false,
-            "required": ["offset", "rotation", "acquisitionAngle", "range"],
+            "required": ["acquisitionAngle", "range"],
             "properties": {
-                "offset": { "$ref": "#/definitions/point", "description": "Anchor location of the weapon on the ship, relative to the top-left corner"},
-                "rotation": { "type": "number", "description": "Anchor rotation" },
                 "acquisitionAngle": { "type": "number", "description": "The weapon will consider a target acquired if the delta angle is less than this value" },
                 "range": { "type": "number", "description": "Maximum weapon range" },
                 "minRange": { "type": "number", "description": "Minimum weapon range" },
                 "turret": {
-                    "maxAngle": { "type": "number", "description": "Maximum range of this turrets aiming arc in each direction, from [0, PI]"},
-                    "turnRate": { "type": "number", "description": "Turret turn rate, in rad/tick" }
+                    "type": "object",
+                    "additionalItems": false,
+                    "required": ["maxAngle", "turnRate"],
+                    "properties": {
+                        "maxAngle": { "type": "number", "description": "Maximum range of this turrets aiming arc in each direction, from [0, PI]"},
+                        "turnRate": { "type": "number", "description": "Turret turn rate, in rad/tick" }
+                    }
                 },
                 "sprite": {
-                    "imgSize": { "$ref": "#/definitions/point", "description": "Size of this weapon sprite, in pixels" },
-                    "imgOffset": { "$ref": "#/definitions/point", "description": "Offset of this weapons image in the atlas" },
-                    "origin": { "$ref": "#/definitions/point", "description": "Offset of the weapon image, in range [0,1]" }
+                    "$ref": "#/definitions/sprite"
                 }
             }
+        },
+        "weapon": {
+            "allOf": [ 
+                { "$ref": "#/definitions/weaponStats" },
+                { "$ref": "#/definitions/weaponAnchor" }
+            ]
+        },
+        "weaponAnchor": {
+            "type": "object",
+            "additionalItems": false,
+            "required": ["offset", "rotation"],
+            "properties": {
+                "offset": { "$ref": "#/definitions/point", "description": "Anchor location of the weapon on the ship, relative to the top-left corner"},
+                "rotation": { "type": "number", "description": "Anchor rotation" }
+            }
+        },
+        "effect": {
+            "$ref": "./effectDefinitions.schema.json"
         }
     }
 }

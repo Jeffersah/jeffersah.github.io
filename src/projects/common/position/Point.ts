@@ -1,4 +1,9 @@
 export default class Point {
+
+    static zero(): Point  {
+        return new Point(0,0);
+    }
+
     constructor(public x: number, public y: number) {
 
     }

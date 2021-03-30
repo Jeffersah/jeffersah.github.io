@@ -1,6 +1,10 @@
 import Angle from "../../common/Angle";
+import { AnimationControl } from "../../common/assets/AnimationControl";
+import { ISpriteAnimationArgs, SpriteAnimation } from "../../common/assets/SpriteAnimation";
 import { AtlasSprite } from "../../common/assets/SpriteAtlas";
 import Point from "../../common/position/Point";
+import { IJsonEffect } from "../data/IJsonEffect";
+import EffectControl from "../Effects/EffectControl";
 import GameState from "../GameState";
 import { Ship } from "../Ship";
 import { ShipDefinition } from "../ShipDefinitions/ShipDefinition";
@@ -8,6 +12,9 @@ import { ShipDefinition } from "../ShipDefinitions/ShipDefinition";
 export interface IWeaponArgs {
     offset: Point;
     sprite?: AtlasSprite;
+    shootAnimation?: ISpriteAnimationArgs;
+    shootEffect?: IJsonEffect;
+
     rotation: number;
 
     turret?: {
@@ -23,10 +30,17 @@ export interface IWeaponArgs {
 export class Weapon {
     turretAngle: number;
     actualAnchor: Point;
-    constructor(private args: IWeaponArgs, shipDef: ShipDefinition) {
+    imgControl ?: AnimationControl;
+    effects: EffectControl;
+
+    constructor(public args: IWeaponArgs, shipDef: ShipDefinition) {
         this.turretAngle = 0;
         this.actualAnchor = this.args.offset.Clone();
         this.actualAnchor.SubtractWith(Point.Multiply(shipDef.origin, shipDef.size));
+        if(args.sprite !== undefined) {
+            this.imgControl = new AnimationControl(args.sprite);
+        }
+        this.effects = new EffectControl();
     }
 
     getWeaponLocation(ship: Ship): Point {
@@ -45,6 +59,9 @@ export class Weapon {
      * @returns Returns a point if the turret is ready to fire on a provided possibleTarget (other than reload times) and null otherwise.
      */
     tick(self: Ship, possibleTargets: Point[]): Point | null {
+
+        this.effects.tick();
+        this.imgControl?.tick();
 
         const location = this.getWeaponLocation(self);
 
@@ -125,13 +142,19 @@ export class Weapon {
 
     /** TODO: SHOOT */
     shoot(gs: GameState, self: Ship) {
-
+        // Play the shoot animation, if necessary
+        if(this.imgControl !== undefined && this.args.shootAnimation !== undefined) {
+            this.imgControl.enqueue(this.args.shootAnimation.animation.play(this.args.shootAnimation));
+            this.imgControl.enqueue(this.args.sprite);
+        }
+        if(this.args.shootEffect !== undefined) this.effects.spawnEffect(this.args.shootEffect, this.getWeaponLocation(self), this.getWeaponCurrentAngle(self));
     }
 
     render(ctx: CanvasRenderingContext2D, ship: Ship) {
-        if(this.args.sprite === undefined) return;
+        if(this.imgControl === undefined) return;
         const realPoint = this.getWeaponLocation(ship);
         let realRot = this.getWeaponCurrentAngle(ship);
-        this.args.sprite.draw(ctx, realPoint, this.args.sprite.sourceSize, realRot);
+        this.imgControl.render(ctx, realPoint, realRot);
+        this.effects.draw(ctx);
     }
 }

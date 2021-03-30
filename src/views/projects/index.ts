@@ -16,6 +16,8 @@ import Chess3dComponent from './chess3d/Chess3dComponent';
 import { SpriteComponent } from './sprite/SpriteComponent';
 import { GravitationComponent } from './gravitation/GravitationComponent';
 import FibvisComponentWrapper from './fibvis/FibvisComponentWrapper';
+import AntColonyComponent from './ant-colony/AntColonyComponent';
+import { AntColonyWrapperComponent } from './ant-colony/AntColonyWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -142,4 +144,10 @@ export const AllProjects: IProject[] = [
         projectComponent: SpriteComponent,
         subCategory: 'Maybe some day'
     },
+
+    {
+        projectName: 'ant-colony',
+        projectTitle: 'Ant Colony Optimization',
+        projectComponent: AntColonyWrapperComponent
+    }
 ];

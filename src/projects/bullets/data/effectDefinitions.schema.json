@@ -1,0 +1,22 @@
+{
+    "$id": "https://jeffersah.github.io/shipDefinition.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Schema for an effect definition",
+    
+    "oneOf": [
+        {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "burstXVariance", "burstYVariance", "numBursts", "burstDelay", "burstLifetime", "burstOuterRadius"],
+            "properties": {
+                "type": { "type": "string", "enum": ["explosion"] },
+                "burstXVariance": { "$ref": "./shipDefinitions.schema.json#/definitions/point", "description": "Position variance [min, max] in the X Axis"},
+                "burstyVariance": { "$ref": "./shipDefinitions.schema.json#/definitions/point", "description": "Position variance [min, max] in the Y Axis"},
+                "numBursts": { "$ref": "./shipDefinitions.schema.json#/definitions/point", "description": "Range on number of bursts, [min, max]" },
+                "burstDelay": { "type": "number", "description": "Time between bursts, in ticks" },
+                "burstLifetime": { "$ref": "./shipDefinitions.schema.json#/definitions/point", "description": "Range on burst lifetime [min, max], in ticks" },
+                "burstOuterRadius": { "$ref": "./shipDefinitions.schema.json#/definitions/point", "description": "Range on burst outer radius [min, max]" }
+            }
+        }
+    ]
+}

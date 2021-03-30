@@ -18,10 +18,22 @@ export class SpriteAnimation {
         ctx.drawImage(this.atlas.image, this.sourceOffset.x + frame * this.sourceSize.x, this.sourceOffset.y, this.sourceSize.x, this.sourceSize.y, 0, 0, 1, 1);
         ctx.restore();
     }
-
-    play(maxTime: number, loop?: boolean): PlayingAnimation {
-        return new PlayingAnimation(this, maxTime, loop ?? false);
+    play(args: ISpriteAnimationArgs): PlayingAnimation;
+    play(maxTime: number, loop?: boolean): PlayingAnimation;
+    play(args: ISpriteAnimationArgs | number, loop?: boolean): PlayingAnimation {
+        if((<ISpriteAnimationArgs>args).animation !== undefined) {
+            return new PlayingAnimation(this, (<ISpriteAnimationArgs>args).maxTime, (<ISpriteAnimationArgs>args).loop ?? false)
+        }
+        else {
+            return new PlayingAnimation(this, <number>args, loop ?? false);
+        }
     }
+}
+
+export interface ISpriteAnimationArgs {
+    animation: SpriteAnimation,
+    maxTime: number,
+    loop?: boolean
 }
 
 export class PlayingAnimation {

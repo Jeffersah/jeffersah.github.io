@@ -2,7 +2,7 @@ import { AtlasSprite, SpriteAtlas } from "../../common/assets/SpriteAtlas";
 import Point from "../../common/position/Point";
 import FigherAI from "../ai/FighterAI";
 import { IShipAI } from "../ai/IShipAI";
-import IJsonShipDefinition, { IJsonWeaponGroup } from "../data/IJsonShipDefinition";
+import IJsonShipDefinition from "../data/IJsonShipDefinition";
 import { ETeam } from "../ETeam";
 import { Ship } from "../Ship";
 import { Weapon } from "../weapons/Weapon";

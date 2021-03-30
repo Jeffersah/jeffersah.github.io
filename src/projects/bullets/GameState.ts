@@ -1,8 +1,10 @@
 import KeyboardManager from "../common/input/KeyboardManager";
+import Point from "../common/position/Point";
 import { ETeam } from "./ETeam";
 import { IEffect } from "./IEffect";
 import IEntity from "./IEntity";
 import Player from "./Player";
+import { Ship } from "./Ship";
 
 export default class GameState {
     public Player: Player;
@@ -49,5 +51,17 @@ export default class GameState {
         for(let i = entities.length - 1; i >= 0; i --) {
             entities[i].render(ctx);
         }
+    }
+
+    public findNearestShips(originPoint: Point, team?:ETeam, maxRange?: number): Ship[] {
+        const allItems = team === undefined ? [...this.Entities[ETeam.ally], ...this.Entities[ETeam.enemy], ...this.Entities[ETeam.neutral]] : this.Entities[team];
+        let ships = <Ship[]> allItems.filter(item => (<Ship>item).currentHp !== undefined);
+        if(maxRange !== undefined) {
+            const rangeSq = maxRange * maxRange;
+            ships = ships.filter(s => Point.subtract(s.position, originPoint).LengthSq() <= rangeSq);
+        }
+        const shipsAndRanges = ships.map(ship => ({ ship, range: Point.subtract(ship.position, originPoint).LengthSq() }));
+        shipsAndRanges.sort((a, b) => a.range - b.range);
+        return shipsAndRanges.map(s => s.ship);
     }
 }

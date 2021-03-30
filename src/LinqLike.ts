@@ -63,3 +63,48 @@ export function range(start: number, count: number) {
     }
     return result;
 }
+
+export function min<T>(items: T[], op: (item: T) => number) {
+    let min = op(items[0]);
+    for(let i = 1; i < items.length; i++){
+        let v = op(items[i]);
+        if(v < min) min = v;
+    }
+    return min;
+}
+
+export function max<T>(items: T[], op: (item: T) => number) {
+    let max = op(items[0]);
+    for(let i = 1; i < items.length; i++){
+        let v = op(items[i]);
+        if(v > max) max = v;
+    }
+    return max;
+}
+
+
+export function findMin<T>(items: T[], op: (item: T) => number) {
+    let min = op(items[0]);
+    let mini = items[0];
+    for(let i = 1; i < items.length; i++){
+        let v = op(items[i]);
+        if(v < min) { 
+            min = v;
+            mini = items[i];
+        }
+    }
+    return mini;
+}
+
+export function findMax<T>(items: T[], op: (item: T) => number) {
+    let max = op(items[0]);
+    let maxi = items[0];
+    for(let i = 1; i < items.length; i++){
+        let v = op(items[i]);
+        if(v > max) { 
+            max = v;
+            maxi = items[i];
+        }
+    }
+    return maxi;
+}

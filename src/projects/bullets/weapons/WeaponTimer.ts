@@ -43,7 +43,8 @@ export class WeaponTimer implements IWeaponTimingArgs {
         return false;
     }
 
-    tick(onShoot: (burstIndex: number, shellIndex: number) => void): void {
+    tick(shouldShoot: boolean, onShoot: (burstIndex: number, shellIndex: number) => void): void {
+        if(shouldShoot) this.shoot();
         if(this.currentlyShooting) {
             if(this.currentBurstDelay === 0) {
                 // Fire burst

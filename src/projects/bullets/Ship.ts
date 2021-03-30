@@ -8,6 +8,7 @@ import GameState from "./GameState";
 import IEntity from "./IEntity";
 import { FlareDefinition } from "./ShipDefinitions/FlareDefinition";
 import { ShipDefinition } from "./ShipDefinitions/ShipDefinition";
+import { Weapon } from "./weapons/Weapon";
 import { WeaponGroup } from "./weapons/WeaponGroup";
 
 export class Ship implements IEntity{
@@ -16,7 +17,7 @@ export class Ship implements IEntity{
     private lastAccel: number;
     private lastDeccel: number;
     private lastTurn: number;
-    private currentHp: number;
+    public currentHp: number;
     private flares: FlareDefinition[];
     
     constructor(
@@ -53,6 +54,10 @@ export class Ship implements IEntity{
             this.Velocity += this.lastAccel * this.definition.maxAccel;
         }
 
+        for(let i = 0; i < this.weaponGroups.length; i++){
+            this.weaponGroups[i].tick(gs, this);
+        }
+
         // Try turn
         var turnAmt = Angle.accuteAngle(this.rotation, tgtHeading);
 
@@ -77,6 +82,9 @@ export class Ship implements IEntity{
             this.flares[i].draw(ctx, this.position, this.definition.origin, this.definition.size, this.rotation);
         }
 
+        for(let i = 0; i < this.weaponGroups.length; i++){
+            this.weaponGroups[i].draw(ctx, this);
+        }
         this.definition.sprite.draw(ctx, this.position, this.definition.size, this.rotation);
 
         this.ai.debugDraw(ctx, this);

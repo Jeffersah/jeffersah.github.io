@@ -25,17 +25,21 @@ import { buildAllDefinitions } from './ShipDefinitions/AllShipDefinitions';
 import { ETeam } from './ETeam';
 import IShipDefinitionsFile from './data/IJsonShipDefinition';
 import { ShipDefinition } from './ShipDefinitions/ShipDefinition';
+import INamedCollection from '../common/INamedCollection';
 
+let atlases: INamedCollection<SpriteAtlas>;
 let scalingHelper: NearestNeighborScalingHelper;
-let shipAtlas: SpriteAtlas;
-let flareAtlas: SpriteAtlas;
 let shipSprite: AtlasSprite;
 
 export default function Run() {
     const assetLoader = new AssetLoader();
     const entitySheet = new SpriteSheet(8, 16, entitySheetUrl, assetLoader.registerAssetLoadCallback());
-    shipAtlas = new SpriteAtlas(shipSheetUrl, assetLoader.registerAssetLoadCallback());
-    flareAtlas = new SpriteAtlas(flareSheetUrl, assetLoader.registerAssetLoadCallback());
+    const shipAtlas = new SpriteAtlas(shipSheetUrl, assetLoader.registerAssetLoadCallback());
+    const flareAtlas = new SpriteAtlas(flareSheetUrl, assetLoader.registerAssetLoadCallback());
+    atlases = {
+        "Ships": shipAtlas,
+        "Flares": flareAtlas
+    };
 
     assetLoader.onAllFinished(() => loadJson(entitySheet));
 }
@@ -46,7 +50,7 @@ function loadJson(entitySheet: SpriteSheet){
         './data/shipDefinitions.json'
     ).then(value => {
         console.log('Got shipDefinitions.json');
-        const definitions = buildAllDefinitions(<IShipDefinitionsFile><any>value, shipAtlas, flareAtlas);
+        const definitions = buildAllDefinitions(<IShipDefinitionsFile><any>value, atlases);
         onLoadDone(entitySheet, definitions);
     });
 }
@@ -57,13 +61,7 @@ function onLoadDone(entitySheet: SpriteSheet, definitions: ShipDefinition[]) {
     scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, Const.Width, Const.Height, true, () => { return; });
     NearestNeighborScaling(ctx);
 
-    shipSprite = shipAtlas.getSprite(new Point(96, 0), new Point(32, 48), new Point(0.5, 1));
-
-    import('./data/shipDefinitions.json').then(value => {
-        console.log('Lazy loaded JSON:');
-        console.log(value);
-        const definitions = buildAllDefinitions(<IShipDefinitionsFile><any>value, shipAtlas, flareAtlas);
-    });
+    shipSprite = atlases["Ships"].getSprite(new Point(96, 0), new Point(32, 48), new Point(0.5, 1));
 
     const keys = new KeyboardManager(document.body, false);
     const player = new Player(entitySheet);
@@ -88,7 +86,8 @@ function onLoadDone(entitySheet: SpriteSheet, definitions: ShipDefinition[]) {
         new Range(20, 60)));
 
     for(let i = 0; i < definitions.length; i++){
-        gs.Entities[ETeam.ally].push(definitions[i].buildShip(ETeam.ally, new Point(-100 * (i+1), 0), Math.PI / 2 + Math.random() * Math.PI));
+        const team = i % 2 === 0 ? ETeam.enemy : ETeam.ally;
+        gs.Entities[team].push(definitions[i].buildShip(team, new Point(-100 * (i+1), 0), Math.random() * Math.PI * 2));
     }
 
     repaintLoop(gs, player, keys, canvas, ctx);
