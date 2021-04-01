@@ -18,6 +18,8 @@ import { GravitationComponent } from './gravitation/GravitationComponent';
 import FibvisComponentWrapper from './fibvis/FibvisComponentWrapper';
 import AntColonyComponent from './ant-colony/AntColonyComponent';
 import { AntColonyWrapperComponent } from './ant-colony/AntColonyWrapperComponent';
+import LazyLoadWrapperComponent from '../common/LazyLoadWrapperComponent';
+import GlslMandelbrotWrapperComponent from './glsl-mandelbrot/GlslMandelbrotWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -149,5 +151,11 @@ export const AllProjects: IProject[] = [
         projectName: 'ant-colony',
         projectTitle: 'Ant Colony Optimization',
         projectComponent: AntColonyWrapperComponent
+    },
+
+    {
+        projectName: 'glsl-mandelbrot',
+        projectTitle: 'Mandelbrot (GLSL)',
+        projectComponent: GlslMandelbrotWrapperComponent
     }
 ];

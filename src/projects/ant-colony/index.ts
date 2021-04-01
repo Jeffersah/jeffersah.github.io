@@ -16,6 +16,10 @@ export default function Run(settings: IRenderSettings, cvs: HTMLCanvasElement) {
     paintLoop(cvs, ctx, settings, state);
 }
 
+export function Cleanup() {
+    stopPaintLoop();
+}
+
 function stopPaintLoop() {
     totalMinPath = null;
     if(currentPaintLoop !== -1)

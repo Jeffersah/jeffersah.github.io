@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Run from '../../../projects/ant-colony/index';
+import Run, { Cleanup } from '../../../projects/ant-colony/index';
 import { IRenderSettings } from '../../../projects/ant-colony/IRenderSettings';
 
 export default function AntColonyComponent() {
@@ -16,6 +16,7 @@ export default function AntColonyComponent() {
 
     React.useEffect(() => {
         Run(state, ref.current);
+        return Cleanup;
     }, [state, ref]);
 
     return <div className='flex row'>
