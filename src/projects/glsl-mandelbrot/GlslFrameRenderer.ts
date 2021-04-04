@@ -2,6 +2,7 @@ import { Range, Range2d } from "../common";
 import * as GLSL from "../common/3d/GlslHelpers";
 import { ResizeCanvas } from "../common/CanvasHelpers";
 import Point from "../common/position/Point";
+import Rect from "../common/position/Rectangle";
 
 const SCROLL_DIV = 3;
 const SCROLL_POW = 1.1;
@@ -17,11 +18,14 @@ export default class GlslFrameRenderer {
     protected canvasRange: Range2d;
     protected windowRange: Range2d;
 
+    private touch_anchors: { [key: number]: Point }
+
     constructor(private canvas: HTMLCanvasElement, private fragment_code: string, private onMiddleClick?: (pt: Point) => void) {
         ResizeCanvas(canvas, 1200, 600);
         this.cursor_anchor = null;
         this.mm_down = false;
         this.gl = canvas.getContext('webgl');
+        this.touch_anchors = {};
         
         this.canvasRange = new Range2d(new Range(0, 1200), new Range(0, 600));
         this.windowRange = new Range2d(new Range(-1, 1), new Range(-1, (canvas.height / canvas.width)));
@@ -67,9 +71,7 @@ export default class GlslFrameRenderer {
             if(this.cursor_anchor != null) {
                 const dx = e.offsetX - this.cursor_anchor.x;
                 const dy = e.offsetY - this.cursor_anchor.y;
-
-                const perc = this.canvasRange.GetPercentage(dx, dy);
-                this.windowRange.ShiftByPercentage(-perc.x, perc.y);
+                this.panCameraByScreenDelta(new Point(dx, dy));
                 this.cursor_anchor = new Point(e.offsetX, e.offsetY);
                 this.renderFrame();
                 e.preventDefault();
@@ -89,6 +91,58 @@ export default class GlslFrameRenderer {
             this.renderFrame();
             e.preventDefault();
         });
+        this.canvas.addEventListener('touchstart', ev => { 
+            if(ev.targetTouches.length >= 3 || ev.targetTouches.length === 0) return;
+            for(let i = 0; i < ev.targetTouches.length; i++){
+                const touch = ev.targetTouches.item(i);
+                this.touch_anchors[touch.identifier] = touchOffset(touch);
+            }
+            ev.preventDefault();
+        });
+        this.canvas.addEventListener('touchmove', ev => {
+            if(ev.touches.length >= 3 || ev.touches.length === 0) return;
+            const moves: [Point, Point][] = [];
+            for(let i = 0; i < ev.targetTouches.length; i++){
+                const touch = ev.targetTouches.item(i);
+                const pos = touchOffset(touch);
+                const oldPos = this.touch_anchors[touch.identifier];
+                if(oldPos === undefined) return;
+                moves.push([oldPos, pos]);
+                this.touch_anchors[touch.identifier] = pos;
+            }
+
+            if(moves.length === 1) {
+                // Just pan the camera
+                this.panCameraByScreenDelta(Point.subtract(moves[0][1], moves[0][0]));
+            }
+            else if(moves.length === 2) {
+                // Average the start + End positions to find the move amt
+                const dragStart = Point.Multiply(Point.add(moves[0][0], moves[1][0]), 0.5, 0.5);
+                const dragEnd = Point.Multiply(Point.add(moves[0][1], moves[1][1]), 0.5, 0.5);
+                const worldPos = this.panCameraByScreenDelta(dragEnd.SubtractWith(dragStart));
+                const startDist = Point.subtract(moves[0][0], moves[1][0]).Length();
+                const endDist = Point.subtract(moves[0][1], moves[1][1]).Length();
+                const scaleAmt = startDist / endDist;
+                this.windowRange.AspectScale(scaleAmt, worldPos.x, 1-worldPos.y);
+            }
+
+            this.renderFrame();
+            ev.preventDefault();
+        });
+        this.canvas.addEventListener('touchend', ev => {
+            this.touch_anchors = {};
+            ev.preventDefault();
+        });
+        this.canvas.addEventListener('touchcancel', ev => {
+            this.touch_anchors = {};
+            ev.preventDefault();
+        });
+    }
+
+    private panCameraByScreenDelta(delta: Point) {
+        const perc = this.canvasRange.GetPercentage(delta.x, delta.y);
+        this.windowRange.ShiftByPercentage(-perc.x, perc.y);
+        return perc;
     }
 
     renderFrame() {
@@ -101,4 +155,9 @@ export default class GlslFrameRenderer {
     cleanup() {
         
     }
+}
+
+function touchOffset(touch: Touch): Point {
+    const tgt = (touch.target as HTMLElement).getBoundingClientRect();
+    return new Point(touch.pageX - tgt.left, touch.pageY - tgt.top);
 }
