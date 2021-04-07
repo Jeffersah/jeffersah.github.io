@@ -55,6 +55,21 @@ export class Copy implements IDelta {
 }
 
 // tslint:disable-next-line: max-classes-per-file
+export class Push implements IDelta {
+    type = 'push';
+    complexity: EComplexity;
+    constructor(public srcArray: SortArray, public srcIndex: number, public tgtArray: SortArray) {
+        this.complexity = EComplexity.Set;
+    }
+    apply(state: SortState): void {
+        this.tgtArray.internalPush(this.srcArray.internalGet(this.srcIndex).value);
+    }
+    rollback(state: SortState): void {
+        this.tgtArray.internalPop();
+    }
+}
+
+// tslint:disable-next-line: max-classes-per-file
 export class Swap implements IDelta {
     type = 'swap';
     complexity: EComplexity;

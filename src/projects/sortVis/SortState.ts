@@ -12,7 +12,7 @@ export default class SortState {
     private initialValue: number[];
     private nextDecoratorId: number;
     private requiresMemoryAllocation: boolean;
-    public allArrayInfo: {arrId: number, offset: number, length: number}[];
+    public allArrayInfo: {arrId: number, offset?: number, length?: number}[];
 
     constructor(data: number[]) {
         this.initialValue = data;
@@ -122,10 +122,10 @@ export default class SortState {
 
     createArray(length?: number, offset?: number): SortArray {
         this.requiresMemoryAllocation = true;
-        this.allArrayInfo.push({arrId: this.nextArrayId, offset: offset === undefined ? 0 : offset, length: length === undefined ? 0 : length});
-        const newArr = new SortArray(this, this.nextArrayId++, offset === undefined ? 0 : offset, new Array(length === undefined ? 0 : length));
+        this.allArrayInfo.push({arrId: this.nextArrayId, offset: offset, length: length});
+        const newArr = new SortArray(this, this.nextArrayId++, offset, new Array(length === undefined ? 0 : length));
         this.arrays.push(newArr);
-        this.deltas.push(new CreateSubArray(newArr, length, offset));
+        this.deltas.push(new CreateSubArray(newArr, length ?? 0, offset));
         return newArr;
     }
 

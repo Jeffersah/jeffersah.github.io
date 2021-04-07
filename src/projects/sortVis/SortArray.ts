@@ -1,11 +1,12 @@
 import SortState from './SortState';
 import Record from './Record';
 import { DeleteSubArray } from './delta/SubArray';
-import { Get, Swap, Copy as Copy } from './delta/SimpleOperations';
+import { Get, Swap, Copy as Copy, Push } from './delta/SimpleOperations';
+import { threadId } from 'worker_threads';
 
 export default class SortArray {
     private data: Record[];
-    constructor(private state: SortState, public arrayId: number, public offset: number, data: number[]) {
+    constructor(private state: SortState, public arrayId: number, public offset: number | undefined, data: number[]) {
         this.data = [];
         for (let i = 0; i < data.length; i++) {
             this.data.push(new Record(state, this, data[i], i));
@@ -33,6 +34,11 @@ export default class SortArray {
         this.state.pushDelta(new Copy(r.array, r.index, this, index, this.data[index].value));
         this.data[index].value = r.value;
     }
+    
+    public push(r: Record) {
+        this.state.pushDelta(new Push(r.array, r.index, this));
+        this.internalPush(r.value);
+    }
 
     public getDeleteDelta() {
         return new DeleteSubArray(this, this.data.map(d => d.value));
@@ -40,6 +46,14 @@ export default class SortArray {
 
     public internalSet(index: number, value: number) {
         this.data[index].value = value;
+    }
+
+    public internalPush(value: number) {
+        this.data.push(new Record(this.state, this, value, this.data.length));
+    }
+
+    public internalPop() {
+        this.data.pop();
     }
 
     public internalSwap(i1: number, i2: number) {

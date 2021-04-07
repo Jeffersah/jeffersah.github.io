@@ -1,6 +1,7 @@
 import ISort from './ISort';
 import SortState from '../SortState';
 import SortArray from '../SortArray';
+import * as React from 'react';
 
 export default class CycleSort implements ISort {
     public name = 'CycleSort';

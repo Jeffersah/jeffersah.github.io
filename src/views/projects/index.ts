@@ -20,6 +20,8 @@ import AntColonyComponent from './ant-colony/AntColonyComponent';
 import { AntColonyWrapperComponent } from './ant-colony/AntColonyWrapperComponent';
 import LazyLoadWrapperComponent from '../common/LazyLoadWrapperComponent';
 import GlslMandelbrotWrapperComponent from './glsl-mandelbrot/GlslMandelbrotWrapperComponent';
+import { RecursiveShooterWrapperComponent } from './recurshooter/RecursiveShooterWrapperComponent';
+import { GridlockWrapperComponent } from './gridlock/GridlockWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -157,5 +159,19 @@ export const AllProjects: IProject[] = [
         projectName: 'glsl-mandelbrot',
         projectTitle: 'Mandelbrot (GLSL)',
         projectComponent: GlslMandelbrotWrapperComponent
+    },
+    
+    {
+        projectName: 'recurshooter',
+        projectTitle: 'Recursive Shooter',
+        subCategory: 'Maybe some day',
+        projectComponent: RecursiveShooterWrapperComponent
+    },
+    
+    {
+        projectName: 'gridlock',
+        projectTitle: 'Gridlock',
+        subCategory: 'Maybe some day',
+        projectComponent: GridlockWrapperComponent
     }
 ];

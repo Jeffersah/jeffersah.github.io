@@ -1,6 +1,7 @@
-import ISort from './ISort';
-import SortState from '../SortState';
-import SortArray from '../SortArray';
+import ISort from '../ISort';
+import SortState from '../../SortState';
+import SortArray from '../../SortArray';
+import * as React from 'react';
 
 export default class SmoothSort implements ISort {
     public name = 'SmoothSort';
@@ -131,4 +132,24 @@ export default class SmoothSort implements ISort {
         }
         return this.heapPrevDist[order];
     }
+}
+
+export function getSmoothSortDescription(): JSX.Element {
+    return <div>
+        <h2>Smooth Sort</h2>
+        <table className='sortAttributeTable'>
+            <tbody>
+                <tr>
+                    <td>Stable</td>
+                    <td>No</td>
+                    <td>In-Place</td>
+                    {/* TODO: Check if it's in-place */}
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+        <p>Smoothsort is a very fast heap-like sorting algorithm which uses a fibonacci heap instead of a typical binary heap to speed up heap construction</p>
+        <p style={{color:'#aaa'}}><i>TODO: Actually write out a good description for smooth sort</i></p>
+    </div>;
 }

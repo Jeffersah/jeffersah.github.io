@@ -2,7 +2,7 @@ import IPaint from './IPaint';
 import SortState from '../SortState';
 import IDelta from '../delta/IDelta';
 import EComplexity from '../delta/EComplexity';
-import { Compare, Swap, Copy } from '../delta/SimpleOperations';
+import { Compare, Swap, Copy, Push } from '../delta/SimpleOperations';
 import SortArray from '../SortArray';
 
 type GetCoordFunc = (index: number, value: number) => { x: number, y: number, height: number };
@@ -58,11 +58,19 @@ export default class BarDisplay implements IPaint {
             wh: state.doesRequireMemory() ? Math.floor(canvas.height * (1 - PERC_WINDOW_FOR_SUBARR)) : canvas.height
         };
 
+        let rollingOffset = 0;
         for (const arr of state.allArrayInfo) {
+
+            const actualOffset = arr.offset ?? rollingOffset;
+            const realLength = arr.length ?? state.arrays.filter(a => a.arrayId === arr.arrId)[0]?.length() ?? 0;
+            if(arr.offset === undefined) {
+                rollingOffset += realLength;
+            }
+
             const window = arr.arrId === 0 ? mainWindow : {
-                wx: Math.floor(arr.offset * widthPer),
+                wx: Math.floor(actualOffset * widthPer),
                 wy: Math.floor(canvas.height - (canvas.height * PERC_WINDOW_FOR_SUBARR)),
-                ww: Math.floor(arr.length * widthPer),
+                ww: Math.floor(realLength * widthPer),
                 wh: Math.floor(canvas.height * PERC_WINDOW_FOR_SUBARR)
             };
             arrWindows[arr.arrId] = window;
@@ -101,9 +109,9 @@ export default class BarDisplay implements IPaint {
         ctx.strokeStyle = '#F80';
         ctx.lineWidth = 1;
         const crossSize = 5;
+        ctx.beginPath();
         for (const delta of deltas.filter(d => d.type === 'copy')) {
             const d = delta as Copy;
-            ctx.beginPath();
 
             const { x, y } = coordsFrom(d.srcArray.arrayId, d.srcIndex, d.srcArray.get(d.srcIndex).value);
             const { x: x2, y: y2 } = coordsFrom(d.tgtArray.arrayId, d.tgtIndex, d.tgtArray.get(d.tgtIndex).value);
@@ -114,8 +122,27 @@ export default class BarDisplay implements IPaint {
             ctx.lineTo(x - crossSize, y + crossSize);
             ctx.moveTo(x, y);
             ctx.lineTo(x2, y2);
-            ctx.stroke();
         }
+        ctx.stroke();
+
+        
+        ctx.strokeStyle = '#F80';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (const delta of deltas.filter(d => d.type === 'push')) {
+            const d = delta as Push;
+
+            const { x, y } = coordsFrom(d.srcArray.arrayId, d.srcIndex, d.srcArray.get(d.srcIndex).value);
+            const { x: x2, y: y2 } = coordsFrom(d.tgtArray.arrayId, d.tgtArray.length()-1, d.tgtArray.get(d.tgtArray.length()-1).value);
+
+            ctx.moveTo(x - crossSize, y - crossSize);
+            ctx.lineTo(x + crossSize, y + crossSize);
+            ctx.moveTo(x + crossSize, y - crossSize);
+            ctx.lineTo(x - crossSize, y + crossSize);
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+        }
+        ctx.stroke();
 
         ctx.strokeStyle = '#0f0';
         ctx.lineWidth = 2;
