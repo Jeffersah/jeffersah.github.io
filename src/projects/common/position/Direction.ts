@@ -35,13 +35,13 @@ export const allDirections: Direction[] = [
     Direction.Left,
     Direction.UpLeft,
 ];
-export const cardinalDirections: Direction[] = [
+export const cardinalDirections: ECardinalDirection[] = [
     Direction.Up,
     Direction.Right,
     Direction.Down,
     Direction.Left
 ];
-export const diagonalDirections: Direction[] = [
+export const diagonalDirections: EDiagonalDirection[] = [
     Direction.UpRight,
     Direction.DownRight,
     Direction.DownLeft,

@@ -135,6 +135,14 @@ export default class Point {
         return new Point(Math.max(a.x, b.x), Math.max(a.y, b.y));
     }
 
+    static Bezier(pts: Point[], t: number): Point {
+        if(pts.length === 1) return pts[0];
+        else if(pts.length === 2) return Point.add(Point.Multiply(pts[1], t), Point.Multiply(pts[0], 1-t));
+        return Point.add(
+            Point.Multiply(Point.Bezier(pts.slice(1), t), t),
+            Point.Multiply(Point.Bezier(pts.slice(0, pts.length - 1), t), 1-t));
+    }
+
     rotate(theta: number): Point {
         const angle = Math.atan2(this.y, this.x);
         const len = this.Length();
