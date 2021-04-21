@@ -8,18 +8,18 @@ export function distinct<T>(items: T[]) {
     return results;
 }
 
-export function groupBy<T>(items: T[], keySelector: (item: T) => string): { key: string, items: T[] }[] {
-    const results: { [key: string]: T[] } = {};
-    for (const item of items) {
-        const key = keySelector(item);
-        if (results[key] !== undefined) {
-            results[key].push(item);
-        } else {
-            results[key] = [ item ];
-        }
-    }
-    return Object.keys(results).map(key => ({ key, items: results[key] }));
-}
+// export function groupBy<T>(items: T[], keySelector: (item: T) => string): { key: string, items: T[] }[] {
+//     const results: { [key: string]: T[] } = {};
+//     for (const item of items) {
+//         const key = keySelector(item);
+//         if (results[key] !== undefined) {
+//             results[key].push(item);
+//         } else {
+//             results[key] = [ item ];
+//         }
+//     }
+//     return Object.keys(results).map(key => ({ key, items: results[key] }));
+// }
 
 export function repeat<T>(item: T, count: number): T[] {
     const arr = Array(count);
@@ -107,4 +107,35 @@ export function findMax<T>(items: T[], op: (item: T) => number) {
         }
     }
     return maxi;
+}
+
+export function groupBy<TKey, TValue>(items: TValue[], op: (item: TValue) => TKey): Map<TKey, TValue[]> {
+    const map = new Map<TKey, TValue[]>();
+    for(const item of items) {
+        const key = op(item);
+        if(map.has(key)) map.get(key).push(item);
+        else map.set(key, [item]);
+    }
+
+    return map;
+}
+
+export function customGroupBy<TKey, TValue>(items: TValue[], getKey: (item: TValue) => TKey, cmp: (k1: TKey, k2: TKey)=> boolean):[TKey, TValue[]][] {
+    let result:[TKey, TValue[]][] = [];
+    for(const item of items) {
+        const k = getKey(item);
+        let handled = false;
+        for(const [groupKey, groupValues] of result) {
+            if(cmp(k, groupKey))
+            {
+                handled =true;
+                groupValues.push(item);
+                break;
+            }
+        }
+        if(!handled) {
+            result.push([k, [item]]);
+        }
+    }
+    return result;
 }

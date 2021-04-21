@@ -16,11 +16,11 @@ export function ProjectsComponent() {
             }
         </ul>
         {
-            projectGroups.map(group =>
-                <div key={group.key}>
-                    <h2>{group.key}</h2>
+            Array.from(projectGroups.entries()).map(([key, value]) =>
+                <div key={key}>
+                    <h2>{key}</h2>
                     <ul>
-                        {group.items.map(project => <li key={project.projectName}><Link to={'/projects/' + project.projectName}>{project.projectTitle}</Link></li>)}
+                        {value.map(project => <li key={project.projectName}><Link to={'/projects/' + project.projectName}>{project.projectTitle}</Link></li>)}
                     </ul>
                 </div>
             )
