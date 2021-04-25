@@ -22,6 +22,10 @@ export default class StackItemPattern {
         return this.value === other.value && this.type === other.type;
     }
 
+    priorityCompare(other: StackItemPattern): number {
+        return other.type - this.type;
+    }
+
     toString(): string {
         switch(this.type) {
             case EPatternType.literal: return this.value;

@@ -30,7 +30,6 @@ value -> ( {arith} )
 `);
 
     const [input, setInput] = React.useState('1 + 1');
-    const [output, setOutput] = React.useState('');
 
     const [tokens, setTokens] = React.useState<Token[]>([]);
     const [stateMachine, setStateMachine] = React.useState<StateMachine>(undefined);
@@ -74,6 +73,17 @@ value -> ( {arith} )
         resultPanelContent = <span style={{color:'red'}}>
             Grammar is invalid.
         </span>;
+
+        if(!stateMachine.isValid && stateMachine.invalidStateKey !== undefined) {
+            
+        resultPanelContent = <span style={{color:'red'}}>
+            Grammar is invalid. The following state is ambiguous:
+            <ul>
+                {stateMachine.invalidStateKey.toString().split('\r\n').map((str, i) => 
+                    <li key={i}>{str}</li>)}
+            </ul>
+        </span>;
+        }
     }
     else if(result === undefined){
 

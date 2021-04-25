@@ -9,7 +9,7 @@ export default class MapConnections {
         this.connections = [];
         for(let dir = 0; dir < 4; dir++) {
             const connectionArr = [];
-            for(let to = dir + 1; to < 5; to++) {
+            for(let to = dir; to < 4; to++) {
                 connectionArr.push((packed & 1) > 0);
                 packed >>= 1;
             }
@@ -23,14 +23,13 @@ export default class MapConnections {
     public connection(from: ETileAnchor, to: ETileAnchor, value?: boolean): void|boolean {
         const fromIndex = TileAnchorHelper.AnchorToIndex(from);
         const toIndex = TileAnchorHelper.AnchorToIndex(to);
-        if(fromIndex === toIndex) throw "From and To must be different values";
         const minIndex = Math.min(fromIndex, toIndex);
         const maxIndex = Math.max(fromIndex, toIndex);
         if (value === undefined) {
-            return this.connections[minIndex][maxIndex-minIndex-1];
+            return this.connections[minIndex][maxIndex-minIndex];
         }
         else {
-            this.connections[minIndex][maxIndex-minIndex-1] = value;
+            this.connections[minIndex][maxIndex-minIndex] = value;
         }
 
     }

@@ -9,6 +9,7 @@ import StateNode from "./StateNode";
 export default class StateMachine {
     states: StateNode[];
     isValid: boolean;
+    invalidStateKey: StateKey;
     constructor(public productions: ProductionSet, firstProductionName: string) {
         this.states = [];
         this.isValid = true;
@@ -27,6 +28,7 @@ export default class StateMachine {
         this.states.push(newState);
         if(!newState.generateContinuations())
         {
+            if(this.isValid) this.invalidStateKey = key;
             this.isValid = false;
             this.states.pop();
             return undefined;

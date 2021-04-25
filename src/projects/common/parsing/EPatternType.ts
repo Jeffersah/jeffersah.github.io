@@ -1,8 +1,8 @@
 enum EPatternType {
-    production,
-    tokenType,
-    literal,
-    endOfInput
+    production = 0,
+    tokenType = 1,
+    literal = 2,
+    endOfInput = 3
 }
 
 export default EPatternType;

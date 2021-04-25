@@ -37,13 +37,20 @@ export default class StateNode {
 
     tryStep(parserState: ParserState): boolean {
         const nextInput = parserState.inputStack[parserState.inputStack.length - 1];
-        for(const [pattern, state] of this.continuations) {
-            if(nextInput.matches(pattern)) {
-                parserState.parsedStack.push(parserState.inputStack.pop());
-                parserState.stateStack.push(state.id);
-                return true;
-            }
+        const validContinuations = Array.from(this.continuations.entries()).filter(arr => nextInput.matches(arr[0]));
+        if(validContinuations.length === 1) {
+            parserState.parsedStack.push(parserState.inputStack.pop());
+            parserState.stateStack.push(validContinuations[0][1].id);
+            return true;
         }
+        else if(validContinuations.length > 1) {
+            validContinuations.sort(([p1], [p2]) => p1.priorityCompare(p2));
+            console.log(validContinuations);
+            parserState.parsedStack.push(parserState.inputStack.pop());
+            parserState.stateStack.push(validContinuations[0][1].id);
+            return true;
+        }
+        
 
         if(this.completedProduction !== undefined) {
             // Reduce
@@ -56,8 +63,8 @@ export default class StateNode {
             parserState.inputStack.push(new TreeBranch(this.completedProduction.production, children));
             return true;
         }
-        console.log('PARSE FAILED!')
-        console.log('State: ' + parserState.toString());
+        // console.log('PARSE FAILED!')
+        // console.log('State: ' + parserState.toString());
         return false;
     }
 }
