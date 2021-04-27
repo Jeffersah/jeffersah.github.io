@@ -1,26 +1,24 @@
+import { findMin } from "../../LinqLike";
 import { AtlasSprite, SpriteAtlas } from "../common/assets/SpriteAtlas";
 import { SpriteSheet } from "../common/assets/SpriteSheet";
 import Angle from "../common/position/Angle";
 import Point from "../common/position/Point";
+import Assets from "./assets";
 import { Car } from "./Car";
+import { ATLAS_WIDTH, CAR_SIZE, CAR_SIZE_PT, TILE_SIZE, TILE_SIZE_PT } from "./Constants";
 import ECarColor from "./ECarColor";
 import ETileAnchor, { ITilePosition, TileAnchorHelper } from "./ETileAnchor";
 import ILevelData from "./ILevelData";
-import allMapTiles, { MapTile } from "./tiles/MapTile";
+import SignalCtrlPanel from "./signalCtrl/signalCtrlPanel";
+import MapTile from "./tiles/MapTile";
+import allMapTileDefinitions, { MapTileDefinition } from "./tiles/MapTileDefintion";
 
-const TILE_SIZE = 48;
-const TILE_SIZE_PT = new Point(TILE_SIZE, TILE_SIZE);
-const ATLAS_WIDTH = 6;
-
-const CAR_SIZE = 18;
-const CAR_SIZE_PT = new Point(CAR_SIZE, CAR_SIZE);
 
 export default class GameState {
     map: (MapTile | null)[][]
-    tileSprites: AtlasSprite[];
     cars: Car[];
 
-    constructor(private level: ILevelData, public tileAtlas: SpriteAtlas, public carAtlas: SpriteAtlas) {
+    constructor(private level: ILevelData, private canvas: HTMLCanvasElement, public assets: Assets) {
         this.map = [];
         for(let c = 0; c < level.width; c++) {
             let col = [];
@@ -30,39 +28,80 @@ export default class GameState {
             this.map.push(col);
         }
 
-        for(let i = 0; i < level.mapdata.length; i++) {
-            let x = i % level.width;
-            let y = Math.floor(i / level.width);
-            this.map[x][y] = allMapTiles[level.mapdata[i]];
-        }
-
-        this.tileSprites = [];
-        for(let i = 0; i < allMapTiles.length; i++) {
+        const tileSprites = [];
+        for(let i = 0; i < allMapTileDefinitions.length; i++) {
             const tx = i % ATLAS_WIDTH;
             const ty = Math.floor(i / ATLAS_WIDTH);
-            this.tileSprites.push(allMapTiles[i] === null ? null : tileAtlas.getSprite(
+            tileSprites.push(allMapTileDefinitions[i] === null ? null : assets.trackImageAtlas.getSprite(
                 new Point(tx * TILE_SIZE, ty * TILE_SIZE),
                 new Point(TILE_SIZE, TILE_SIZE)
             ));
         }
+
+        for(let i = 0; i < level.mapdata.length; i++) {
+            let x = i % level.width;
+            let y = Math.floor(i / level.width);
+            const definition = allMapTileDefinitions[level.mapdata[i]];
+            if(definition === null) {
+                this.map[x][y] = null;
+            }
+            else {
+                this.map[x][y] = new MapTile(definition, tileSprites[definition.tileId]);
+            }
+        }
+
         this.ResetLevel();
+    }
+
+    public tryGetOverlay(clickLocation: Point, cvsScaleFactor: number): SignalCtrlPanel | undefined {
+        const tilePt = new Point(Math.floor(clickLocation.x / TILE_SIZE), Math.floor(clickLocation.y / TILE_SIZE));
+        const tile = this.map[tilePt.x][tilePt.y];
+        if(tile === undefined || tile === null || tile.signals.length === 0) return undefined;
+        const nearestSignal = findMin(tile.signals, signal => Point.subtract(signal.getRenderPosition(tilePt), clickLocation).LengthSq());
+
+        const preferredRenderLocation = new Point(tilePt.x * TILE_SIZE + TILE_SIZE, tilePt.y * TILE_SIZE);
+        if(this.canvas.width / cvsScaleFactor - preferredRenderLocation.x < this.assets.ctrlPanelBackground.image.width) {
+            // Move to left side
+            preferredRenderLocation.x = tilePt.x * TILE_SIZE - this.assets.ctrlPanelBackground.image.width;
+        }
+
+        if(this.canvas.height / cvsScaleFactor - preferredRenderLocation.y < this.assets.ctrlPanelBackground.image.height) {
+            // Shift up to fit
+            preferredRenderLocation.y = this.canvas.height / cvsScaleFactor - this.assets.ctrlPanelBackground.image.height;
+        }
+
+        return new SignalCtrlPanel(tile, nearestSignal, this.assets, preferredRenderLocation.x, preferredRenderLocation.y);
     }
 
     public ResetLevel() {
         this.cars = [];
         for(const spawn of this.level.spawns) {
-            if(spawn.color !== ECarColor.Gray) {
+            if(spawn.color >= 0) {
                 this.cars.push(new Car(
                     spawn.color, 
-                    this.carAtlas.getSprite(
+                    this.assets.carImageAtlas.getSprite(
                         new Point(CAR_SIZE * (spawn.color as number), 0),
                         CAR_SIZE_PT,
                         new Point(0.5, 0.5)
                     ), 
-                    {
+                    TileAnchorHelper.EquivalentPosition({
                         position: new Point(spawn.position.x, spawn.position.y),
-                        anchor: ETileAnchor.Center
-                    }, 
+                        anchor: spawn.direction
+                    }), 
+                    false));
+            }
+            else {
+                this.cars.push(new Car(
+                    spawn.color, 
+                    this.assets.carImageAtlas.getSprite(
+                        new Point(CAR_SIZE * (3 -(spawn.color as number)), 0),
+                        CAR_SIZE_PT,
+                        new Point(0.5, 0.5)
+                    ), 
+                    TileAnchorHelper.EquivalentPosition({
+                        position: new Point(spawn.position.x, spawn.position.y),
+                        anchor: spawn.direction
+                    }), 
                     false));
             }
         }
@@ -76,47 +115,21 @@ export default class GameState {
             if(car.nextPosition !== undefined) {
                 car.position = car.nextPosition;
             }
-            car.nextPosition = this.CalculateCarNextPosition(car);
+            car.nextPosition = car.CalculateNextPosition(this);
         }
-    }
-
-    public CalculateCarNextPosition(c: Car): ITilePosition | undefined {
-        const tile = this.map[c.position.position.x][c.position.position.y];
-        const validOutputs = tile.connections.allConnections(c.position.anchor);
-        if(validOutputs.length === 0) c.isCrashed = true;
-        else {
-            const chosenOutput = validOutputs[Math.floor(Math.random() * validOutputs.length)];
-            return {
-                position: Point.add(c.position.position, TileAnchorHelper.AnchorToTileMove(chosenOutput)),
-                anchor: TileAnchorHelper.ReverseDirection(chosenOutput)
-            };
-        }
-        return undefined;
     }
 
     public draw(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, interpPercent: number) {
         for(let dx = 0; dx < this.map.length; dx++) {
             for(let dy = 0; dy < this.map[dx].length; dy++) {
                 if(this.map[dx][dy] !== null) {
-                    this.tileSprites[this.map[dx][dy].tileId].draw(ctx, new Point(dx * TILE_SIZE, dy * TILE_SIZE), TILE_SIZE_PT);
+                    this.map[dx][dy].draw(ctx, dx, dy, this.assets);
                 }
             }
         }
 
         for(const car of this.cars) {
-            const fromAnchor = TileAnchorHelper.GetRealPosition(car.position, TILE_SIZE_PT);
-            if(car.nextPosition !== undefined) {
-                const toAnchor = TileAnchorHelper.GetRealPosition(car.nextPosition, TILE_SIZE_PT);
-                const tileMidpoint = TileAnchorHelper.GetRealPosition({...car.position, anchor: ETileAnchor.Center}, TILE_SIZE_PT);
-
-                const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, toAnchor], interpPercent);
-
-                const fromAngle = TileAnchorHelper.GetEntryRotation(car.position.anchor);
-                const exitAngle = TileAnchorHelper.GetExitRotation(car.nextPosition.anchor);
-                const rel = Angle.relativeAngle(fromAngle, exitAngle);
-
-                car.sprite.draw(ctx, renderPosition, car.sprite.sourceSize, fromAngle + rel * interpPercent);
-            }
+            car.draw(ctx, interpPercent);
         }
     }
 }

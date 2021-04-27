@@ -19,6 +19,13 @@ export class TileAnchorHelper {
 
     static AllAnchors: ETileAnchor[] = [ETileAnchor.Right, ETileAnchor.Bottom, ETileAnchor.Left, ETileAnchor.Top];
 
+    static EquivalentPosition(pos: ITilePosition): ITilePosition {
+        return {
+            position: Point.add(pos.position, TileAnchorHelper.AnchorToTileMove(pos.anchor)),
+            anchor: TileAnchorHelper.ReverseDirection(pos.anchor)
+        };
+    }
+
     static AnchorToIndex(anchor: ETileAnchor): number {
         return <number>anchor;
     }
@@ -33,8 +40,8 @@ export class TileAnchorHelper {
         }
     }
 
-    static ReverseDirection(anchor: ETileAnchor) {
-        return (anchor + 2) % 4;
+    static ReverseDirection(anchor: ETileAnchor): ETileAnchor {
+        return <ETileAnchor>((anchor + 2) % 4);
     }
 
     static IndexToAnchor(index: number): ETileAnchor {
@@ -69,12 +76,17 @@ export class TileAnchorHelper {
     }
 
     static GetEntryRotation(anchor: ETileAnchor): number {
-        return (TileAnchorHelper.GetExitRotation(anchor) + Math.PI) % (Math.PI * 2);
+        return TileAnchorHelper.GetExitRotation(TileAnchorHelper.ReverseDirection(anchor));
     }
 
     static GetRealPosition(position: ITilePosition, tileSize: Point) {
         var tilePosition = Point.Multiply(position.position, tileSize);
         var offsetPosition = Point.Multiply(TileAnchorHelper.GetAnchorOffset(position.anchor), tileSize);
         return tilePosition.AddWith(offsetPosition);
+    }
+    
+    static GetMidpoint(position: { position: Point }, tileSize: Point) {
+        var tilePosition = Point.Multiply(position.position, tileSize);
+        return tilePosition.AddWith(Point.Multiply(tileSize, 0.5));
     }
 }

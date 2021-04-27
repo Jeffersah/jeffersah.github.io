@@ -60,10 +60,11 @@ export default class Point {
         return this;
     }
 
+    public MultWith(s: number): this;
     public MultWith(x: number, y: number): this;
     public MultWith(other: Point): this;
     public MultWith(other: number|Point, y?: number): this {
-        const {x: nx, y: ny} = splitArgs(other, y);
+        const {x: nx, y: ny} = splitArgsOrSingle(other, y);
         this.x *= nx;
         this.y *= ny;
         return this;
@@ -152,5 +153,16 @@ export default class Point {
 
 function splitArgs(x: Point|number, y ?: number): {x: number, y: number} {
     if(y === undefined) return { x: (<Point>x).x, y: (<Point>x).y };
+    return {x: <number>x, y};
+}
+
+function splitArgsOrSingle(x: Point|number, y ?: number): {x: number, y: number} {
+    if(y === undefined)
+    {
+        if((x as Point).x !== undefined) {
+            return { x: (<Point>x).x, y: (<Point>x).y };
+        }
+        return { x: x as number, y: x as number };
+    } 
     return {x: <number>x, y};
 }

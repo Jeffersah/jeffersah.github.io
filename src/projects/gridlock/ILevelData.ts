@@ -9,19 +9,16 @@ export default interface ILevelData {
     height: number;
     mapdata: number[];
     spawns: IJsonSpawnDefinition[];
-    endpoints: [];
+    endpoints: IJsonEndpointDefinition[];
 }
 
-export type IJsonSpawnDefinition = IJsonGraySpawnDefinition | IJsonColorSpawnDefinition
-
-export interface IJsonGraySpawnDefinition {
+export interface IJsonSpawnDefinition {
     position: {x: number, y: number};
     direction: ETileAnchor;
-    color: ECarColor.Gray;
-    ai: string;
+    color: ECarColor;
 }
 
-export interface IJsonColorSpawnDefinition {
+export interface IJsonEndpointDefinition {
     position: {x: number, y: number};
     color: ECarColor;
 }

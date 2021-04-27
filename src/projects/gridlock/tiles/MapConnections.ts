@@ -37,7 +37,7 @@ export default class MapConnections {
     public allConnections(from: ETileAnchor): ETileAnchor[] {
         let output = [];
         for(const to of TileAnchorHelper.AllAnchors) {
-            if(from !== to && this.connection(from, to)) {
+            if(this.connection(from, to)) {
                 output.push(to);
             }
         }
