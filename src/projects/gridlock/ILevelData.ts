@@ -10,6 +10,7 @@ export default interface ILevelData {
     mapdata: number[];
     spawns: IJsonSpawnDefinition[];
     endpoints: IJsonEndpointDefinition[];
+    disableSignals: IJsonDisabledSignal[];
 }
 
 export interface IJsonSpawnDefinition {
@@ -21,4 +22,10 @@ export interface IJsonSpawnDefinition {
 export interface IJsonEndpointDefinition {
     position: {x: number, y: number};
     color: ECarColor;
+}
+
+export interface IJsonDisabledSignal {
+    tile: { x: number, y: number },
+    signalIndex: number,
+    forceSignals: number
 }

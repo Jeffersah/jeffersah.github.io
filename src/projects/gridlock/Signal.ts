@@ -19,9 +19,15 @@ const ARROW_DIR: Point[] = [
 
 export default class Signal {
     private currentSignals: Map<ECarColor, ETileAnchor>;
+    public isDisabled: boolean;
     constructor(public definition: ISignalDefinition)
     {
         this.currentSignals = new Map<ECarColor, ETileAnchor>();
+    }
+
+    disable(forceInstructions: number){
+        this.isDisabled = true;
+
     }
 
     getInstruction(car: ECarColor) : ETileAnchor | undefined {
@@ -48,9 +54,13 @@ export default class Signal {
             .AddWith(this.definition.dx, this.definition.dy);
     }
 
-    draw(ctx: CanvasRenderingContext2D, tile: Point, hub: HTMLImageElement, arrows: SpriteSheet) {
+    draw(ctx: CanvasRenderingContext2D, tile: Point, hub: SpriteSheet, arrows: SpriteSheet) {
         const midpoint = TileAnchorHelper.GetMidpoint({ position: tile }, TILE_SIZE_PT).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
-        ctx.drawImage(hub, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy);
+        hub.render(ctx,
+            midpoint.x + this.definition.dx, midpoint.y + this.definition.dy,
+            6, 6,
+            this.isDisabled ? 1 : 0, 0);
+            
         const arrowOffsets: number[] = [0,0,0,0];
         for(var [car, anchor] of this.currentSignals.entries()){
             const offset = arrowOffsets[anchor]++;
@@ -61,9 +71,12 @@ export default class Signal {
         }
     }
     
-    draw_offgrid(ctx: CanvasRenderingContext2D, position: Point, tileSize: Point, hub: HTMLImageElement, arrows: SpriteSheet) {
+    draw_offgrid(ctx: CanvasRenderingContext2D, position: Point, tileSize: Point, hub: SpriteSheet, arrows: SpriteSheet) {
         const midpoint = position.AddWith(Point.Multiply(tileSize, 0.5, 0.5)).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
-        ctx.drawImage(hub, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy);
+        hub.render(ctx, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy,
+            6, 6,
+            this.isDisabled ? 1 : 0, 0);
+
         const arrowOffsets: number[] = [0,0,0,0];
         for(var [car, anchor] of this.currentSignals.entries()){
             const offset = arrowOffsets[anchor]++;

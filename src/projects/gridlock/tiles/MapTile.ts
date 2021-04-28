@@ -21,6 +21,10 @@ export default class MapTile {
         this.overdrawAnchors = this.definition.tileId === 3 ? [ ETileAnchor.Left, ETileAnchor.Right ] : [];
     }
 
+    DisableSignal(id: number, forceDisplay: number) {
+        this.signals[id].disable(forceDisplay);
+    }
+
     TryGetSignal(from: ETileAnchor, color: ECarColor): ETileAnchor|undefined {
         for(const signal of this.signals) {
             if(signal.definition.inputDirs.indexOf(from) !== -1) {
@@ -69,7 +73,7 @@ export default class MapTile {
     draw(ctx: CanvasRenderingContext2D, x: number, y: number, assets: Assets) {
         this.image.draw(ctx, new Point(x * TILE_SIZE, y * TILE_SIZE), TILE_SIZE_PT);
         for(const signal of this.signals) {
-            signal.draw(ctx, new Point(x, y), assets.signalHubImage.image, assets.signalArrowsImage);
+            signal.draw(ctx, new Point(x, y), assets.signalHubSheet, assets.signalArrowsImage);
         }
 
         if(this.definition.isStop && this.endpointColor !== undefined && this.endpointColor !== null) {
@@ -94,7 +98,7 @@ export default class MapTile {
     draw_offgrid(ctx: CanvasRenderingContext2D, x: number, y: number, tileSize: number, assets: Assets) {
         this.image.draw(ctx, new Point(x, y), new Point(tileSize, tileSize));
         for(const signal of this.signals) {
-            signal.draw_offgrid(ctx, new Point(x, y), new Point(tileSize, tileSize), assets.signalHubImage.image, assets.signalArrowsImage);
+            signal.draw_offgrid(ctx, new Point(x, y), new Point(tileSize, tileSize), assets.signalHubSheet, assets.signalArrowsImage);
         }
     }
 }

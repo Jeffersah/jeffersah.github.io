@@ -1,6 +1,4 @@
 import { any, customGroupBy, findMin, groupBy } from "../../LinqLike";
-import { AtlasSprite, SpriteAtlas } from "../common/assets/SpriteAtlas";
-import { SpriteSheet } from "../common/assets/SpriteSheet";
 import Angle from "../common/position/Angle";
 import Point from "../common/position/Point";
 import Assets from "./assets";
@@ -45,6 +43,10 @@ export default class GameState {
             }
         }
 
+        for(let i = 0; i < level.disableSignals.length; i++) {
+            this.map[level.disableSignals[i].tile.x][level.disableSignals[i].tile.y].DisableSignal(level.disableSignals[i].signalIndex, level.disableSignals[i].forceSignals);
+        }
+
         this.ResetLevel();
     }
 
@@ -53,6 +55,8 @@ export default class GameState {
         const tile = this.map[tilePt.x][tilePt.y];
         if(tile === undefined || tile === null || tile.signals.length === 0) return undefined;
         const nearestSignal = findMin(tile.signals, signal => Point.subtract(signal.getRenderPosition(tilePt), clickLocation).LengthSq());
+
+        if(nearestSignal.isDisabled) return undefined;
 
         const preferredRenderLocation = new Point(tilePt.x * TILE_SIZE + TILE_SIZE, tilePt.y * TILE_SIZE);
         if(this.canvas.width / cvsScaleFactor - preferredRenderLocation.x < this.assets.ctrlPanelBackground.image.width) {
