@@ -107,6 +107,9 @@ export default class SignalCtrlPanel {
             const buttonImg = selected ? this.colorButtonDown : this.colorButtonUp;
 
             buttonImg.draw(ctx, new Point(this.dx + 1, this.dy + 32 * colorButton), new Point(63, 32));
+
+            this.assets.carImageAtlas.getSprite(new Point(18 * colorButton, 0), new Point(18, 18))
+                .draw(ctx, new Point(this.dx + 1 + 63/2 - 8, this.dy + 32 * colorButton + 16 - 8), new Point(18, 18));
         }
 
         const selectedDir = this.signal.getInstruction(this.selectedColor) ?? -1;
@@ -120,5 +123,6 @@ export default class SignalCtrlPanel {
         const roundImg = selectedDir === -1 ? this.roundButtonDown : this.roundButtonUp;
         roundImg.draw(ctx, new Point(this.dx + UICoords.round.x, this.dy + UICoords.round.y), new Point(16, 16));
 
+        this.tile.draw_offgrid(ctx, this.dx + 72, this.dy + 8, 48, this.assets);
     }
 }

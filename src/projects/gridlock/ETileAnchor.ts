@@ -1,4 +1,5 @@
 import Point from "../common/position/Point";
+import EAnchorConnectionFlag from "./EAnchorConnectionFlag";
 
 enum ETileAnchor {
     Right = 0,
@@ -6,6 +7,13 @@ enum ETileAnchor {
     Left = 2,
     Top = 3,
 }
+
+const TileAnchorConnectionMap = [
+    [ EAnchorConnectionFlag.RR, EAnchorConnectionFlag.RB, EAnchorConnectionFlag.RL, EAnchorConnectionFlag.RT ],
+    [ EAnchorConnectionFlag.BR, EAnchorConnectionFlag.BB, EAnchorConnectionFlag.BL, EAnchorConnectionFlag.BT ],
+    [ EAnchorConnectionFlag.LR, EAnchorConnectionFlag.LB, EAnchorConnectionFlag.LL, EAnchorConnectionFlag.LT ],
+    [ EAnchorConnectionFlag.TR, EAnchorConnectionFlag.TB, EAnchorConnectionFlag.TL, EAnchorConnectionFlag.TT ]
+];
 
 export interface ITilePosition {
     anchor: ETileAnchor;
@@ -20,6 +28,7 @@ export class TileAnchorHelper {
     static AllAnchors: ETileAnchor[] = [ETileAnchor.Right, ETileAnchor.Bottom, ETileAnchor.Left, ETileAnchor.Top];
 
     static EquivalentPosition(pos: ITilePosition): ITilePosition {
+        if(pos === undefined) return undefined;
         return {
             position: Point.add(pos.position, TileAnchorHelper.AnchorToTileMove(pos.anchor)),
             anchor: TileAnchorHelper.ReverseDirection(pos.anchor)
@@ -88,5 +97,9 @@ export class TileAnchorHelper {
     static GetMidpoint(position: { position: Point }, tileSize: Point) {
         var tilePosition = Point.Multiply(position.position, tileSize);
         return tilePosition.AddWith(Point.Multiply(tileSize, 0.5));
+    }
+
+    static GetConnection(from: ETileAnchor, to: ETileAnchor) : EAnchorConnectionFlag {
+        return TileAnchorConnectionMap[from][to];
     }
 }

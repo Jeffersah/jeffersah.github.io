@@ -27,7 +27,20 @@ export default function GridlockComponent() {
     }
 
     return <div className='flex row'>
-        <canvas ref={ref} />
+        <canvas ref={ref} tabIndex={0} onKeyDown={key => {
+            if(key.keyCode === 32) {
+                runner?.toggleRunning();
+                key.preventDefault();
+                key.stopPropagation();
+            }
+            else {
+                if(runner?.handleKeyEvent(key.nativeEvent) ?? false)
+                {
+                    key.preventDefault();
+                    key.stopPropagation();
+                }
+            }
+        }} />
         <div className='flex col'>
             <button onClick={ev => {
                 if(runner) {

@@ -28,6 +28,6 @@ export default function GridlockLevelPreviewComponent(props: { level: ILevelData
 
     return <div className='flex row align-center' style={{border: '1px solid black', padding: '0 0 0 8px'}} onClick={ev => props.onClick(ev.nativeEvent)}>
         <span>{props.level.id}: {props.level.name}</span>
-        <canvas ref={ref} />
+        <canvas ref={ref}  />
     </div>;
 }

@@ -1,3 +1,4 @@
+import { clearLine } from "readline";
 import C from "../EAnchorConnectionFlag";
 import ETileAnchor, { TileAnchorHelper } from "../ETileAnchor";
 import MapConnections from "./MapConnections";
@@ -15,7 +16,7 @@ export class MapTileDefinition {
     connections: MapConnections;
     signals: ISignalDefinition[];
 
-    constructor(public tileId: number, packedConnections: number, signalPerInput: boolean = false, public isStop: boolean = false) {
+    constructor(public tileId: number, packedConnections: number, signalPerInput: boolean = false, public isStop: boolean = false, public isCrossover: boolean = false) {
         this.connections = new MapConnections(packedConnections);
         this.signals = [];
         for(const anchor of TileAnchorHelper.AllAnchors) {
@@ -52,7 +53,7 @@ const allMapTileDefinitions: MapTileDefinition[] = [
     null,
     new MapTileDefinition(1, C.TB),
     new MapTileDefinition(2, C.LR),
-    new MapTileDefinition(3, C.TB|C.LR),
+    new MapTileDefinition(3, C.TB|C.LR, false, false, true),
 
     new MapTileDefinition(4, C.RT),
     new MapTileDefinition(5, C.RB),
@@ -98,6 +99,21 @@ const allMapTileDefinitions: MapTileDefinition[] = [
     new MapTileDefinition(37, C.BB|C.TT),
     new MapTileDefinition(38, C.RR|C.LL|C.BB|C.TT),
     null, // Special: The overlay for bridges
+
+    new MapTileDefinition(39, C.RT|C.LL, false, false, true),
+    new MapTileDefinition(40, C.RB|C.TT, false, false, true),
+    new MapTileDefinition(41, C.LB|C.TT, false, false, true),
+    new MapTileDefinition(42, C.LT|C.RR, false, false, true),
+    
+    new MapTileDefinition(43, C.RT|C.BB, false, false, true),
+    new MapTileDefinition(44, C.RB|C.LL, false, false, true),
+    new MapTileDefinition(45, C.LB|C.RR, false, false, true),
+    new MapTileDefinition(46, C.LT|C.BB, false, false, true),
+    
+    new MapTileDefinition(47, C.RT|C.LL|C.BB, false, false, true),
+    new MapTileDefinition(48, C.RB|C.TT|C.LL, false, false, true),
+    new MapTileDefinition(49, C.LB|C.TT|C.RR, false, false, true),
+    new MapTileDefinition(50, C.LT|C.RR|C.BB, false, false, true),
 ];
 
 

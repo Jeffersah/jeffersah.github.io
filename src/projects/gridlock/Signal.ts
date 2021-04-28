@@ -1,7 +1,7 @@
 import { off } from "process";
 import { SpriteSheet } from "../common/assets/SpriteSheet";
 import Point from "../common/position/Point";
-import { TILE_SIZE_PT } from "./Constants";
+import { TILE_SIZE_PT, TILE_SIZE } from "./Constants";
 import ECarColor from "./ECarColor";
 import ETileAnchor, { TileAnchorHelper } from "./ETileAnchor";
 import { ISignalDefinition } from "./tiles/MapTileDefintion";
@@ -50,6 +50,19 @@ export default class Signal {
 
     draw(ctx: CanvasRenderingContext2D, tile: Point, hub: HTMLImageElement, arrows: SpriteSheet) {
         const midpoint = TileAnchorHelper.GetMidpoint({ position: tile }, TILE_SIZE_PT).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
+        ctx.drawImage(hub, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy);
+        const arrowOffsets: number[] = [0,0,0,0];
+        for(var [car, anchor] of this.currentSignals.entries()){
+            const offset = arrowOffsets[anchor]++;
+            const offsetDir = ARROW_DIR[anchor];
+
+            const position = Point.add(midpoint, Point.Multiply(offsetDir, (ARROW_SHIFT_HUB + ARROW_SHIFT * offset))).AddWith(this.definition.dx, this.definition.dy);
+            arrows.render(ctx, position.x, position.y, ARROW_SIZE, ARROW_SIZE, anchor, car);
+        }
+    }
+    
+    draw_offgrid(ctx: CanvasRenderingContext2D, position: Point, tileSize: Point, hub: HTMLImageElement, arrows: SpriteSheet) {
+        const midpoint = position.AddWith(Point.Multiply(tileSize, 0.5, 0.5)).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
         ctx.drawImage(hub, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy);
         const arrowOffsets: number[] = [0,0,0,0];
         for(var [car, anchor] of this.currentSignals.entries()){

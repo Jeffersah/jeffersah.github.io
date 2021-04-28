@@ -6,9 +6,12 @@ import ILevelData from "./ILevelData";
 import Assets from "./assets";
 import Point from "../common/position/Point";
 import SignalCtrlPanel from "./signalCtrl/signalCtrlPanel";
+import { TILE_SIZE } from "./Constants";
 
 const NUM_INTERP_FRAMES = 40;
-const CVS_SCALE = 2;
+
+const MAX_CVS_WIDTH = 1024;
+const MAX_CVS_HEIGHT = 1024;
 
 var NextRunnerId = 0;
 
@@ -28,15 +31,14 @@ export default class Runner {
     private runnerID: number;
 
     private isDestroyed: boolean;
+    private canvasScale: number;
 
     constructor(public canvas: HTMLCanvasElement) {
         this.runnerID = NextRunnerId++;
         console.log(`Create runner ${this.runnerID}`);
-
         ResizeCanvas(canvas, 512 * 2, 384 * 2);
         this.ctx = canvas.getContext('2d');
-        NearestNeighborScaling(this.ctx);
-        this.ctx.scale(CVS_SCALE, CVS_SCALE);
+        this.ctx.save();
         this.repaintTimer = -1;
         this.interpFrameCount = 0;
         this.isRunning = false;
@@ -48,10 +50,20 @@ export default class Runner {
         canvas.addEventListener('click', this.boundEventListener);
     }
 
+    handleKeyEvent(ev: KeyboardEvent): boolean {
+        if(ev.key === 'escape') {
+            this.overlay = undefined;
+            return true;
+        }
+
+        return false;
+    }
+
     handleMouseEvent(ev: MouseEvent) {
-        const relCoords = new Point(ev.offsetX / CVS_SCALE, ev.offsetY / CVS_SCALE);
+        if(this.isRunning) return;
+        const relCoords = new Point(ev.offsetX / this.canvasScale, ev.offsetY / this.canvasScale);
         if(!(this.overlay?.tryHandleClick(relCoords.x, relCoords.y) ?? false)) {
-            this.overlay = this.gameState.tryGetOverlay(relCoords, CVS_SCALE);
+            this.overlay = this.gameState.tryGetOverlay(relCoords, this.canvasScale);
         }
     }
 
@@ -67,15 +79,38 @@ export default class Runner {
         this.interpFrameCount = 0;
         this.isRunning = !this.isRunning;
         
+        this.overlay = undefined;
     }
 
     loadLevel(level: ILevelData) {
+        console.log('LOAD');
+        
+        this.ctx.restore();
+        this.ctx.save();
+        
+        const levelWidth = level.width * TILE_SIZE;
+        const levelHeight = level.height * TILE_SIZE;
+        
+        console.log(`${levelWidth * 2}, ${MAX_CVS_WIDTH}`);
+        if(levelWidth * 2 <= MAX_CVS_WIDTH && levelHeight * 2 <= MAX_CVS_HEIGHT) {
+            ResizeCanvas(this.canvas, levelWidth * 2, levelHeight * 2);
+            NearestNeighborScaling(this.ctx);
+            this.ctx.scale(2, 2);
+            this.canvasScale = 2;
+        } else {
+            ResizeCanvas(this.canvas, levelWidth, levelHeight);
+            this.canvasScale = 1;
+        }
+
         this.gameState = new GameState(level, this.canvas, this.assets);
         this.interpFrameCount = 0;
+        this.overlay = undefined;
+
     }
 
     private loadComplete() {
         this.gameState = new GameState((levelsJson as ILevelData[])[0], this.canvas, this.assets);
+        this.loadLevel((levelsJson as ILevelData[])[0]);
         this.runTick();
     }
 

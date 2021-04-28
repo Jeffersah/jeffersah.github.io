@@ -1,4 +1,4 @@
-import { findMin } from "../../LinqLike";
+import { any, customGroupBy, findMin, groupBy } from "../../LinqLike";
 import { AtlasSprite, SpriteAtlas } from "../common/assets/SpriteAtlas";
 import { SpriteSheet } from "../common/assets/SpriteSheet";
 import Angle from "../common/position/Angle";
@@ -28,14 +28,9 @@ export default class GameState {
             this.map.push(col);
         }
 
-        const tileSprites = [];
-        for(let i = 0; i < allMapTileDefinitions.length; i++) {
-            const tx = i % ATLAS_WIDTH;
-            const ty = Math.floor(i / ATLAS_WIDTH);
-            tileSprites.push(allMapTileDefinitions[i] === null ? null : assets.trackImageAtlas.getSprite(
-                new Point(tx * TILE_SIZE, ty * TILE_SIZE),
-                new Point(TILE_SIZE, TILE_SIZE)
-            ));
+        let allEndpoints: (ECarColor | undefined)[] = new Array(level.mapdata.length);
+        for(const end of level.endpoints) {
+            allEndpoints[end.position.x + end.position.y * level.width] = end.color;
         }
 
         for(let i = 0; i < level.mapdata.length; i++) {
@@ -46,7 +41,7 @@ export default class GameState {
                 this.map[x][y] = null;
             }
             else {
-                this.map[x][y] = new MapTile(definition, tileSprites[definition.tileId]);
+                this.map[x][y] = new MapTile(definition, assets.getTrackSprite(definition.tileId), allEndpoints[i]);
             }
         }
 
@@ -88,7 +83,7 @@ export default class GameState {
                         position: new Point(spawn.position.x, spawn.position.y),
                         anchor: spawn.direction
                     }), 
-                    false));
+                    this.assets));
             }
             else {
                 this.cars.push(new Car(
@@ -102,7 +97,7 @@ export default class GameState {
                         position: new Point(spawn.position.x, spawn.position.y),
                         anchor: spawn.direction
                     }), 
-                    false));
+                    this.assets));
             }
         }
         this.updateCars();
@@ -111,15 +106,46 @@ export default class GameState {
     public updateCars() {
         // Update all cars next positions
         for(const car of this.cars) {
-            if(car.isCrashed) continue;
+            car.LogicTick();
+
+            if(car.isCrashed()) continue;
             if(car.nextPosition !== undefined) {
                 car.position = car.nextPosition;
             }
             car.nextPosition = car.CalculateNextPosition(this);
         }
+
+        for(const [pos, checkColis] of customGroupBy(this.cars, car => car.position.position, (p1, p2) => p1.x === p2.x && p1.y === p2.y)) {
+            for(let i = 0; i < checkColis.length; i++) {
+                for(let j = i + 1; j < checkColis.length; j++) {
+                    if(this.map[pos.x][pos.y].CheckColisions(checkColis[i], checkColis[j])) {
+                        checkColis[i].crashHere();
+                        checkColis[j].crashHere();
+                    }
+                }
+            }
+        }
+        
+        for(const car of this.cars) {
+            if(car.nextPosition === undefined) continue;
+            const equivPoint = TileAnchorHelper.EquivalentPosition(car.nextPosition);
+
+            for(const otherCar of this.cars) {
+                if(car === otherCar || otherCar.nextPosition === undefined) continue;
+                if(equivPoint.anchor === otherCar.nextPosition.anchor && equivPoint.position.Equals(otherCar.nextPosition.position)) {
+                    car.crashAt(car.nextPosition);
+                    otherCar.crashAt(otherCar.nextPosition);
+                }
+            }
+        }
+
     }
 
     public draw(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, interpPercent: number) {
+        for(const car of this.cars) {
+            car.EveryTick();
+        }
+
         for(let dx = 0; dx < this.map.length; dx++) {
             for(let dy = 0; dy < this.map[dx].length; dy++) {
                 if(this.map[dx][dy] !== null) {
@@ -128,8 +154,42 @@ export default class GameState {
             }
         }
 
+        const overdrawCars: Car[] = [];
+
         for(const car of this.cars) {
-            car.draw(ctx, interpPercent);
+            const mapTile = this.map[car.position.position.x][car.position.position.y];
+            const fromAnchor = car.position.anchor;
+            const toAnchor = car.nextPosition?.anchor;
+            const checkOverdrawPos = [
+                car.position, car.nextPosition,
+                TileAnchorHelper.EquivalentPosition(car.position), TileAnchorHelper.EquivalentPosition(car.nextPosition)
+            ];
+
+            if(any(checkOverdrawPos, coords => 
+                coords !== undefined && this.map[coords.position.x][coords.position.y].overdrawAnchors.indexOf(coords.anchor) !== -1
+            ))
+            {
+                overdrawCars.push(car);
+                continue;
+            }
+
+            car.draw(ctx, interpPercent, mapTile.GetPositionAdjust(fromAnchor, toAnchor, interpPercent));
+        }
+        
+
+        for(let dx = 0; dx < this.map.length; dx++) {
+            for(let dy = 0; dy < this.map[dx].length; dy++) {
+                if(this.map[dx][dy] !== null) {
+                    this.map[dx][dy].overdraw(ctx, dx, dy, this.assets);
+                }
+            }
+        }
+        
+        for(const car of overdrawCars) {
+            const mapTile = this.map[car.position.position.x][car.position.position.y];
+            const fromAnchor = car.position.anchor;
+            const toAnchor = car.nextPosition?.anchor;
+            car.draw(ctx, interpPercent, mapTile.GetPositionAdjust(fromAnchor, toAnchor, interpPercent));
         }
     }
 }
