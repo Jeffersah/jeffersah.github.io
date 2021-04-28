@@ -27,7 +27,13 @@ export default class Signal {
 
     disable(forceInstructions: number){
         this.isDisabled = true;
-
+        for(let color = 0; color < 4; color++) {
+            for(let anchor = 0; anchor < 4; anchor++) {
+                if((forceInstructions & 1) === 1)
+                    this.setInstruction(color, anchor);
+                forceInstructions >>= 1;
+            }
+        }
     }
 
     getInstruction(car: ECarColor) : ETileAnchor | undefined {
@@ -60,7 +66,7 @@ export default class Signal {
             midpoint.x + this.definition.dx, midpoint.y + this.definition.dy,
             6, 6,
             this.isDisabled ? 1 : 0, 0);
-            
+
         const arrowOffsets: number[] = [0,0,0,0];
         for(var [car, anchor] of this.currentSignals.entries()){
             const offset = arrowOffsets[anchor]++;
