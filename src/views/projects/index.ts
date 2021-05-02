@@ -23,6 +23,7 @@ import GlslMandelbrotWrapperComponent from './glsl-mandelbrot/GlslMandelbrotWrap
 import { RecursiveShooterWrapperComponent } from './recurshooter/RecursiveShooterWrapperComponent';
 import { GridlockWrapperComponent } from './gridlock/GridlockWrapperComponent';
 import Lr1ParserComponentWrapper from './lr1-parser/Lr1ParserComponentWrapper';
+import GlslCubesWrapperComponent from './glsl-cubes/GlslCubesWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -172,7 +173,6 @@ export const AllProjects: IProject[] = [
     {
         projectName: 'gridlock',
         projectTitle: 'Gridlock',
-        subCategory: 'Maybe some day',
         projectComponent: GridlockWrapperComponent
     },
     
@@ -180,6 +180,14 @@ export const AllProjects: IProject[] = [
         projectName: 'lr1-parser',
         projectTitle: 'LR(1) Parser',
         projectComponent: Lr1ParserComponentWrapper,
+        subCategory: 'Maybe some day'
+    },
+    
+    {
+        projectName: 'glsl-cubes',
+        projectTitle: 'CubeShader (GLSL)',
+        projectComponent: GlslCubesWrapperComponent,
+        
         subCategory: 'Maybe some day'
     },
 ];

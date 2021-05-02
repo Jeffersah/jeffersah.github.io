@@ -1,4 +1,5 @@
 import Point from "../position/Point";
+import { IJsonAnimation } from "./json/IJsonAnimation";
 import { SpriteAtlas } from "./SpriteAtlas";
 
 export class SpriteAnimation {
@@ -6,6 +7,15 @@ export class SpriteAnimation {
 
     constructor(public atlas: SpriteAtlas, public sourceOffset: Point, public sourceSize: Point, public numFrames: number, origin?: Point) {
         this.origin = origin ?? new Point(0,0);
+    }
+
+    static FromJson(atlas: SpriteAtlas, params: IJsonAnimation) : SpriteAnimation {
+
+        return new SpriteAnimation(atlas, 
+            new Point(params.sourceOffset[0], params.sourceOffset[1]),
+            new Point(params.frameSize[0], params.frameSize[1]),
+            params.numFrames,
+            params.origin === undefined ? undefined : new Point(params.origin[0], params.origin[1]));
     }
 
     draw(ctx: CanvasRenderingContext2D, position: Point, size: Point, frame: number, rotation?: number) {

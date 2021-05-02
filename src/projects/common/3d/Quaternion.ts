@@ -1,5 +1,6 @@
 import Vector from './Vector';
 import { vec2 } from 'gl-matrix';
+import Matrix4 from './Matrix4';
 
 export default class Quaternion {
     constructor(public real: number, public i: number, public j: number, public k: number) {
@@ -42,5 +43,23 @@ export default class Quaternion {
             const qOut = Quaternion.multiply(this, Quaternion.multiply(inputQ, this.inverse()));
             return new Vector(qOut.i, qOut.j, qOut.k);
         }
+    }
+
+    // Stolen from https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
+    public toMatrix():Matrix4 {
+        const mtx = new Matrix4();
+        mtx.components[0][0] = 1 - 2 * this.j * this.j - 2 * this.k * this.k;
+        mtx.components[0][1] = 2 * this.i * this.j - 2 * this.k * this.real;
+        mtx.components[0][2] = 2 * this.i * this.k + 2 * this.j * this.real;
+        
+        mtx.components[1][0] = 2 * this.i * this.j + 2 * this.k * this.real;
+        mtx.components[1][1] = 1 - 2 * this.i * this.i - 2 * this.k * this.k;
+        mtx.components[1][2] = 2 * this.j * this.k - 2 * this.i * this.real;
+        
+        mtx.components[2][0] = 2 * this.i * this.k - 2 * this.j * this.real;
+        mtx.components[2][1] = 2 * this.j * this.k + 2 * this.i * this.real;
+        mtx.components[2][2] = 1 - 2 * this.i * this.i - 2 * this.j * this.j;
+
+        return mtx;
     }
 }

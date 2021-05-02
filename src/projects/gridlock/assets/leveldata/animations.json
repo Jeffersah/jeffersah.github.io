@@ -1,0 +1,94 @@
+[
+    {
+        "carType": 0,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 0],
+        "numFrames": 6
+    },
+    {
+        "carType": 0,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 1],
+        "numFrames": 6
+    },
+    {
+        "carType": 1,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 2],
+        "numFrames": 5
+    },
+    {
+        "carType": 1,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 3],
+        "numFrames": 5
+    },
+    {
+        "carType": 2,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 4],
+        "numFrames": 7
+    },
+    {
+        "carType": 2,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 5],
+        "numFrames": 7
+    },
+    {
+        "carType": 3,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 6],
+        "numFrames": 7
+    },
+    {
+        "carType": 3,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 7],
+        "numFrames": 7
+    },
+    {
+        "carType": -1,
+        "repeatCount": 1,
+        "conditions": "reverse",
+        "sourceOffset": [0, 8],
+        "numFrames": 7,
+        "overridesRotation": true
+    },
+    {
+        "carType": -2,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 9],
+        "numFrames": 6
+    },
+    {
+        "carType": -2,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 10],
+        "numFrames": 6
+    },
+    {
+        "carType": -3,
+        "repeatCount": 1,
+        "conditions": "turnLeft",
+        "sourceOffset": [0, 9],
+        "numFrames": 6
+    },
+    {
+        "carType": -3,
+        "repeatCount": 1,
+        "conditions": "turnRight",
+        "sourceOffset": [0, 10],
+        "numFrames": 6
+    }
+]

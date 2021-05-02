@@ -19,6 +19,14 @@ export class AnimationControl {
         }
     }
 
+    current(): PlayingAnimation|AtlasSprite {
+        return this.queue[0];
+    }
+
+    enqueueFront(src: PlayingAnimation | AtlasSprite) {
+        this.queue.splice(0, 0, src);
+    }
+
     play(src: PlayingAnimation | AtlasSprite) {
         this.queue = [src];
     }

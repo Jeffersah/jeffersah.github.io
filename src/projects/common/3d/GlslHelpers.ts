@@ -36,6 +36,91 @@ export function initShaderProgram(gl: WebGLRenderingContext, vertexShaderSource:
     return shaderProgram;
   }
 
+
+export function shaderDraw(gl: WebGLRenderingContext, shader: WebGLProgram, positionBuffer: WebGLBuffer, positionNumComponents: number, renderMode: 'triangle'|'tristrip'|'trifan', bufferOffset: number, bufferCount: number, bindUniforms: (gl: WebGLRenderingContext) => void) {
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+    gl.clearDepth(1.0);                 // Clear everything
+    gl.enable(gl.DEPTH_TEST);           // Enable depth testing
+    gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+
+    // Clear the canvas before we start drawing on it.
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Tell WebGL how to pull out the positions from the position
+    // buffer into the vertexPosition attribute.
+    {
+      const type = gl.FLOAT;    // the data in the buffer is 32bit floats
+      const normalize = false;  // don't normalize
+      const stride = 0;         // how many bytes to get from one set of values to the next
+                                // 0 = use type and numComponents above
+      const offset = 0;         // how many bytes inside the buffer to start from
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.vertexAttribPointer(
+            gl.getAttribLocation(shader, 'aVertexPosition'),
+            positionNumComponents,
+            type,
+            normalize,
+            stride,
+            offset);
+      gl.enableVertexAttribArray(
+        gl.getAttribLocation(shader, 'aVertexPosition'));
+    }
+
+    // Tell WebGL to use our program when drawing
+
+    gl.useProgram(shader);
+    bindUniforms(gl);
+    gl.drawArrays(
+      renderMode === 'triangle' ? gl.TRIANGLES :
+      renderMode === 'tristrip' ? gl.TRIANGLE_STRIP :
+      gl.TRIANGLE_FAN, bufferOffset, bufferCount);
+}
+
+
+export function shaderDrawMultiple(gl: WebGLRenderingContext, shader: WebGLProgram, positionBuffer: WebGLBuffer, positionNumComponents: number, renderMode: 'triangle'|'tristrip'|'trifan', drawCounts: number, getGeom: (i: number) => {bufferOffset: number, bufferCount: number}, bindUniforms: (gl: WebGLRenderingContext, i: number) => void) {
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+  gl.clearDepth(1.0);                 // Clear everything
+  gl.enable(gl.DEPTH_TEST);           // Enable depth testing
+  gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+
+  // Clear the canvas before we start drawing on it.
+
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // Tell WebGL how to pull out the positions from the position
+  // buffer into the vertexPosition attribute.
+  {
+    const type = gl.FLOAT;    // the data in the buffer is 32bit floats
+    const normalize = false;  // don't normalize
+    const stride = 0;         // how many bytes to get from one set of values to the next
+                              // 0 = use type and numComponents above
+    const offset = 0;         // how many bytes inside the buffer to start from
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(
+          gl.getAttribLocation(shader, 'aVertexPosition'),
+          positionNumComponents,
+          type,
+          normalize,
+          stride,
+          offset);
+    gl.enableVertexAttribArray(
+      gl.getAttribLocation(shader, 'aVertexPosition'));
+  }
+
+  // Tell WebGL to use our program when drawing
+
+  gl.useProgram(shader);
+  for(let i = 0; i < drawCounts; i++) {
+    bindUniforms(gl, i);
+    let {bufferOffset, bufferCount} = getGeom(i);
+    gl.drawArrays(
+      renderMode === 'triangle' ? gl.TRIANGLES :
+      renderMode === 'tristrip' ? gl.TRIANGLE_STRIP :
+      gl.TRIANGLE_FAN, bufferOffset, bufferCount);
+  }
+}
+
 export function fragmentShaderOnlyDraw(gl: WebGLRenderingContext, shader: WebGLProgram, positionBuffer: WebGLBuffer, bindUniforms: (gl: WebGLRenderingContext) => void) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
     gl.clearDepth(1.0);                 // Clear everything
@@ -103,6 +188,18 @@ export function fragmentShaderOnlyInitBuffer(gl: WebGLRenderingContext, left?: n
                    gl.STATIC_DRAW);
  
      return positionBuffer;
+}
+
+export function initGLBuffer(gl: WebGLRenderingContext, components: number[]) {
+  const positionBuffer = gl.createBuffer();
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  gl.bufferData(gl.ARRAY_BUFFER,
+                new Float32Array(components),
+                gl.STATIC_DRAW);
+
+  return positionBuffer;
 }
 
 export const defaultVertexShader = `attribute vec4 aVertexPosition;

@@ -10,6 +10,9 @@ import MapTile from "./tiles/MapTile";
 import { PlayingAnimation } from "../common/assets/SpriteAnimation";
 import Rand from "../../utils/rand";
 import Assets from "./assets";
+import CarAnimationControl from "./CarAnimationControl";
+import { SpriteSheet } from "../common/assets/SpriteSheet";
+import { AnimationPlayCondition, IJsonAnimationInfo } from "./assets/leveldata/IJsonAnimationInfo";
 
 const TILE_CRASH_MAX_INTERP = 0.4;
 const EDGE_CRASH_MAX_INTERP = 0.9;
@@ -28,6 +31,9 @@ export class Car {
     hasPlayedCrashAnimation: boolean;
 
     flameRenders: { anim: PlayingAnimation, offset: Point }[];
+    private animations: CarAnimationControl;
+
+    private currentAnimationDefinition?: IJsonAnimationInfo;
 
     constructor(public color: ECarColor, public sprite: AtlasSprite, public position: ITilePosition, private assets: Assets) {
         this.nextPosition = undefined;
@@ -35,6 +41,8 @@ export class Car {
         this.parkAnimationComplete = false;
         this.hasPlayedCrashAnimation = false;
         this.flameRenders = [];
+        this.animations = assets.animationControllers[color];
+        this.currentAnimationDefinition = undefined;
     }
 
     isCrashed(): boolean {
@@ -97,6 +105,7 @@ export class Car {
         if(this.isCrashed() && !this.hasPlayedCrashAnimation) { 
             this.hasPlayedCrashAnimation = true; 
         }
+        this.currentAnimationDefinition = undefined;
     }
 
     public CalculateNextPosition(state: GameState): ITilePosition | undefined {
@@ -111,7 +120,7 @@ export class Car {
 
         const chosen = this.chooseOutputDirection(state, tile, validOutputs);
         if(chosen === undefined){
-            // TODO: Check if we can park
+            // TODO: Parking animation
             if(tile.definition.isStop) {
                 this.parkedAt = this.position.position;
                 this.parkAnimationComplete = false;
@@ -125,6 +134,16 @@ export class Car {
             }
             return undefined;
         }
+
+        // Figure out what direction we're moving
+        let moveDirection : AnimationPlayCondition = 
+            this.position.anchor === chosen ? 'reverse'
+            : this.position.anchor === TileAnchorHelper.ReverseDirection(chosen) ? 'straight'
+            : this.position.anchor === (chosen + 1) % 4 ? 'turnRight'
+            : 'turnLeft';
+
+        this.currentAnimationDefinition = this.animations.animations[moveDirection];
+
         return {
             position: Point.add(this.position.position, TileAnchorHelper.AnchorToTileMove(chosen)),
             anchor: TileAnchorHelper.ReverseDirection(chosen)
@@ -165,6 +184,21 @@ export class Car {
         const tileMidpoint = TileAnchorHelper.GetMidpoint(this.position, TILE_SIZE_PT);
         const fromAngle = TileAnchorHelper.GetEntryRotation(this.position.anchor);
 
+        let sprite: AtlasSprite;
+        let shouldRotate: boolean;
+        if(this.currentAnimationDefinition === undefined) {
+            sprite = this.sprite;
+            shouldRotate = true;
+        } else {
+            const animInterp = (interpPercent * this.currentAnimationDefinition.repeatCount) % 1;
+            const frameNumber = Math.floor(animInterp * this.currentAnimationDefinition.numFrames);
+            shouldRotate = !(this.currentAnimationDefinition.overridesRotation ?? false);
+            sprite = this.assets.carAnimations.getSprite(
+                new Point(18 * (this.currentAnimationDefinition.sourceOffset[0] + frameNumber), 18 * this.currentAnimationDefinition.sourceOffset[1]),
+                new Point(18, 18),
+                new Point(0.5, 0.5));
+        }
+
         if(this.isCrashed()) {
             let effectiveNext : ITilePosition;
             if(this.nextPosition !== undefined) effectiveNext = this.nextPosition;
@@ -196,7 +230,7 @@ export class Car {
             const rel = Angle.relativeAngle(fromAngle, exitAngle);
 
 
-            this.sprite.draw(ctx, renderPosition, this.sprite.sourceSize, fromAngle - rel * useInterp);
+            sprite.draw(ctx, renderPosition, sprite.sourceSize, shouldRotate ? (fromAngle - rel * useInterp) : fromAngle);
 
             if(this.hasPlayedCrashAnimation || interpPercent > useInterp) {
                 for(const flame of this.flameRenders) {
@@ -213,14 +247,14 @@ export class Car {
 
             const rel = Angle.relativeAngle(fromAngle, exitAngle);
 
-            this.sprite.draw(ctx, renderPosition, this.sprite.sourceSize, fromAngle - rel * interpPercent);
+            sprite.draw(ctx, renderPosition, sprite.sourceSize, shouldRotate ? (fromAngle - rel * interpPercent) : fromAngle);
         }
         else if(this.parkedAt !== undefined) {
             if(!this.parkAnimationComplete) {
                 const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, tileMidpoint], interpPercent).AddWith(positionAdjust);
-                this.sprite.draw(ctx, renderPosition, this.sprite.sourceSize, fromAngle);
+                sprite.draw(ctx, renderPosition, sprite.sourceSize, fromAngle);
             } else {
-                this.sprite.draw(ctx, tileMidpoint, this.sprite.sourceSize, fromAngle);
+                sprite.draw(ctx, tileMidpoint, sprite.sourceSize, fromAngle);
             }
         }
     }
