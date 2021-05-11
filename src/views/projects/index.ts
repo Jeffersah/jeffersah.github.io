@@ -24,6 +24,7 @@ import { RecursiveShooterWrapperComponent } from './recurshooter/RecursiveShoote
 import { GridlockWrapperComponent } from './gridlock/GridlockWrapperComponent';
 import Lr1ParserComponentWrapper from './lr1-parser/Lr1ParserComponentWrapper';
 import GlslCubesWrapperComponent from './glsl-cubes/GlslCubesWrapperComponent';
+import DiploWrapperComponent from './diplo/DiploWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -143,33 +144,28 @@ export const AllProjects: IProject[] = [
         subCategory: 'Test',
         projectComponent: RpgTextEngineComponent
     },
-    
     {
         projectName: 'sprite',
         projectTitle: 'Sprite Editor',
         projectComponent: SpriteComponent,
         subCategory: 'Maybe some day'
     },
-
     {
         projectName: 'ant-colony',
         projectTitle: 'Ant Colony Optimization',
         projectComponent: AntColonyWrapperComponent
     },
-
     {
         projectName: 'glsl-mandelbrot',
         projectTitle: 'Mandelbrot (GLSL)',
         projectComponent: GlslMandelbrotWrapperComponent
     },
-    
     {
         projectName: 'recurshooter',
         projectTitle: 'Recursive Shooter',
         subCategory: 'Maybe some day',
         projectComponent: RecursiveShooterWrapperComponent
     },
-    
     {
         projectName: 'gridlock',
         projectTitle: 'Gridlock',
@@ -182,12 +178,22 @@ export const AllProjects: IProject[] = [
         projectComponent: Lr1ParserComponentWrapper,
         subCategory: 'Maybe some day'
     },
-    
     {
         projectName: 'glsl-cubes',
         projectTitle: 'CubeShader (GLSL)',
         projectComponent: GlslCubesWrapperComponent,
-        
+        subCategory: 'Maybe some day'
+    },
+    {
+        projectName: 'glsl-cubemap',
+        projectTitle: 'CubeMap Shader (GLSL)',
+        projectComponent: GlslCubesWrapperComponent,
+        subCategory: 'Maybe some day'
+    },
+    {
+        projectName: 'diplo',
+        projectTitle: 'Diplomacy',
+        projectComponent: DiploWrapperComponent,
         subCategory: 'Maybe some day'
     },
 ];

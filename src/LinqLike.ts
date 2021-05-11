@@ -8,6 +8,16 @@ export function distinct<T>(items: T[]) {
     return results;
 }
 
+export function flatMap<IT, OT>(items: IT[], func: ((arg: IT) => OT[])): OT[]
+{
+    let output = [];
+    for(const item of items)
+    {
+        output.push(...func(item));
+    }
+    return output;
+}
+
 // export function groupBy<T>(items: T[], keySelector: (item: T) => string): { key: string, items: T[] }[] {
 //     const results: { [key: string]: T[] } = {};
 //     for (const item of items) {
