@@ -20,6 +20,18 @@ vec2 cplx_mult(vec2 a, vec2 b) {
     return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
 }
 
+vec2 cplx_div(vec2 a, vec2 b) {
+    float denom = dot(b, b);
+    return vec2 (
+        (a.x * b.x + a.y * b.y) / denom,
+        (a.y * b.x - a.x * b.y) / denom 
+    );
+}
+
+vec2 scalar_mult(vec2 a, vec2 b) {
+    return vec2( a.x * b.x, a.y * b.y);
+}
+
 float cplx_abssq(vec2 v) {
     return dot(v, v);
 }

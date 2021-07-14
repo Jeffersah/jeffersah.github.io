@@ -2,21 +2,27 @@ import * as React from 'react';
 import AllAmplitudeFunctions, { IAmplitudeFunction } from '../../../projects/glsl-fracaudio/AmplitudeMode';
 import fireColor from '../../../projects/glsl-fracaudio/ColorFunctions/FireColor';
 import grayscaleColor from '../../../projects/glsl-fracaudio/ColorFunctions/GrayscaleColor';
+import hueColor from '../../../projects/glsl-fracaudio/ColorFunctions/HueColor';
 import { IColorFunction } from '../../../projects/glsl-fracaudio/ColorFunctions/IColorFunction';
 import FractalAudioPlayer from '../../../projects/glsl-fracaudio/FractalAudioPlayer';
 import burningShip from '../../../projects/glsl-fracaudio/Fractals/BurningShip';
+import featherFractal from '../../../projects/glsl-fracaudio/Fractals/Feather';
 import { IFractal } from '../../../projects/glsl-fracaudio/Fractals/IFractal';
 import mandelbrot from '../../../projects/glsl-fracaudio/Fractals/Mandelbrot';
+import squareFractal from '../../../projects/glsl-fracaudio/Fractals/Square';
 import RendererWrapperComponent from '../../../projects/glsl-fracaudio/RendererWrapperComponent';
 import { ObjDropdownComponent } from '../../common/ObjDropdownComponent';
 
 const fractals: IFractal[] = [
     mandelbrot,
-    burningShip
+    burningShip,
+    featherFractal,
+    squareFractal
 ];
 const colors: IColorFunction[] = [
     grayscaleColor,
-    fireColor
+    fireColor,
+    hueColor
 ];
 
 export default function GlslFractalAudioComponent() {
@@ -41,13 +47,15 @@ export default function GlslFractalAudioComponent() {
             <canvas ref={canvas} style={{ position: 'absolute', width: '100%', height: '100%', top:0, left:0 }}></canvas>
             <canvas ref={overlayCanvas} style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none', top:0, left:0}}></canvas>
         </div>
-        <div style={{ width: '20%', height: '100%', background: 'gray', position: 'absolute', left: '80%' }}>
+        <div style={{ width: '20%', height: '100%', background: '#333', position: 'absolute', left: '80%' }}>
             <label>Fractal:</label>
             <ObjDropdownComponent options={fractals} value={frac} getName={f => f.Name} onChange={f => setFrac(f)} />
             <label>Color:</label>
             <ObjDropdownComponent options={colors} value={color} getName={c => c.Name} onChange={c => setColor(c)} />
             <label>Amplitude Function:</label>
             <ObjDropdownComponent options={AllAmplitudeFunctions} value={amplitude} getName={a => a.Name} onChange={a => setAmplitude(a)} />
+
+            <div style={{ bottom: 0, position: 'absolute', color: '#999', textAlign: 'center', width: '100%' }}>Inspired by <a href='https://www.youtube.com/watch?v=GiAj9WW1OfQ'>this video</a></div>
         </div>
     </div>;
 }

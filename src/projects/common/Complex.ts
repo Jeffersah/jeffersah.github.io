@@ -62,6 +62,15 @@ export class Complex {
         return new Complex(a.real - b.real, a.imaginary - b.imaginary);
     }
 
+
+    public static div(a: Complex, b: Complex) {
+        const denom = b.real * b.real + b.imaginary * b.imaginary;
+        return new Complex(
+            (a.real * b.real + a.imaginary * b.imaginary) / denom,
+            (a.imaginary * b.real - a.real * b.imaginary) / denom
+        );
+    }
+
     public static mult(a: Complex, b: Complex) {
         return new Complex(a.real * b.real - a.imaginary * b.imaginary, a.real * b.imaginary + a.imaginary * b.real);
     }

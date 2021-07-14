@@ -6,6 +6,7 @@ export function loadShader(gl: WebGLRenderingContext, type: number, source: stri
     gl.compileShader(shader);
     // See if it compiled successfully
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(source);
       alert(`An error occurred compiling the ${(type === gl.VERTEX_SHADER ? 'vertex' : type === gl.FRAGMENT_SHADER ? 'fragment' : '')} shaders: ` + gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return undefined;
