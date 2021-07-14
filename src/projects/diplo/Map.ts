@@ -65,6 +65,7 @@ export class Province {
     supply: boolean;
     owner?: FactionType;
     polygons: Point[][];
+    svgData: string;
     neighbors: Province[];
     midpoint: Point;
 
@@ -76,6 +77,7 @@ export class Province {
         this.type = json.type;
         this.name = key;
         this.abbr = json.abbr;
+        this.svgData = json.data;
 
         let svgPath = json.data.split(' ');
         let svgMode: 'm' | 'v' | 'h' = 'm';

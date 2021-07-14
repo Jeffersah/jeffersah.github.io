@@ -56,6 +56,11 @@ export class Complex {
     public static add(a: Complex, b: Complex) {
         return new Complex(a.real + b.real, a.imaginary + b.imaginary);
     }
+    
+
+    public static subtract(a: Complex, b: Complex) {
+        return new Complex(a.real - b.real, a.imaginary - b.imaginary);
+    }
 
     public static mult(a: Complex, b: Complex) {
         return new Complex(a.real * b.real - a.imaginary * b.imaginary, a.real * b.imaginary + a.imaginary * b.real);

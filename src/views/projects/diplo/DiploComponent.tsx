@@ -21,7 +21,7 @@ export default function DiploComponent() {
                             province.type == 'coast' ? '#00aa00' :
                             province.type == 'land' ? '#00ff00' : '#0000ff'} 
                         stroke='black'
-                        d={province.polygons.map(poly => 'M ' + poly.map(p => p.x + ',' + p.y).join(' ') + ' z').join(' ')}
+                        d={province.svgData}
                         onClick={()=>setSelection(key)}
                     />
                     <text fontSize='10' fill='black' x={province.midpoint.x} y={province.midpoint.y} style={{ pointerEvents: 'none' }}>{province.abbr}</text>
@@ -33,7 +33,7 @@ export default function DiploComponent() {
                     let fromPt = province.midpoint;
                     return <g key={key}>
                         {province.neighbors.map(n => 
-                            <line x1={fromPt.x} y1={fromPt.y} x2={n.midpoint.x} y2={n.midpoint.y} stroke='red' />)}
+                            <line key={province.abbr + '-' + n.abbr} x1={fromPt.x} y1={fromPt.y} x2={n.midpoint.x} y2={n.midpoint.y} stroke='red' />)}
                     </g>
                 })}
             </g>

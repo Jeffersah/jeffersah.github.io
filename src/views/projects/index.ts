@@ -25,6 +25,8 @@ import { GridlockWrapperComponent } from './gridlock/GridlockWrapperComponent';
 import Lr1ParserComponentWrapper from './lr1-parser/Lr1ParserComponentWrapper';
 import GlslCubesWrapperComponent from './glsl-cubes/GlslCubesWrapperComponent';
 import DiploWrapperComponent from './diplo/DiploWrapperComponent';
+import AsmGameWrapperComponent from './asmgame/AsmGameWrapperComponent';
+import GlslFractalAudioWrapperComponent from './glsl-fracaudio/GlslFractalAudioWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -134,7 +136,7 @@ export const AllProjects: IProject[] = [
     {
         projectName: 'raymarch',
         projectTitle: 'Raymarch/GLSL',
-        subCategory: 'Test',
+        subCategory: 'WebGL',
         projectComponent: RaymarchComponentWrapper
     },
 
@@ -158,7 +160,8 @@ export const AllProjects: IProject[] = [
     {
         projectName: 'glsl-mandelbrot',
         projectTitle: 'Mandelbrot (GLSL)',
-        projectComponent: GlslMandelbrotWrapperComponent
+        projectComponent: GlslMandelbrotWrapperComponent,
+        subCategory: 'WebGL'
     },
     {
         projectName: 'recurshooter',
@@ -182,7 +185,7 @@ export const AllProjects: IProject[] = [
         projectName: 'glsl-cubes',
         projectTitle: 'CubeShader (GLSL)',
         projectComponent: GlslCubesWrapperComponent,
-        subCategory: 'Maybe some day'
+        subCategory: 'WebGL'
     },
     {
         projectName: 'glsl-cubemap',
@@ -196,4 +199,18 @@ export const AllProjects: IProject[] = [
         projectComponent: DiploWrapperComponent,
         subCategory: 'Maybe some day'
     },
+
+    {
+        projectName: 'asmgame',
+        projectTitle: 'ASM Game',
+        projectComponent: AsmGameWrapperComponent,
+        subCategory: 'Maybe some day'
+    },
+
+    {
+        projectName: 'fracaudio',
+        projectTitle: 'Fractal Audio',
+        projectComponent: GlslFractalAudioWrapperComponent,
+        subCategory: 'WebGL'
+    }
 ];

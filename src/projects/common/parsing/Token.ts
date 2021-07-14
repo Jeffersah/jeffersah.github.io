@@ -9,6 +9,9 @@ export default class Token implements ITreeItem{
     firstToken(): Token {
         return this;
     }
+    allTokens(): Token[] {
+        return [this];
+    }
     matches(pattern: StackItemPattern): boolean {
         switch(pattern.type) {
             case EPatternType.literal: return pattern.value === this.value;
@@ -28,6 +31,9 @@ export class EndOfStringToken implements ITreeItem {
     }
     firstToken() {
         return new Token('$$', 'endOfString', -1, -1);
+    }
+    allTokens(): Token[] {
+        return [this.firstToken()];
     }
     toString() {
         return '$$';
