@@ -3,6 +3,7 @@ import AllAmplitudeFunctions, { IAmplitudeFunction } from '../../../projects/gls
 import fireColor from '../../../projects/glsl-fracaudio/ColorFunctions/FireColor';
 import grayscaleColor from '../../../projects/glsl-fracaudio/ColorFunctions/GrayscaleColor';
 import hueColor from '../../../projects/glsl-fracaudio/ColorFunctions/HueColor';
+import paperColor from '../../../projects/glsl-fracaudio/ColorFunctions/PaperColor';
 import { IColorFunction } from '../../../projects/glsl-fracaudio/ColorFunctions/IColorFunction';
 import FractalAudioPlayer from '../../../projects/glsl-fracaudio/FractalAudioPlayer';
 import burningShip from '../../../projects/glsl-fracaudio/Fractals/BurningShip';
@@ -22,7 +23,8 @@ const fractals: IFractal[] = [
 const colors: IColorFunction[] = [
     grayscaleColor,
     fireColor,
-    hueColor
+    hueColor,
+    paperColor
 ];
 
 export default function GlslFractalAudioComponent() {
@@ -41,6 +43,7 @@ export default function GlslFractalAudioComponent() {
             audio.Cleanup();
         }
     }, [canvas, frac, amplitude, color]);
+
 
     return <div className='conway conway_body full_body'>
         <div style={{ width: '80%', height: '100%', position: 'absolute' }}>

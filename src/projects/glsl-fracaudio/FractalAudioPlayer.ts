@@ -5,7 +5,7 @@ import { IAmplitudeFunction } from "./AmplitudeMode";
 import { IFractal } from "./Fractals/IFractal";
 
 const sampleRate = 8820; // 44100;
-const upsampleRate = 44100;
+const upsampleRate = 8820;
 const sampleTimeSeconds = 1;
 const GAIN = 0.3;
 
@@ -19,7 +19,6 @@ export default class FractalAudioPlayer {
     {
         ResizeCanvas(canvas, canvas.clientWidth, canvas.clientHeight);
         this.ctx = canvas.getContext('2d');
-        this.ctx.strokeStyle = 'red';
         this.audio = new AudioContext();
         this.gain = this.audio.createGain();
         this.gain.gain.value = GAIN;
@@ -34,6 +33,7 @@ export default class FractalAudioPlayer {
         this.currentAudio?.stop();
         this.currentAudio = new PlayingAudio(this.audio, point, fractal, this.amplitude);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.strokeStyle = 'red';
 
         this.currentAudio.start(this.gain);
 
@@ -57,7 +57,7 @@ class PlayingAudio {
     minBounds: Complex;
     maxBounds: Complex;
     source: AudioBufferSourceNode;
-    constructor(private audio: AudioContext, point: Complex, fractal: IFractal, amplitude: IAmplitudeFunction) {
+    constructor(private audio: AudioContext, private point: Complex, private fractal: IFractal, private amplitude: IAmplitudeFunction) {
         this.arr = new Array(sampleRate * sampleTimeSeconds);
 
         const init = point;
@@ -74,7 +74,7 @@ class PlayingAudio {
             this.maxBounds.imaginary = Math.max(this.maxBounds.imaginary, z.imaginary);
         }
 
-        const result = amplitude.GetAmplitude(this.minBounds, this.maxBounds);
+        const result = amplitude.GetAmplitude(this.minBounds, this.maxBounds, fractal);
         this.minBounds = result.min;
         this.maxBounds = result.max;
     }
@@ -92,8 +92,8 @@ class PlayingAudio {
             const next = Math.min(this.arr.length - 1, Math.ceil(index));
             const percent = index % 1;
 
-            const interpReal = interp(this.arr[prev].real, this.arr[next].real, percent);
-            const interpImaginary = interp(this.arr[prev].imaginary, this.arr[next].imaginary, percent);
+            const interpReal = upsampleRate != sampleRate ? interp(this.arr[prev].real, this.arr[next].real, percent) : this.arr[prev].real;
+            const interpImaginary = upsampleRate != sampleRate ? interp(this.arr[prev].imaginary, this.arr[next].imaginary, percent) : this.arr[prev].imaginary;
 
             const xp = (interpReal - this.minBounds.real) / range.real;
             const yp = (interpImaginary - this.minBounds.imaginary) / range.imaginary;

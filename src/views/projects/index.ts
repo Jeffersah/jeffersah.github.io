@@ -27,6 +27,8 @@ import GlslCubesWrapperComponent from './glsl-cubes/GlslCubesWrapperComponent';
 import DiploWrapperComponent from './diplo/DiploWrapperComponent';
 import AsmGameWrapperComponent from './asmgame/AsmGameWrapperComponent';
 import GlslFractalAudioWrapperComponent from './glsl-fracaudio/GlslFractalAudioWrapperComponent';
+import SimpleCypherWrapperComponent from './simple-cypher/SimpleCypherWrapperComponent';
+import GlslGeomFracWrapperComponent from './glsl-geomfrac/GlslGeomFracWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -212,5 +214,19 @@ export const AllProjects: IProject[] = [
         projectTitle: 'Fractal Audio',
         projectComponent: GlslFractalAudioWrapperComponent,
         subCategory: 'WebGL'
+    },
+    
+    {
+        projectName: 'geomfrac',
+        projectTitle: 'Geometric Fractal',
+        projectComponent: GlslGeomFracWrapperComponent,
+        subCategory: 'WebGL'
+    },
+
+    {
+        projectName: 'simplecypher',
+        projectTitle: 'Simple Cypher',
+        projectComponent: SimpleCypherWrapperComponent,
+        subCategory: 'Test'
     }
 ];

@@ -1,13 +1,14 @@
 import { Complex } from "../common";
+import { IFractal } from "./Fractals/IFractal";
 
 export interface IAmplitudeFunction {
     Name: string;
-    GetAmplitude(min: Complex, max: Complex): { min: Complex, max: Complex };
+    GetAmplitude(min: Complex, max: Complex, fractal: IFractal): { min: Complex, max: Complex };
 }
 
 class DefaultAmplitudeFunction implements IAmplitudeFunction {
     Name: string = 'Fill';
-    GetAmplitude(min: Complex, max: Complex): {min: Complex, max: Complex}
+    GetAmplitude(min: Complex, max: Complex, fractal: IFractal): {min: Complex, max: Complex}
     {
         return {min, max};
     }
@@ -15,7 +16,7 @@ class DefaultAmplitudeFunction implements IAmplitudeFunction {
 
 class FixedAspectAmplitudeFunction implements IAmplitudeFunction {
     Name: string = 'Square';
-    GetAmplitude(min: Complex, max: Complex): {min: Complex, max: Complex}
+    GetAmplitude(min: Complex, max: Complex, fractal: IFractal): {min: Complex, max: Complex}
     {
         const range = Complex.subtract(max, min);
         if(range.real === range.imaginary) return {min, max};
@@ -34,5 +35,16 @@ class FixedAspectAmplitudeFunction implements IAmplitudeFunction {
     }
 }
 
-const AllAspectFunctions = [ new DefaultAmplitudeFunction(), new FixedAspectAmplitudeFunction() ];
+class AbsoluteAmplitudeFunction implements IAmplitudeFunction {
+    Name: string = 'Absolute';
+    GetAmplitude(min: Complex, max: Complex, fractal: IFractal): {min: Complex, max: Complex}
+    {
+        return {
+            min: new Complex(-fractal.MaxAmplitude, -fractal.MaxAmplitude),
+            max: new Complex(fractal.MaxAmplitude, fractal.MaxAmplitude)
+        };
+    }
+}
+
+const AllAspectFunctions = [ new DefaultAmplitudeFunction(), new FixedAspectAmplitudeFunction(), new AbsoluteAmplitudeFunction() ];
 export default AllAspectFunctions;
