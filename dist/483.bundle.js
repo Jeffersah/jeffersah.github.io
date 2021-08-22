@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunktrading_game=self.webpackChunktrading_game||[]).push([[483],{7483:(e,t,a)=>{a.r(t),a.d(t,{default:()=>i});var n=a(3804);function i(){return n.createElement("div",{className:"conway conway_body full_body"},n.createElement("div",{style:{width:"80%",height:"100%",position:"absolute"}},n.createElement("canvas",{style:{position:"absolute",width:"100%",height:"100%",top:0,left:0}}),n.createElement("canvas",{style:{position:"absolute",width:"100%",height:"100%",pointerEvents:"none",top:0,left:0}})))}}}]);
+//# sourceMappingURL=483.bundle.js.map

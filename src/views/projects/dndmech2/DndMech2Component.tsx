@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useWindowSize from '../../../hooks/useWindowSize';
-import * as css from './css/dndmech2.css';
+import css from './css/dndmech2.css';
 import MechComponent from './MechComponent';
 import { IChassis, allChassies } from './Chassis';
 import Dropdown from 'react-dropdown';
@@ -11,7 +11,6 @@ import { IComponentBonus, defaultComponentBonus, addCompBonus } from './Componen
 import { offhandComponents } from './Components/Offhand';
 import { mainHandComponents } from './Components/MainHand';
 import MechDisplay from './MechDisplay';
-
 
 export type ComponentType = 'head'|'body'|'rarm'|'larm'|'rhand'|'lhand'|'rleg'|'lleg';
 export interface IDamageStatus {

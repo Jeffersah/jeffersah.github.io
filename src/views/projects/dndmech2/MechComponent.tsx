@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as css from './css/dndmech2.css';
+import css from './css/dndmech2.css';
 import MechHp from './MechHp';
 import { IComponentHp } from './Chassis';
 import IMechComponent, { IMechCustomComponentProps } from './Components/IMechComponent';
