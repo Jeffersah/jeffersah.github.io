@@ -209,3 +209,11 @@ void main() {
   vPos = vec3(aVertexPosition.xy, 0.0);
   gl_Position = aVertexPosition;
 }`;
+
+export const defaultWebGl2VertexShader = `#version 300 es
+in vec4 aVertexPosition;
+out vec3 vPos;
+void main() {
+  vPos = vec3(aVertexPosition.xy, 0.0);
+  gl_Position = aVertexPosition;
+}`;
