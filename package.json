@@ -6,7 +6,7 @@
   "dependencies": {
     "@microsoft/signalr": "^5.0.9",
     "@types/react-resize-detector": "^5.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "axios-observable": "^1.2.1",
     "gl-matrix": "^3.3.0",
     "react": "^17.0.2",
