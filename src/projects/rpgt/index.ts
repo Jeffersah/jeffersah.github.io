@@ -72,9 +72,9 @@ function tick() {
         cy = Math.max(0, Math.min((world.height - Const.TILES_HIGH) * Const.TILE_SIZE, playerPos.y - (Const.TILE_SIZE * Const.TILES_HIGH / 2)));
     }
 
-    camPos.MultWith(CAMERA_SLOWDOWN_FACTOR, CAMERA_SLOWDOWN_FACTOR)
-          .AddWith(cx, cy)
-          .DivideWith(CAMERA_SLOWDOWN_FACTOR + 1, CAMERA_SLOWDOWN_FACTOR + 1);
+    camPos.multWith(CAMERA_SLOWDOWN_FACTOR, CAMERA_SLOWDOWN_FACTOR)
+          .addWith(cx, cy)
+          .divideWith(CAMERA_SLOWDOWN_FACTOR + 1, CAMERA_SLOWDOWN_FACTOR + 1);
 
     ctx.translate(-camPos.x, -camPos.y);
     ctx.drawImage(world.prerender, 0, 0);

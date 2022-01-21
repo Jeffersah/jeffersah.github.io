@@ -22,7 +22,7 @@ export class ColonyState {
             let distRow = [];
             for(let to = from + 1; to < this.points.length; to++){
                 row.push(1);
-                let dist = Point.subtract(this.points[from], this.points[to]).Length();
+                let dist = Point.subtract(this.points[from], this.points[to]).length();
                 distRow.push(dist);
                 if(dist > this.maxDist) this.maxDist = dist;
             }

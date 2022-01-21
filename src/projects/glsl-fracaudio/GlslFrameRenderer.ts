@@ -124,11 +124,11 @@ export default class GlslFrameRenderer {
             }
             else if(moves.length === 2) {
                 // Average the start + End positions to find the move amt
-                const dragStart = Point.Multiply(Point.add(moves[0][0], moves[1][0]), 0.5, 0.5);
-                const dragEnd = Point.Multiply(Point.add(moves[0][1], moves[1][1]), 0.5, 0.5);
-                const worldPos = this.panCameraByScreenDelta(dragEnd.SubtractWith(dragStart));
-                const startDist = Point.subtract(moves[0][0], moves[1][0]).Length();
-                const endDist = Point.subtract(moves[0][1], moves[1][1]).Length();
+                const dragStart = Point.multiply(Point.add(moves[0][0], moves[1][0]), 0.5, 0.5);
+                const dragEnd = Point.multiply(Point.add(moves[0][1], moves[1][1]), 0.5, 0.5);
+                const worldPos = this.panCameraByScreenDelta(dragEnd.subtractWith(dragStart));
+                const startDist = Point.subtract(moves[0][0], moves[1][0]).length();
+                const endDist = Point.subtract(moves[0][1], moves[1][1]).length();
                 const scaleAmt = startDist / endDist;
                 this.windowRange.AspectScale(scaleAmt, worldPos.x, 1-worldPos.y);
             }

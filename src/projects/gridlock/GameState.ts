@@ -54,7 +54,7 @@ export default class GameState {
         const tilePt = new Point(Math.floor(clickLocation.x / TILE_SIZE), Math.floor(clickLocation.y / TILE_SIZE));
         const tile = this.map[tilePt.x][tilePt.y];
         if(tile === undefined || tile === null || tile.signals.length === 0) return undefined;
-        const nearestSignal = findMin(tile.signals, signal => Point.subtract(signal.getRenderPosition(tilePt), clickLocation).LengthSq());
+        const nearestSignal = findMin(tile.signals, signal => Point.subtract(signal.getRenderPosition(tilePt), clickLocation).lengthSq());
 
         if(nearestSignal.isDisabled) return undefined;
 
@@ -136,7 +136,7 @@ export default class GameState {
 
             for(const otherCar of this.cars) {
                 if(car === otherCar || otherCar.nextPosition === undefined) continue;
-                if(equivPoint.anchor === otherCar.nextPosition.anchor && equivPoint.position.Equals(otherCar.nextPosition.position)) {
+                if(equivPoint.anchor === otherCar.nextPosition.anchor && equivPoint.position.equals(otherCar.nextPosition.position)) {
                     car.crashAt(car.nextPosition);
                     otherCar.crashAt(otherCar.nextPosition);
                 }

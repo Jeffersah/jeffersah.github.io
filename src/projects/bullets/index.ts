@@ -107,7 +107,7 @@ function repaint(gameState: GameState, player: Player, canvas: HTMLCanvasElement
     ctx.fillRect(0, 0, Const.Width, Const.Height);
     ctx.save();
 
-    const focusPoint = Point.add(player.position, Point.Multiply(player.velocity, 10));
+    const focusPoint = Point.add(player.position, Point.multiply(player.velocity, 10));
 
     ctx.translate(-(focusPoint.x - Const.Width / 2), -(focusPoint.y - Const.Height / 2));
     ctx.fillStyle = 'gray';

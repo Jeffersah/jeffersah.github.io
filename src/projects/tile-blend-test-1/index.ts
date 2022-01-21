@@ -64,7 +64,7 @@ function RenderTerrainCell(ctx: CanvasRenderingContext2D, terr: Terrain, sprites
 function onMouseMove(ev: MouseEvent) {
     const mouseCoords = new Point(Math.floor(ev.offsetX / (16 * SCALE_FACTOR)), Math.floor(ev.offsetY / (16 * SCALE_FACTOR)));
     if (pvMousePos !== undefined) {
-        if (!mouseCoords.Equals(pvMousePos)) {
+        if (!mouseCoords.equals(pvMousePos)) {
             RenderTerrainCell(context, terrain, tiles, pvMousePos.x, pvMousePos.y);
             selectors.render(context, mouseCoords.x * 16 * SCALE_FACTOR, mouseCoords.y * 16 * SCALE_FACTOR, 16 * SCALE_FACTOR, 16 * SCALE_FACTOR,
                 1, 0);

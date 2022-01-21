@@ -46,12 +46,12 @@ function arePolysTouching(p1: Point[], pt2: Point[]): boolean {
         let line = [p1[i], p1[(i+1)%p1.length]];
         for(let j = 0; j < pt2.length; j++) {
             let otherLine = [pt2[j], pt2[(j+1)%pt2.length]];
-            if(Point.subtract(otherLine[0], line[0]).LengthSq() < ADJ_THRESH
-                && Point.subtract(otherLine[1], line[1]).LengthSq() < ADJ_THRESH)
+            if(Point.subtract(otherLine[0], line[0]).lengthSq() < ADJ_THRESH
+                && Point.subtract(otherLine[1], line[1]).lengthSq() < ADJ_THRESH)
                 return true;
                 
-            if(Point.subtract(otherLine[1], line[0]).LengthSq() < ADJ_THRESH
-                && Point.subtract(otherLine[0], line[1]).LengthSq() < ADJ_THRESH)
+            if(Point.subtract(otherLine[1], line[0]).lengthSq() < ADJ_THRESH
+                && Point.subtract(otherLine[0], line[1]).lengthSq() < ADJ_THRESH)
                 return true;
         }
     }

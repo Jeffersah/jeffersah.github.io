@@ -68,10 +68,10 @@ export class FlareDefinition {
 
     draw(ctx: CanvasRenderingContext2D, location: Point, shipOrigin: Point, shipSize: Point, rotation: number) {
         if(!this.shouldRender) return;
-        let realPoint = this.offset.Clone();
-        realPoint.SubtractWith(Point.Multiply(shipOrigin, shipSize));
+        let realPoint = this.offset.clone();
+        realPoint.subtractWith(Point.multiply(shipOrigin, shipSize));
         realPoint = realPoint.rotate(rotation);
-        realPoint.AddWith(location);
+        realPoint.addWith(location);
         let realRot = this.adjRot + this.rotation + rotation;
         this.playing.draw(ctx, realPoint, this.animation.sourceSize, realRot);
     }

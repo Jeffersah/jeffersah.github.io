@@ -35,7 +35,7 @@ export default class Line {
     private static parallelIntersection(a: Line, b: Line): { percentA: number, percentB: number } | null {
         const basis = a.ray().normalize();
         function getBasisValue(pt: Point) {
-            return Point.Dot(Point.subtract(pt, a.start), basis);
+            return Point.dot(Point.subtract(pt, a.start), basis);
         }
         let aRange = new Range(getBasisValue(a.start), getBasisValue(a.end));
         let bRange = new Range(getBasisValue(b.start), getBasisValue(b.end));

@@ -1,4 +1,3 @@
-import { exception } from "console";
 import { Color } from "../Color";
 import { fastColorInterpolator, InterpolationFunction, numberInterpolator } from "./InterpolationFunction";
 

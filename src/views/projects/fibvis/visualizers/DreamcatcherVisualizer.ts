@@ -28,9 +28,9 @@ export default class DreamcatcherVisualizer implements IVisualizer {
         ctx.lineJoin = ctx.lineCap = 'round';
         ctx.beginPath();
         for(let i = 0; i < this.series.length && i < indexProgress; i++){
-            let coords = this.anchorPoints[this.series[i]].Clone();
-            coords.MultWith(actualRadius, actualRadius);
-            coords.AddWith(width / 2, height / 2);
+            let coords = this.anchorPoints[this.series[i]].clone();
+            coords.multWith(actualRadius, actualRadius);
+            coords.addWith(width / 2, height / 2);
             if(i === 0) ctx.moveTo(coords.x, coords.y);
             else ctx.lineTo(coords.x, coords.y);
         }
@@ -40,8 +40,8 @@ export default class DreamcatcherVisualizer implements IVisualizer {
         let endPoint = this.anchorPoints[this.series[seriesIndex + 1]];
 
         const tgtPoint = Point.interpolate(startPoint, endPoint, progress);
-        tgtPoint.MultWith(actualRadius, actualRadius);
-        tgtPoint.AddWith(width / 2, height / 2);
+        tgtPoint.multWith(actualRadius, actualRadius);
+        tgtPoint.addWith(width / 2, height / 2);
 
         ctx.lineTo(tgtPoint.x, tgtPoint.y);
         ctx.stroke();
@@ -64,9 +64,9 @@ export default class DreamcatcherVisualizer implements IVisualizer {
         ctx.lineJoin = ctx.lineCap = 'round';
         ctx.beginPath();
         for(let i = 0; i < this.series.length; i++){
-            let coords = this.anchorPoints[this.series[i]].Clone();
-            coords.MultWith(actualRadius, actualRadius);
-            coords.AddWith(width / 2, height / 2);
+            let coords = this.anchorPoints[this.series[i]].clone();
+            coords.multWith(actualRadius, actualRadius);
+            coords.addWith(width / 2, height / 2);
             if(i === 0) ctx.moveTo(coords.x, coords.y);
             else ctx.lineTo(coords.x, coords.y);
         }

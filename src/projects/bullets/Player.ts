@@ -70,15 +70,15 @@ export default class Player {
         this.rotation += this.angularVelocity;
 
         const friction = (1 - Math.abs(diffPerc)) * PHYS.vFricMin + (Math.abs(diffPerc)) * PHYS.vFricMax;
-        this.velocity.MultWith(friction, friction);
+        this.velocity.multWith(friction, friction);
 
         if (this.isEngineOn) {
             this.velocity.x += PHYS.acceleration * Math.cos(this.rotation);
             this.velocity.y += PHYS.acceleration * Math.sin(this.rotation);
         }
 
-        let vTotal = this.velocity.Length();
-        let vAngle = this.velocity.Direction();
+        let vTotal = this.velocity.length();
+        let vAngle = this.velocity.direction();
 
         if (vTotal >= PHYS.maxvelocity) {
             vTotal = PHYS.maxvelocity;
@@ -93,7 +93,7 @@ export default class Player {
         this.velocity.y = Math.sin(vAngle) * vTotal;
 
 
-        this.position.AddWith(this.velocity);
+        this.position.addWith(this.velocity);
     }
 
     render(ctx: CanvasRenderingContext2D) {

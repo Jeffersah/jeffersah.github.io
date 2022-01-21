@@ -18,7 +18,7 @@ export default class Bounds {
         relativePoints = relativePoints.map(pt => Point.subtract(pt, this.origin));
         relativePoints = relativePoints.map(pt => {
             const angle = Math.atan2(pt.y, pt.x);
-            const dist = pt.Length();
+            const dist = pt.length();
             return Point.fromAngle(angle + this.rotation, dist);
         });
         relativePoints = relativePoints.map(pt => Point.add(pt, this.position));

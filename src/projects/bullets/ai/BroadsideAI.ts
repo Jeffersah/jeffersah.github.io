@@ -29,13 +29,13 @@ export default class BroadsideAI extends ShipAI {
         const targetLocation = gs.Player.position;
         const toLocation = Point.subtract(targetLocation, ship.position);
         const currentHeading = ship.rotation;
-        const inwardHeading = toLocation.Direction();
+        const inwardHeading = toLocation.direction();
         const tangentHeadings = [
             Angle.normalize(inwardHeading - (Math.PI / 2)),
             Angle.normalize(inwardHeading + (Math.PI / 2))
         ];
 
-        if(toLocation.LengthSq() < this.args.minDistance * this.args.minDistance) {
+        if(toLocation.lengthSq() < this.args.minDistance * this.args.minDistance) {
             const fleeHeadings = [
                 Angle.normalize(inwardHeading - (Math.PI * 5 / 6)),
                 Angle.normalize(inwardHeading + (Math.PI * 5 / 6))
@@ -47,14 +47,14 @@ export default class BroadsideAI extends ShipAI {
             for(let i = 0; i < tgtPoints.length; i++) {
                 this.debugLine(ship.position, tgtPoints[i]);
             }
-            const tgtHeadings = tgtPoints.map(tgt => Point.subtract(tgt, ship.position).Direction());
+            const tgtHeadings = tgtPoints.map(tgt => Point.subtract(tgt, ship.position).direction());
             const bestHeading = getMinHeading(currentHeading, tgtHeadings); 
             
             return { 
                 tgtVel: ship.definition.maxSpeed, 
                 tgtHeading: bestHeading
             };
-        } else if (toLocation.LengthSq() > this.args.maxDistance * this.args.maxDistance) {
+        } else if (toLocation.lengthSq() > this.args.maxDistance * this.args.maxDistance) {
             const orbitDist = (this.args.minDistance + this.args.maxDistance)/2;
             // Close the gap
             this.debugPoint(targetLocation, undefined, orbitDist);
@@ -62,7 +62,7 @@ export default class BroadsideAI extends ShipAI {
             for(let i = 0; i < tgtPoints.length; i++) {
                 this.debugPoint(tgtPoints[i]);
             }
-            const tgtHeadings = tgtPoints.map(tgt => Point.subtract(tgt, ship.position).Direction());
+            const tgtHeadings = tgtPoints.map(tgt => Point.subtract(tgt, ship.position).direction());
             const bestHeading = getMinHeading(currentHeading, tgtHeadings); 
             
             return { 

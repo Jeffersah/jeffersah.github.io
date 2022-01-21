@@ -56,12 +56,12 @@ export default class Signal {
 
     getRenderPosition(tile: Point): Point {
         return TileAnchorHelper.GetMidpoint({ position: tile }, TILE_SIZE_PT)
-            .SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2)
-            .AddWith(this.definition.dx, this.definition.dy);
+            .subtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2)
+            .addWith(this.definition.dx, this.definition.dy);
     }
 
     draw(ctx: CanvasRenderingContext2D, tile: Point, hub: SpriteSheet, arrows: SpriteSheet) {
-        const midpoint = TileAnchorHelper.GetMidpoint({ position: tile }, TILE_SIZE_PT).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
+        const midpoint = TileAnchorHelper.GetMidpoint({ position: tile }, TILE_SIZE_PT).subtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
         hub.render(ctx,
             midpoint.x + this.definition.dx, midpoint.y + this.definition.dy,
             6, 6,
@@ -72,13 +72,13 @@ export default class Signal {
             const offset = arrowOffsets[anchor]++;
             const offsetDir = ARROW_DIR[anchor];
 
-            const position = Point.add(midpoint, Point.Multiply(offsetDir, (ARROW_SHIFT_HUB + ARROW_SHIFT * offset))).AddWith(this.definition.dx, this.definition.dy);
+            const position = Point.add(midpoint, Point.multiply(offsetDir, (ARROW_SHIFT_HUB + ARROW_SHIFT * offset))).addWith(this.definition.dx, this.definition.dy);
             arrows.render(ctx, position.x, position.y, ARROW_SIZE, ARROW_SIZE, anchor, car);
         }
     }
     
     draw_offgrid(ctx: CanvasRenderingContext2D, position: Point, tileSize: Point, hub: SpriteSheet, arrows: SpriteSheet) {
-        const midpoint = position.AddWith(Point.Multiply(tileSize, 0.5, 0.5)).SubtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
+        const midpoint = position.addWith(Point.multiply(tileSize, 0.5, 0.5)).subtractWith(ARROW_SIZE / 2, ARROW_SIZE / 2); 
         hub.render(ctx, midpoint.x + this.definition.dx, midpoint.y + this.definition.dy,
             6, 6,
             this.isDisabled ? 1 : 0, 0);
@@ -88,7 +88,7 @@ export default class Signal {
             const offset = arrowOffsets[anchor]++;
             const offsetDir = ARROW_DIR[anchor];
 
-            const position = Point.add(midpoint, Point.Multiply(offsetDir, (ARROW_SHIFT_HUB + ARROW_SHIFT * offset))).AddWith(this.definition.dx, this.definition.dy);
+            const position = Point.add(midpoint, Point.multiply(offsetDir, (ARROW_SHIFT_HUB + ARROW_SHIFT * offset))).addWith(this.definition.dx, this.definition.dy);
             arrows.render(ctx, position.x, position.y, ARROW_SIZE, ARROW_SIZE, anchor, car);
         }
     }

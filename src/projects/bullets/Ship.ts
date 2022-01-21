@@ -34,7 +34,7 @@ export class Ship implements IEntity{
     }
 
     getBounds(): Bounds {
-        return new Bounds(this.position, this.definition.size, Point.Multiply(this.definition.origin, this.definition.size), this.rotation);
+        return new Bounds(this.position, this.definition.size, Point.multiply(this.definition.origin, this.definition.size), this.rotation);
     }
 
     tick(keys: KeyboardManager, gs: GameState): boolean {
@@ -73,7 +73,7 @@ export class Ship implements IEntity{
 
         if(this.Velocity >= 0) this.Velocity = Math.min(this.Velocity, this.definition.maxSpeed);
         else this.Velocity = Math.max(this.Velocity, - this.definition.maxSpeed);
-        this.position.AddWith(Point.fromAngle(this.rotation, this.Velocity));
+        this.position.addWith(Point.fromAngle(this.rotation, this.Velocity));
         return this.currentHp > 0;
     }
 

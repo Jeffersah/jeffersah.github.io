@@ -44,7 +44,7 @@ export class MapTileDefinition {
 
 function getSignalOffset(signalPerInput: boolean, anchor: ETileAnchor): {dx: number, dy: number} {
     if(!signalPerInput) return { dx: 0, dy: 0 };
-    const pos = TileAnchorHelper.AnchorToTileMove(anchor).MultWith(EDGE_SIGNAL_OFFSET);
+    const pos = TileAnchorHelper.AnchorToTileMove(anchor).multWith(EDGE_SIGNAL_OFFSET);
     return {dx: pos.x, dy: pos.y };
 }
 

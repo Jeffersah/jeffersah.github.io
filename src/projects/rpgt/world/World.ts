@@ -39,10 +39,10 @@ export default class World {
         const xDirection = vel.x >= 0 ? Direction.Right : Direction.Left;
         const yDirection = vel.y >= 0 ? Direction.Down : Direction.Up;
         if (vel.x !== 0) {
-            const startXTile = Math.floor(pos.Edge(xDirection) / Const.TILE_SIZE);
-            const endXTile = Math.floor((pos.Edge(xDirection) + vel.x) / Const.TILE_SIZE);
-            const startYTile = Math.floor(pos.Edge(Direction.Up) / Const.TILE_SIZE);
-            const endYTile = Math.floor((pos.Edge(Direction.Down) - 1) / Const.TILE_SIZE);
+            const startXTile = Math.floor(pos.edge(xDirection) / Const.TILE_SIZE);
+            const endXTile = Math.floor((pos.edge(xDirection) + vel.x) / Const.TILE_SIZE);
+            const startYTile = Math.floor(pos.edge(Direction.Up) / Const.TILE_SIZE);
+            const endYTile = Math.floor((pos.edge(Direction.Down) - 1) / Const.TILE_SIZE);
 
             let xColision: number | undefined;
             IterateRange(startXTile, endXTile, (x, ctrl) => {
@@ -68,10 +68,10 @@ export default class World {
             }
         }
         if (vel.y !== 0) {
-            const startYTile = Math.floor(pos.Edge(yDirection) / Const.TILE_SIZE);
-            const endYTile = Math.floor((pos.Edge(yDirection) + vel.y) / Const.TILE_SIZE);
-            const startXTile = Math.floor(pos.Edge(Direction.Left) / Const.TILE_SIZE);
-            const endXTile = Math.floor((pos.Edge(Direction.Right) - 1) / Const.TILE_SIZE);
+            const startYTile = Math.floor(pos.edge(yDirection) / Const.TILE_SIZE);
+            const endYTile = Math.floor((pos.edge(yDirection) + vel.y) / Const.TILE_SIZE);
+            const startXTile = Math.floor(pos.edge(Direction.Left) / Const.TILE_SIZE);
+            const endXTile = Math.floor((pos.edge(Direction.Right) - 1) / Const.TILE_SIZE);
 
             let yColision: number | undefined;
             IterateRange(startYTile, endYTile, (y, ctrl) => {

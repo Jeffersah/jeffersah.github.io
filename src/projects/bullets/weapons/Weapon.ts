@@ -35,8 +35,8 @@ export class Weapon {
 
     constructor(public args: IWeaponArgs, shipDef: ShipDefinition) {
         this.turretAngle = 0;
-        this.actualAnchor = this.args.offset.Clone();
-        this.actualAnchor.SubtractWith(Point.Multiply(shipDef.origin, shipDef.size));
+        this.actualAnchor = this.args.offset.clone();
+        this.actualAnchor.subtractWith(Point.multiply(shipDef.origin, shipDef.size));
         if(args.sprite !== undefined) {
             this.imgControl = new AnimationControl(args.sprite);
         }
@@ -45,7 +45,7 @@ export class Weapon {
 
     getWeaponLocation(ship: Ship): Point {
         const result = this.actualAnchor.rotate(ship.rotation);
-        result.AddWith(ship.position);
+        result.addWith(ship.position);
         return result;
     }
     getWeaponAnchorAngle(ship: Ship) {
@@ -67,7 +67,7 @@ export class Weapon {
 
         // Filter down targets to those in range
         possibleTargets = possibleTargets.filter(p => {
-            const pDist = Point.subtract(p, location).LengthSq();
+            const pDist = Point.subtract(p, location).lengthSq();
             return (
                 (this.args.minRange === undefined || 
                     (pDist > this.args.minRange * this.args.minRange)
@@ -83,7 +83,7 @@ export class Weapon {
             // I have no turret, fire if anyone is in spray range
             for(let i = 0; i < possibleTargets.length; i++) {
                 // Find absolute direction to target
-                const angleToTarget = Point.subtract(possibleTargets[i], self.position).Direction();
+                const angleToTarget = Point.subtract(possibleTargets[i], self.position).direction();
                 // Find angle to target relative to turret anchor angle
                 const turretRelAngle = Angle.accuteAngle(anchorAngle, angleToTarget);
                 // Check if relAngle is less than the spray angle (he's in range)
@@ -110,7 +110,7 @@ export class Weapon {
 
             // Choose the target closest to anchor angle
             for(let i = 0; i < possibleTargets.length; i++) {
-                const angleToTarget = Point.subtract(possibleTargets[i], self.position).Direction();
+                const angleToTarget = Point.subtract(possibleTargets[i], self.position).direction();
                 const turretRelAngle = Angle.accuteAngle(anchorAngle, angleToTarget);
                 if(target === null || Math.abs(turretRelAngle) < Math.abs(targetAngle)) {
                     target = possibleTargets[i];

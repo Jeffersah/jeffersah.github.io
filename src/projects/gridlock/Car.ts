@@ -223,7 +223,7 @@ export class Car {
                 renderPosition = Point.Bezier([fromAnchor, tileMidpoint, toAnchor], useInterp);
             }
 
-            renderPosition = renderPosition.AddWith(positionAdjust);
+            renderPosition = renderPosition.addWith(positionAdjust);
 
             const exitAngle = TileAnchorHelper.GetEntryRotation(effectiveNext.anchor);
 
@@ -241,7 +241,7 @@ export class Car {
         else if(this.nextPosition !== undefined) {
             const toAnchor = TileAnchorHelper.GetRealPosition(this.nextPosition, TILE_SIZE_PT);
 
-            const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, toAnchor], interpPercent).AddWith(positionAdjust);
+            const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, toAnchor], interpPercent).addWith(positionAdjust);
 
             const exitAngle = TileAnchorHelper.GetEntryRotation(this.nextPosition.anchor);
 
@@ -251,7 +251,7 @@ export class Car {
         }
         else if(this.parkedAt !== undefined) {
             if(!this.parkAnimationComplete) {
-                const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, tileMidpoint], interpPercent).AddWith(positionAdjust);
+                const renderPosition = Point.Bezier([fromAnchor, tileMidpoint, tileMidpoint], interpPercent).addWith(positionAdjust);
                 sprite.draw(ctx, renderPosition, sprite.sourceSize, fromAngle);
             } else {
                 sprite.draw(ctx, tileMidpoint, sprite.sourceSize, fromAngle);

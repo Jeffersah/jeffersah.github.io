@@ -49,7 +49,7 @@ export default class RunGameScreen implements IScreen {
             ctx.scale(this.map.recursePosition.scale, this.map.recursePosition.scale);
             ctx.rotate(this.map.recursePosition.rotation);
 
-            const tgtPoint = this.map.recursePosition.center.rotate(-this.map.recursePosition.rotation).MultWith(1/this.map.recursePosition.scale, 1/this.map.recursePosition.scale);
+            const tgtPoint = this.map.recursePosition.center.rotate(-this.map.recursePosition.rotation).multWith(1/this.map.recursePosition.scale, 1/this.map.recursePosition.scale);
 
             ctx.translate(tgtPoint.x, tgtPoint.y);
         }

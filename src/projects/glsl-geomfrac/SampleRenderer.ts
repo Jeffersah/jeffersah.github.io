@@ -143,7 +143,7 @@ out float v_sample;
 void main() {
     v_sample = a_position.w;
     vec4 pos = a_position * u_transform_1 * u_transform_2;
-    gl_Position = vec4(pos.xyz, 1.0);
+    gl_Position = pos.xyzz;
     gl_PointSize = (v_sample*v_sample) * 2.0;
 }
 `;

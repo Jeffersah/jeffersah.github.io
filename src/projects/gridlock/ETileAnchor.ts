@@ -89,14 +89,14 @@ export class TileAnchorHelper {
     }
 
     static GetRealPosition(position: ITilePosition, tileSize: Point) {
-        var tilePosition = Point.Multiply(position.position, tileSize);
-        var offsetPosition = Point.Multiply(TileAnchorHelper.GetAnchorOffset(position.anchor), tileSize);
-        return tilePosition.AddWith(offsetPosition);
+        var tilePosition = Point.multiply(position.position, tileSize);
+        var offsetPosition = Point.multiply(TileAnchorHelper.GetAnchorOffset(position.anchor), tileSize);
+        return tilePosition.addWith(offsetPosition);
     }
     
     static GetMidpoint(position: { position: Point }, tileSize: Point) {
-        var tilePosition = Point.Multiply(position.position, tileSize);
-        return tilePosition.AddWith(Point.Multiply(tileSize, 0.5));
+        var tilePosition = Point.multiply(position.position, tileSize);
+        return tilePosition.addWith(Point.multiply(tileSize, 0.5));
     }
 
     static GetConnection(from: ETileAnchor, to: ETileAnchor) : EAnchorConnectionFlag {

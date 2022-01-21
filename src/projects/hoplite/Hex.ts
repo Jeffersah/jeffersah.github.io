@@ -3,7 +3,7 @@ import Point from "../common/position/Point";
 import { PIX_PER_CELL_X, PIX_PER_CELL_Y } from "./Constants";
 
 export function HexToPixel(point: Point) {
-    return Point.add(Point.Multiply(PIX_PER_CELL_Y, point.y), point.x * PIX_PER_CELL_X, 0);
+    return Point.add(Point.multiply(PIX_PER_CELL_Y, point.y), point.x * PIX_PER_CELL_X, 0);
 }
 
 export function PixelToHex(point: Point) {

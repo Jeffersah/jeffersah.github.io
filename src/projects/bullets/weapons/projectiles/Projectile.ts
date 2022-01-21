@@ -18,7 +18,7 @@ export class Projectile {
     constructor(public args: IProjectileArgs, public position: Point, public target: Point, rot: number, public team: ETeam) {
         this.heading = rot + ((Math.random() - .5) * args.spawnSprayAngle);
         if(args.weaponType === 'laser') {
-            this.laserLength = args.maxLength ?? Point.subtract(target, position).Length();
+            this.laserLength = args.maxLength ?? Point.subtract(target, position).length();
             this.laserEndPoint = Point.add(position, Point.fromAngle(this.heading, this.laserLength));
         } else if(args.weaponType === 'bullet') {
             this.bulletDelta = Point.fromAngle(this.heading, args.moveSpeed);
@@ -28,7 +28,7 @@ export class Projectile {
     
     tick() : boolean{
         if(this.args.weaponType === 'bullet') {
-            this.position.AddWith(this.bulletDelta);
+            this.position.addWith(this.bulletDelta);
         }
         return this.remainingLifetime-- === 0;
     }

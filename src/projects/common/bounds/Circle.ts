@@ -6,7 +6,7 @@ export class Circle {
     }
 
     surfaceDepth(other: Circle) {
-        return Point.subtract(this.position, other.position).Length() - this.radius - other.radius;
+        return Point.subtract(this.position, other.position).length() - this.radius - other.radius;
     }
 
     intersects(other: Circle): boolean {

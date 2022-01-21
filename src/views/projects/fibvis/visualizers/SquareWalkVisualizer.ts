@@ -18,9 +18,9 @@ export default class SquareWalkVisualizer implements IVisualizer {
 
     constructor(public modulo: number, public series: number[]) {
         const currentPoint = new Point(0,0);
-        this.pts = [currentPoint.Clone()];
-        this.minExtent = currentPoint.Clone();
-        this.maxExtent = currentPoint.Clone();
+        this.pts = [currentPoint.clone()];
+        this.minExtent = currentPoint.clone();
+        this.maxExtent = currentPoint.clone();
         let dir = 0;
 
         for(let i = 0; i < series.length; i++) {
@@ -29,8 +29,8 @@ export default class SquareWalkVisualizer implements IVisualizer {
                 : dir-1;
             dir += dirs.length;
             dir %= dirs.length;
-            currentPoint.AddWith(dirs[dir]);
-            var pt = currentPoint.Clone();
+            currentPoint.addWith(dirs[dir]);
+            var pt = currentPoint.clone();
             this.minExtent = Point.componentMin(this.minExtent, pt);
             this.maxExtent = Point.componentMax(this.maxExtent, pt);
             this.pts.push(pt);
@@ -72,7 +72,7 @@ export default class SquareWalkVisualizer implements IVisualizer {
         let startPoint = this.pts[seriesIndex];
         let endPoint = this.pts[seriesIndex + 1];
         const tgtPoint = Point.interpolate(startPoint, endPoint, progress);
-        tgtPoint.MultWith(width, height);
+        tgtPoint.multWith(width, height);
         ctx.lineTo(tgtPoint.x, tgtPoint.y)
         ctx.stroke();
 

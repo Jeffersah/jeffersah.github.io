@@ -12,16 +12,16 @@ export default class WalkVisualizer implements IVisualizer {
 
     constructor(public modulo: number, public series: number[]) {
         const currentPoint = new Point(0,0);
-        this.pts = [currentPoint.Clone()];
-        this.minExtent = currentPoint.Clone();
-        this.maxExtent = currentPoint.Clone();
+        this.pts = [currentPoint.clone()];
+        this.minExtent = currentPoint.clone();
+        this.maxExtent = currentPoint.clone();
 
         let anglePerModulo = (Math.PI * 2) / modulo;
 
         for(let i = 0; i < series.length; i++) {
             const angle = anglePerModulo * series[i];
-            currentPoint.AddWith(Point.fromAngle(angle));
-            var pt = currentPoint.Clone();
+            currentPoint.addWith(Point.fromAngle(angle));
+            var pt = currentPoint.clone();
             this.minExtent = Point.componentMin(this.minExtent, pt);
             this.maxExtent = Point.componentMax(this.maxExtent, pt);
             this.pts.push(pt);
@@ -55,7 +55,7 @@ export default class WalkVisualizer implements IVisualizer {
         let startPoint = this.pts[seriesIndex];
         let endPoint = this.pts[seriesIndex + 1];
         const tgtPoint = Point.interpolate(startPoint, endPoint, progress);
-        tgtPoint.MultWith(width, height);
+        tgtPoint.multWith(width, height);
         ctx.lineTo(tgtPoint.x, tgtPoint.y)
         ctx.stroke();
 

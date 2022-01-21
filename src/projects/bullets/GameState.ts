@@ -58,9 +58,9 @@ export default class GameState {
         let ships = <Ship[]> allItems.filter(item => (<Ship>item).currentHp !== undefined);
         if(maxRange !== undefined) {
             const rangeSq = maxRange * maxRange;
-            ships = ships.filter(s => Point.subtract(s.position, originPoint).LengthSq() <= rangeSq);
+            ships = ships.filter(s => Point.subtract(s.position, originPoint).lengthSq() <= rangeSq);
         }
-        const shipsAndRanges = ships.map(ship => ({ ship, range: Point.subtract(ship.position, originPoint).LengthSq() }));
+        const shipsAndRanges = ships.map(ship => ({ ship, range: Point.subtract(ship.position, originPoint).lengthSq() }));
         shipsAndRanges.sort((a, b) => a.range - b.range);
         return shipsAndRanges.map(s => s.ship);
     }

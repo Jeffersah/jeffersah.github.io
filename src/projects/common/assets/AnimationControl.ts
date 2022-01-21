@@ -55,8 +55,8 @@ export class AnimationControl {
     }
 
     private getRenderSize(src: PlayingAnimation | AtlasSprite): Point {
-        if(isSprite(src)) return Point.Multiply(src.sourceSize, this.scaleFactor);
-        else return Point.Multiply(src.source.sourceSize, this.scaleFactor);
+        if(isSprite(src)) return Point.multiply(src.sourceSize, this.scaleFactor);
+        else return Point.multiply(src.source.sourceSize, this.scaleFactor);
     }
 }
 
