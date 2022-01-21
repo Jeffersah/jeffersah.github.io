@@ -51,6 +51,10 @@ export default class Point {
         return Math.atan2(this.y, this.x);
     }
 
+    public Truncate(): Point {
+        return new Point(Math.trunc(this.x), Math.trunc(this.y));
+    }
+
     public AddWith(x: number, y: number): this;
     public AddWith(other: Point): this;
     public AddWith(other: number|Point, y?: number): this {

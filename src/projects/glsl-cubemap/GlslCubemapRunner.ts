@@ -1,4 +1,4 @@
-import Rand from "../../utils/rand";
+import Rand from "../../utils/Rand";
 import { Complex, Range, Range2d } from "../common";
 import Camera from "../common/3d/Camera";
 import * as GLSL from "../common/3d/GlslHelpers";

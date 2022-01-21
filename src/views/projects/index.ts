@@ -29,6 +29,7 @@ import AsmGameWrapperComponent from './asmgame/AsmGameWrapperComponent';
 import GlslFractalAudioWrapperComponent from './glsl-fracaudio/GlslFractalAudioWrapperComponent';
 import SimpleCypherWrapperComponent from './simple-cypher/SimpleCypherWrapperComponent';
 import GlslGeomFracWrapperComponent from './glsl-geomfrac/GlslGeomFracWrapperComponent';
+import { HopliteWrapperComponent } from './hoplite/HopliteWrapperComponent';
 
 export interface IProject {
     projectName: string;
@@ -228,5 +229,11 @@ export const AllProjects: IProject[] = [
         projectTitle: 'Simple Cypher',
         projectComponent: SimpleCypherWrapperComponent,
         subCategory: 'Test'
+    },
+
+    {
+        projectName: 'hoplite',
+        projectTitle: 'Hoplite',
+        projectComponent: HopliteWrapperComponent
     }
 ];

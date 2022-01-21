@@ -5,7 +5,7 @@ import levelsJson from './assets/leveldata/levels.json';
 import ILevelData from "./ILevelData";
 import Assets from "./assets";
 import Point from "../common/position/Point";
-import SignalCtrlPanel from "./signalCtrl/signalCtrlPanel";
+import SignalCtrlPanel from "./signalCtrl/SignalCtrlPanel";
 import { TILE_SIZE } from "./Constants";
 
 const NUM_INTERP_FRAMES = 40;

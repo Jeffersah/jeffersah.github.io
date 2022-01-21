@@ -8,7 +8,7 @@ import { TILE_SIZE_PT } from "./Constants";
 import { any } from "../../LinqLike";
 import MapTile from "./tiles/MapTile";
 import { PlayingAnimation } from "../common/assets/SpriteAnimation";
-import Rand from "../../utils/rand";
+import Rand from "../../utils/Rand";
 import Assets from "./assets";
 import CarAnimationControl from "./CarAnimationControl";
 import { SpriteSheet } from "../common/assets/SpriteSheet";

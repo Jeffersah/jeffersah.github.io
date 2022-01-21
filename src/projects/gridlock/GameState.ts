@@ -7,7 +7,7 @@ import { ATLAS_WIDTH, CAR_SIZE, CAR_SIZE_PT, TILE_SIZE, TILE_SIZE_PT } from "./C
 import ECarColor from "./ECarColor";
 import ETileAnchor, { ITilePosition, TileAnchorHelper } from "./ETileAnchor";
 import ILevelData from "./ILevelData";
-import SignalCtrlPanel from "./signalCtrl/signalCtrlPanel";
+import SignalCtrlPanel from "./signalCtrl/SignalCtrlPanel";
 import MapTile from "./tiles/MapTile";
 import allMapTileDefinitions, { MapTileDefinition } from "./tiles/MapTileDefintion";
 

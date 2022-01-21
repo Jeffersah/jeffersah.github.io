@@ -13,6 +13,15 @@ export default class NearestNeighborScalingHelper {
         }
     }
 
+    public Detatch() {
+        if (this.scaleByWindowSize) {
+            window.removeEventListener('resize', () => this.Rescale());
+        }
+        else {
+            this.canvas.parentElement.removeEventListener('resize', () => this.Rescale());
+        }
+    }
+
     public Rescale() {
         let currentWidth: number;
         let currentHeight: number;

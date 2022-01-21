@@ -5,7 +5,7 @@ import { ResizeCanvas } from '../common/CanvasHelpers';
 import { Color } from '../common/Color';
 import { unitRange } from '../common/Range';
 import * as Const from './Constants';
-import Rock from './rock';
+import Rock from './Rock';
 
 const NUM_ROCKS = 50;
 
