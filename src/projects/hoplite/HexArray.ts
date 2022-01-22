@@ -74,6 +74,15 @@ export default class HexArray<T> {
         return -Math.min(row, this._size - 1);
     }
 
+    public iterate(func: (x: number, y: number, value: T) => void) {
+        for(let y = -this._size+1; y < this._size; y++) {
+            let [xMin, xMax] = this.getXRange(y);
+            for(let x = xMin; x < xMax; x++) {
+                func(x, y, this.get(x, y));
+            }
+        }
+    }
+
     private toArrayCoords(x: number, y: number): [number, number] {
         const row = this._size - 1 + y;
         const firstX = -Math.min(row, this._size - 1);

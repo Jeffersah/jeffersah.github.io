@@ -52,7 +52,6 @@ export class Floor extends SimpleCell {
     }
 }
 
-
 export class Lava extends SimpleCell {
     constructor() {
         super(1, new Point(1,0), false);
@@ -61,5 +60,14 @@ export class Lava extends SimpleCell {
     OnEntityStep(entity: Entity): void {
         if(!entity.isFlying)
             entity.TakeDamage(999);
+    }
+}
+
+export class DownStairs extends SimpleCell {
+    constructor() {
+        super(2, new Point(5, 0), true);
+    }
+
+    OnEntityStep(entity: Entity): void {
     }
 }
