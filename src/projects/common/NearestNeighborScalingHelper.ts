@@ -45,4 +45,20 @@ export default class NearestNeighborScalingHelper {
             this.onResize();
         }
     }
+
+    public TryRescale() {
+        let currentWidth: number;
+        let currentHeight: number;
+        if (this.scaleByWindowSize) {
+            currentWidth = window.innerWidth;
+            currentHeight = window.innerHeight;
+        }
+        else {
+            currentWidth = this.canvas.parentElement.clientWidth;
+            currentHeight = this.canvas.parentElement.clientHeight;
+        }
+
+        if(this.canvas.width === currentWidth && this.canvas.height === currentHeight) { return }
+        this.Rescale();
+    }
 }

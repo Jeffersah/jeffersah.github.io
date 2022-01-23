@@ -4,7 +4,7 @@ import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { HexToPixel, PixelToHex } from "../Hex";
 import HexCell, { DownStairs } from "../HexCell";
-import EnemyTurnPhase from "./EnemyTurnPhase";
+import EnemyAttackPhase from "./EnemyAttackPhase";
 import FloorTransitionPhase from "./FloorTransitionPhase";
 import IGamePhase from "./IGamePhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
@@ -30,11 +30,9 @@ export default class PlayerMoveAnimPhase implements IGamePhase {
     tick(state: GameState, keys: KeyboardManager): IGamePhase {
         this.time++;
         if(this.time === this.duration) { 
-            state.entities.set(null, this.playerPos);
-            state.entities.set(state.player, this.playerDest);
             state.player.position = this.playerDest;
 
-            if(state.tiles.get(state.player.position).typeId === DownStairs.TileID) {
+            if(state.tiles.get(state.player.position).typeId === DownStairs.TypeID) {
                 return new FloorTransitionPhase();
             }
 
@@ -42,7 +40,7 @@ export default class PlayerMoveAnimPhase implements IGamePhase {
                 return new PlayerTurnGamePhase();
             }
             else {
-                return new EnemyTurnPhase();
+                return new EnemyAttackPhase();
             }
         }
         return this;

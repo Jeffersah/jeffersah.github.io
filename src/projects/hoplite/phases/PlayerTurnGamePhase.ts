@@ -35,11 +35,7 @@ export default class PlayerTurnGamePhase implements IGamePhase {
         if(dir !== undefined) {
             const destination = Point.add(state.player.position, DirectionHelper.ToPoint(dir));
 
-            if(!state.tiles.isInBounds(destination.x, destination.y))
-                return this;
-            if(!state.tiles.get(destination).isPathable)
-                return this;
-            if(state.entities.get(destination) !== null)
+            if(!state.isValidMove(destination, false))
                 return this;
 
             return new PlayerMoveAnimPhase(state.player.position, destination);

@@ -13,6 +13,7 @@ import EntryAnimationPhase from './phases/EntryAnimationPhase';
 import IGamePhase from './phases/IGamePhase';
 import GameStartAnimationPhase from './phases/GameStartAnimationPhase';
 import FloorZeroGen from './mapGen/FloorZeroGen';
+import Zombie from './entities/Zombie';
 
 export default function Run(): (()=>void) {
     let ctx: CanvasRenderingContext2D;
@@ -40,12 +41,16 @@ export default function Run(): (()=>void) {
             true, 
             () => { return; }
         );
+
+        Zombie.onAssetsLoaded(assets);
         state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
         NearestNeighborScaling(ctx);
         tick();
     }
     
     function tick() {
+        scaleHelper.TryRescale();
+        NearestNeighborScaling(ctx);
 
         const nextPhase = currentPhase.tick(state, keys);
 

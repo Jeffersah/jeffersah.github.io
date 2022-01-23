@@ -125,6 +125,8 @@ export default class Point {
     }
 
     static interpolate(a: Point, b: Point, p: number): Point {
+        if(p === 0) return a;
+        if(p === 1) return b;
         return new Point(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p);
     }
 

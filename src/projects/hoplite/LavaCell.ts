@@ -7,13 +7,14 @@ import HexCell from "./HexCell";
 import MultiPartCell from "./MultiPartCell";
 
 export default class Lava extends MultiPartCell {
+    public static TypeID = 1;
 
     constructor(assets: Assets) {
-        super(1, assets, new Point(0, 4), false);
+        super(Lava.TypeID, assets, new Point(0, 4), false);
     }
 
     OnEntityStep(entity: Entity): void {
         if(!entity.isFlying)
-            entity.TakeDamage(999);
+            entity.hp -= 100;
     }
 }

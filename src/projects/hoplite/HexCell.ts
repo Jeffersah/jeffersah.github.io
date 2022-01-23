@@ -60,10 +60,10 @@ export abstract class SimpleCell extends HexCell{
 }
 
 export class Floor extends SimpleCell {
-    public static TileID = 0;
+    public static TypeID = 0;
 
     constructor(assets: Assets, customSprite?: Point) {
-        super(Floor.TileID, assets, customSprite ?? new Point(0,0), true, customSprite !== undefined);
+        super(Floor.TypeID, assets, customSprite ?? new Point(0,0), true, customSprite !== undefined);
     }
 
     OnEntityStep(entity: Entity): void {
@@ -73,9 +73,9 @@ export class Floor extends SimpleCell {
 // TypeID 1 : Lava
 
 export class DownStairs extends SimpleCell {
-    public static TileID = 2;
+    public static TypeID = 2;
     constructor(assets: Assets) {
-        super(DownStairs.TileID, assets, new Point(5, 0), true, true);
+        super(DownStairs.TypeID, assets, new Point(5, 0), true, true);
     }
 
     OnEntityStep(entity: Entity): void {
