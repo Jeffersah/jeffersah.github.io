@@ -9,3 +9,5 @@ export const MAP_SIZE = 6;
 export const MAP_PIXEL_SIZE = (MAP_SIZE*2 - 1)*PIX_PER_CELL_X;
 
 export const MAP_CENTER_POSITION = new Point(MAP_PIXEL_SIZE/2 - TILE_WIDTH / 2, MAP_PIXEL_SIZE/2 - TILE_HEIGHT / 2);
+
+export const PLAYER_START_POSITION = new Point(-2, 4);

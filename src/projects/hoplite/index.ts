@@ -7,7 +7,12 @@ import Point from '../common/position/Point';
 import { TILES_HIGH } from '../rpgt/Constants';
 import * as C from "./Constants";
 import Assets from './Assets';
-import HexWorld from './HexWorld';
+import GameState from './GameState';
+import StandardMapGen from './mapGen/StandardMapGen';
+import EntryAnimationPhase from './phases/EntryAnimationPhase';
+import IGamePhase from './phases/IGamePhase';
+import GameStartAnimationPhase from './phases/GameStartAnimationPhase';
+import FloorZeroGen from './mapGen/FloorZeroGen';
 
 export default function Run(): (()=>void) {
     let ctx: CanvasRenderingContext2D;
@@ -18,7 +23,8 @@ export default function Run(): (()=>void) {
     const assetLoader = new AssetLoader();
     const assets = new Assets(assetLoader);
 
-    let world: HexWorld;
+    let state: GameState;
+    let currentPhase: IGamePhase = new GameStartAnimationPhase();
 
     keys = new KeyboardManager(document.body);
     assetLoader.onAllFinished(assetLoadDone);
@@ -34,18 +40,20 @@ export default function Run(): (()=>void) {
             true, 
             () => { return; }
         );
-        world = new HexWorld(C.MAP_SIZE);
+        state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
+        NearestNeighborScaling(ctx);
         tick();
     }
     
     function tick() {
-        NearestNeighborScaling(ctx);
-        ctx.clearRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
 
+        currentPhase = currentPhase.tick(state);
+
+        ctx.clearRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
 
-        world.draw(ctx, assets);
+        currentPhase.draw(ctx, state);
 
 
         requestAnimationFrame(() => tick());

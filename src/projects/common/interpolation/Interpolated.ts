@@ -20,3 +20,13 @@ export class InterpolationTimer {
         return animation.range.sample(animation.timingFunction(this.elapsedTime / this.totalTime));
     }
 }
+
+export class LinkedInterpolation<T> {
+    constructor(public timer: InterpolationTimer, public interp: Interpolated<T>) {
+
+    }
+
+    sample(): T {
+        return this.timer.sample(this.interp);
+    }
+}

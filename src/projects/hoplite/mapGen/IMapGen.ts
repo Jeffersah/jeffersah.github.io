@@ -1,5 +1,6 @@
+import Assets from "../Assets";
 import GameState from "../GameState";
 
 export default interface IMapGen {
-    generateMap(floor: number, state: GameState): void;
+    generateMap(assets: Assets, floor: number, state: GameState): void;
 }

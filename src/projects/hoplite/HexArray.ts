@@ -43,11 +43,11 @@ export default class HexArray<T> {
         if(typeof xp === "number"){
             return [xp as number, y];
         }
-        else if((xp as [number, number]).length !== undefined) {
-            return xp as [number, number];
+        else if ((xp as Point).x !== undefined) {
+            return [(xp as Point).x, (xp as Point).y];
         }
         else {
-            return [(xp as Point).x, (xp as Point).y];
+            return xp as [number, number];
         }
     }
 

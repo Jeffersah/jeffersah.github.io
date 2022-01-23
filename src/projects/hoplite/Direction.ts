@@ -9,8 +9,17 @@ export enum Direction {
     UpRight = 5
 }
 
+export const AllDirections: Direction[] = [
+    Direction.Right,
+    Direction.DownRight,
+    Direction.DownLeft,
+    Direction.Left,
+    Direction.UpLeft,
+    Direction.UpRight
+];
+
 export class DirectionHelper {
-    public ToPoint(direction: Direction): Point {
+    public static ToPoint(direction: Direction): Point {
         switch (direction) {
             case Direction.Right: return new Point(1, 0);
             case Direction.DownRight: return new Point(0, 1);
@@ -21,7 +30,7 @@ export class DirectionHelper {
         }
     }
 
-    public Turn(direction: Direction, amount: number): Direction {
+    public static Turn(direction: Direction, amount: number): Direction {
         const result = (direction + amount)%6;
         return (result + 6) % 6;
     }

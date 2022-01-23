@@ -1,8 +1,13 @@
 import Point from "../common/position/Point";
 import Assets from "./Assets";
 import Entity from "./Entity";
-import HexWorld from "./HexWorld";
 import * as C from "./Constants";
+import IRenderableSource from "../common/rendering/IRenderableSource";
+import IRenderable from "../common/rendering/IRenderable";
+import Sprite from "../common/rendering/Sprite";
+import Rect from "../common/position/Rectangle";
+import GameState from "./GameState";
+import { HexToPixel } from "./Hex";
 
 export default abstract class HexCell {
     isPathable: boolean;
@@ -14,58 +19,47 @@ export default abstract class HexCell {
     }
 
     abstract OnEntityStep(entity: Entity): void;
-    abstract AfterWorldLoad(world: HexWorld, pt: Point): void;
-    abstract Draw(ctx: CanvasRenderingContext2D, assets: Assets, world: HexWorld, pt: Point): void;
+    abstract AfterWorldLoad(world: GameState, pt: Point): void;
+    abstract draw(ctx: CanvasRenderingContext2D, world: GameState, pt: Point): void;
 }
 
 export abstract class SimpleCell extends HexCell{
-    public spriteSheetTilePosition: Point;
+    private renderable: IRenderable;
+    private bg_renderable: IRenderable;
 
-    constructor(typeId: number, spriteSheetPosition: Point, isPathable: boolean){
+    constructor(typeId: number, assets: Assets, spriteSheetPosition: Point, isPathable: boolean){
         super(typeId, isPathable);
-        this.spriteSheetTilePosition = spriteSheetPosition;
+
+        this.bg_renderable = new Sprite(assets.tiles.image, new Rect(11 * C.TILE_WIDTH, 0, C.TILE_WIDTH, C.TILE_HEIGHT));
+        this.renderable = new Sprite(assets.tiles.image, new Rect(spriteSheetPosition.x * C.TILE_WIDTH, spriteSheetPosition.y * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT));
     }
 
-    override AfterWorldLoad(world: HexWorld, pt: Point): void {
+    override AfterWorldLoad(world: GameState, pt: Point): void {
         
     }
 
-    override Draw(ctx: CanvasRenderingContext2D, assets: Assets, world: HexWorld, pt: Point): void {
-        assets.tiles.render(
-            ctx,
-            pt.x * C.PIX_PER_CELL_X + (pt.y * C.PIX_PER_CELL_Y.x) + C.MAP_CENTER_POSITION.x,
-            (pt.y * C.PIX_PER_CELL_Y.y) + C.MAP_CENTER_POSITION.y,
-            C.TILE_WIDTH,
-            C.TILE_HEIGHT,
-            this.spriteSheetTilePosition.x,
-            this.spriteSheetTilePosition.y
-        )
+    override draw(ctx: CanvasRenderingContext2D, world: GameState, pt: Point): void {
+        let target = HexToPixel(pt);
+
+        this.bg_renderable.draw(ctx, new Rect(target.x, target.y + 24, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
+        this.renderable.draw(ctx, new Rect(target.x, target.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
     }
 }
 
 export class Floor extends SimpleCell {
-    constructor() {
-        super(0, new Point(0,0), true);
+    constructor(assets: Assets) {
+        super(0, assets,new Point(0,0), true);
     }
 
     OnEntityStep(entity: Entity): void {
     }
 }
 
-export class Lava extends SimpleCell {
-    constructor() {
-        super(1, new Point(1,0), false);
-    }
-
-    OnEntityStep(entity: Entity): void {
-        if(!entity.isFlying)
-            entity.TakeDamage(999);
-    }
-}
+// TypeID 1 : Lava
 
 export class DownStairs extends SimpleCell {
-    constructor() {
-        super(2, new Point(5, 0), true);
+    constructor(assets: Assets) {
+        super(2, assets, new Point(5, 0), true);
     }
 
     OnEntityStep(entity: Entity): void {

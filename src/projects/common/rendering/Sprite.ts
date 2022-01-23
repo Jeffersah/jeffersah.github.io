@@ -6,8 +6,10 @@ import IRenderableSource from "./IRenderableSource";
 
 export default class Sprite implements IRenderable, ISimpleRenderable, IRenderableSource {
 
-    constructor(public source: CanvasImageSource, public sourceBounds: Rect, public origin: Point) {
+    public origin: Point;
 
+    constructor(public source: CanvasImageSource, public sourceBounds: Rect, origin?: Point) {
+        this.origin = origin ?? new Point(0,0);
     }
 
     getSprite(): Sprite {

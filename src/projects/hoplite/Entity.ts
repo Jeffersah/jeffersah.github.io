@@ -1,17 +1,17 @@
+import { LinkedInterpolation } from "../common/interpolation/Interpolated";
+import Point from "../common/position/Point";
+import Rect from "../common/position/Rectangle";
 import IRenderable from "../common/rendering/IRenderable";
 import GameState from "./GameState";
 
-export default class Entity {
+export default abstract class Entity {
     isFlying: boolean;
     maxHp: number;
     hp: number;
+    position: Point;
 
-    constructor(protected renderable: IRenderable) {
-
-    }
-    
-    getRenderable(): IRenderable {
-        return this.renderable;
+    constructor(position: Point) {
+        this.position = position;
     }
     
     TakeDamage(dmg: number) {
@@ -21,4 +21,6 @@ export default class Entity {
     tick(state: GameState) {
 
     }
+
+    abstract draw(ctx: CanvasRenderingContext2D): void;
 }
