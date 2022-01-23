@@ -47,8 +47,8 @@ export abstract class SimpleCell extends HexCell{
 }
 
 export class Floor extends SimpleCell {
-    constructor(assets: Assets) {
-        super(0, assets,new Point(0,0), true);
+    constructor(assets: Assets, customSprite?: Point) {
+        super(0, assets, customSprite ?? new Point(0,0), true);
     }
 
     OnEntityStep(entity: Entity): void {

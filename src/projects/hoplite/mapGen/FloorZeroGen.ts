@@ -6,6 +6,16 @@ import HexArray from "../HexArray";
 import Assets from "../Assets";
 import { GetRing } from "../Hex";
 import Lava from "../LavaCell";
+import Point from "../../common/position/Point";
+
+const playerMoveTileArts = [
+    new Point(6,2),
+    new Point(7,2),
+    new Point(9,2),
+    new Point(7,3),
+    new Point(6,3),
+    new Point(8,2),
+];
 
 export default class FloorZeroGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -21,7 +31,14 @@ export default class FloorZeroGen implements IMapGen {
             state.tiles.set(new Lava(assets), ring2[i]);
         }
 
-        state.tiles.set(new Lava(assets), 0,0);
+        const playerRing = GetRing(1).map(p => Point.add(p, C.PLAYER_START_POSITION));
+        for(let i = 0; i < playerRing.length; i++) {
+            state.tiles.set(
+                new Floor(assets, playerMoveTileArts[i]),
+                playerRing[i]
+            )
+        }
+
 
         state.tiles.set(new DownStairs(assets), 2, -4);
     }

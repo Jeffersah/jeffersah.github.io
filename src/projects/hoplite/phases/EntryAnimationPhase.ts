@@ -2,6 +2,7 @@ import GameState from "../GameState";
 import IGamePhase from "./IGamePhase";
 import * as C from '../Constants';
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
+import KeyboardManager from "../../common/input/KeyboardManager";
 
 const ENTRY_ANIMATION_TIME = 120;
 
@@ -12,7 +13,9 @@ export default class EntryAnimationPhase implements IGamePhase {
 
     }
 
-    tick(state: GameState): IGamePhase {
+    init(state:GameState){}
+
+    tick(state: GameState, keys: KeyboardManager): IGamePhase {
         this.animationTime++;
         if(this.animationTime >= ENTRY_ANIMATION_TIME) { 
             return new PlayerTurnGamePhase();

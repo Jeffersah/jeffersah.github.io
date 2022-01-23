@@ -47,7 +47,7 @@ export default function Run(): (()=>void) {
     
     function tick() {
 
-        currentPhase = currentPhase.tick(state);
+        const nextPhase = currentPhase.tick(state, keys);
 
         ctx.clearRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
         ctx.fillStyle = '#000000';
@@ -55,7 +55,12 @@ export default function Run(): (()=>void) {
 
         currentPhase.draw(ctx, state);
 
+        if(nextPhase !== currentPhase) {
+            currentPhase = nextPhase;
+            nextPhase.init(state);
+        }
 
+        keys.update();
         requestAnimationFrame(() => tick());
     }
 

@@ -12,6 +12,7 @@ import Rect from "../common/position/Rectangle";
 export default class GameState {
 
     public player: Player;
+    public enemies: Entity[] = [];
 
     public tiles: HexArray<HexCell>;
     public entities: HexArray<Entity>;
@@ -24,6 +25,12 @@ export default class GameState {
         this.entities.set(this.player, C.PLAYER_START_POSITION.x, C.PLAYER_START_POSITION.y);
     }
 
+    moveEntity(entity: Entity, to: Point) {
+        this.entities.set(null, entity.position);
+        this.entities.set(entity, to);
+        entity.position = to;
+    }
+
     changeFloor(floorNum: number, generator: IMapGen) {
         this.entities = new HexArray<Entity>(this.entities.size(), null);
         generator.generateMap(this.assets, floorNum, this);
@@ -32,14 +39,16 @@ export default class GameState {
         });
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D, excludeEntities?: Entity[]) {
         this.tiles.iterate((x, y, cell) => {
             cell.draw(ctx, this, new Point(x, y));
         });
 
         this.entities.iterate((x, y, entity) => {
             if(entity !== null && entity !== undefined) {
-                entity.draw(ctx);
+                if(excludeEntities === undefined || !excludeEntities.includes(entity)) {
+                    entity.draw(ctx);
+                }
             }
         });
     }
