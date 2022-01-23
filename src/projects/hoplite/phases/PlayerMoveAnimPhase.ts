@@ -3,8 +3,9 @@ import Point from "../../common/position/Point";
 import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { HexToPixel, PixelToHex } from "../Hex";
-import HexCell from "../HexCell";
+import HexCell, { DownStairs } from "../HexCell";
 import EnemyTurnPhase from "./EnemyTurnPhase";
+import FloorTransitionPhase from "./FloorTransitionPhase";
 import IGamePhase from "./IGamePhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 
@@ -32,6 +33,11 @@ export default class PlayerMoveAnimPhase implements IGamePhase {
             state.entities.set(null, this.playerPos);
             state.entities.set(state.player, this.playerDest);
             state.player.position = this.playerDest;
+
+            if(state.tiles.get(state.player.position).typeId === DownStairs.TileID) {
+                return new FloorTransitionPhase();
+            }
+
             if(state.enemies.length === 0) {
                 return new PlayerTurnGamePhase();
             }

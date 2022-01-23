@@ -4,7 +4,7 @@ import * as C from '../Constants';
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 import KeyboardManager from "../../common/input/KeyboardManager";
 
-const ENTRY_ANIMATION_TIME = 120;
+const ENTRY_ANIMATION_TIME = 60;
 
 export default class EntryAnimationPhase implements IGamePhase {
     animationTime = 0;

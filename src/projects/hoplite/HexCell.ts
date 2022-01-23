@@ -8,6 +8,8 @@ import Sprite from "../common/rendering/Sprite";
 import Rect from "../common/position/Rectangle";
 import GameState from "./GameState";
 import { HexToPixel } from "./Hex";
+import { DeltaRenderable } from "../common/rendering/DeltaRenderable";
+import { StackRenderable } from "../common/rendering/StackRenderable";
 
 export default abstract class HexCell {
     isPathable: boolean;
@@ -24,13 +26,24 @@ export default abstract class HexCell {
 }
 
 export abstract class SimpleCell extends HexCell{
+
     private renderable: IRenderable;
     private bg_renderable: IRenderable;
 
-    constructor(typeId: number, assets: Assets, spriteSheetPosition: Point, isPathable: boolean){
+    constructor(typeId: number, assets: Assets, spriteSheetPosition: Point, isPathable: boolean, includeDefaultRenderable?: boolean){
         super(typeId, isPathable);
 
-        this.bg_renderable = new Sprite(assets.tiles.image, new Rect(11 * C.TILE_WIDTH, 0, C.TILE_WIDTH, C.TILE_HEIGHT));
+        this.bg_renderable = 
+            new DeltaRenderable(
+                new Sprite(assets.tiles.image, new Rect(11 * C.TILE_WIDTH, 0, C.TILE_WIDTH, C.TILE_HEIGHT)),
+                new Rect(0, .75, 1, 1)
+            );
+
+        if(includeDefaultRenderable === true) {
+            this.bg_renderable = new StackRenderable(
+                [this.bg_renderable, new Sprite(assets.tiles.image, new Rect(0, 0, C.TILE_WIDTH, C.TILE_HEIGHT))]
+            );
+        }
         this.renderable = new Sprite(assets.tiles.image, new Rect(spriteSheetPosition.x * C.TILE_WIDTH, spriteSheetPosition.y * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT));
     }
 
@@ -41,14 +54,16 @@ export abstract class SimpleCell extends HexCell{
     override draw(ctx: CanvasRenderingContext2D, world: GameState, pt: Point): void {
         let target = HexToPixel(pt);
 
-        this.bg_renderable.draw(ctx, new Rect(target.x, target.y + 24, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
+        this.bg_renderable.draw(ctx, new Rect(target.x, target.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
         this.renderable.draw(ctx, new Rect(target.x, target.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
     }
 }
 
 export class Floor extends SimpleCell {
+    public static TileID = 0;
+
     constructor(assets: Assets, customSprite?: Point) {
-        super(0, assets, customSprite ?? new Point(0,0), true);
+        super(Floor.TileID, assets, customSprite ?? new Point(0,0), true, customSprite !== undefined);
     }
 
     OnEntityStep(entity: Entity): void {
@@ -58,8 +73,9 @@ export class Floor extends SimpleCell {
 // TypeID 1 : Lava
 
 export class DownStairs extends SimpleCell {
+    public static TileID = 2;
     constructor(assets: Assets) {
-        super(2, assets, new Point(5, 0), true);
+        super(DownStairs.TileID, assets, new Point(5, 0), true, true);
     }
 
     OnEntityStep(entity: Entity): void {
