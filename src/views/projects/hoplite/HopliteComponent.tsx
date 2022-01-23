@@ -3,7 +3,7 @@ import Run from '../../../projects/hoplite/index';
 
 export default function HopliteComponent() {
     React.useEffect(()=>Run());
-    return <div className='rpgt rpgt_body full_body center'>
+    return <div className='rpgt rpgt_body full_body center' style={{background: "black"}}>
         <canvas id="mainCanvas"></canvas>
     </div>;
 }
