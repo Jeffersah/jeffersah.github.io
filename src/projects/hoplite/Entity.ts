@@ -3,6 +3,7 @@ import Rect from "../common/position/Rectangle";
 import IRenderable from "../common/rendering/IRenderable";
 import { HexToPixel } from "./Hex";
 import * as C from './Constants';
+import Player from "./entities/Player";
 
 export default abstract class Entity {
     isFlying: boolean;
@@ -15,6 +16,10 @@ export default abstract class Entity {
     }
 
     abstract draw(ctx: CanvasRenderingContext2D): void;
+
+    static IsPlayer(entity: Entity): entity is Player {
+        return (entity as Player).primary !== undefined;
+    }
 }
 
 export abstract class SimpleEnemy extends Entity {

@@ -1,9 +1,14 @@
 import { TimingFunction } from "./TimingFunction";
-import { Keyframes } from './Keyframes';
+import { EvenlySpacedKeyframes, Keyframes } from './Keyframes';
+import { InterpolationFunction } from "./InterpolationFunction";
 
 export class Interpolated<T> {
     constructor(public range: Keyframes<T>, public timingFunction: TimingFunction) {
 
+    }
+
+    public static linear<T>(interpolator: InterpolationFunction<T>, ...args: T[]) {
+        return new Interpolated<T>(EvenlySpacedKeyframes<T>(interpolator, ...args), (t: number) => t);
     }
 }
 

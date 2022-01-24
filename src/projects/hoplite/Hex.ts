@@ -2,6 +2,20 @@ import Point from "../common/position/Point";
 import { MAP_CENTER_POSITION, PIX_PER_CELL_X, PIX_PER_CELL_Y } from "./Constants";
 import { Direction, DirectionHelper } from "./Direction";
 
+export function TurnRight(pt: Point, amt?: number) {
+    for(let i = 0; i < (amt ?? 1); i++){
+        pt = new Point(-pt.y, pt.x + pt.y);
+    }
+    return pt;
+}
+
+export function TurnLeft(pt: Point, amt?: number) {
+    for(let i = 0; i < (amt ?? 1); i++){
+        pt = new Point(pt.x + pt.y, -pt.x);
+    }
+    return pt;
+}
+
 export function HexToPixel(point: Point) {
     return Point.add(Point.multiply(PIX_PER_CELL_Y, point.y), point.x * PIX_PER_CELL_X + MAP_CENTER_POSITION.x, MAP_CENTER_POSITION.y);
 }

@@ -1,12 +1,14 @@
-import { IWeaponArgs } from "../../bullets/weapons/Weapon";
 import Point from "../../common/position/Point";
 import Rect from "../../common/position/Rectangle";
 import IRenderable from "../../common/rendering/IRenderable";
 import Sprite from "../../common/rendering/Sprite";
 import Assets from "../Assets";
+import AttackInfo from "../AttackInfo";
 import * as C from '../Constants';
+import Player from "../entities/Player";
+import GameState from "../GameState";
 
-export default class PlayerWeapon {
+export default abstract class PlayerWeapon {
 
     public iconImage: IRenderable;
     public sprite: IRenderable;
@@ -33,4 +35,6 @@ export default class PlayerWeapon {
                 new Rect(artTile.x * C.TILE_WIDTH, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
         }
     }
+
+    abstract getAttacks(state: GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[];
 }

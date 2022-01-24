@@ -4,7 +4,7 @@ import { fastColorInterpolator, InterpolationFunction, numberInterpolator } from
 export function EvenlySpacedKeyframes<T>(...args: T[]): Keyframes<T>;
 export function EvenlySpacedKeyframes<T>(interpolator: InterpolationFunction<T>, ...args: T[]): Keyframes<T>;
 export function EvenlySpacedKeyframes<T>(interpolator?: InterpolationFunction<T>, ...args: T[]): Keyframes<T> {
-    if(interpolator.arguments === undefined) {
+    if(typeof(interpolator) !== 'function') {
         args.splice(0, 0, <T><any>interpolator);
         interpolator = undefined;
     }

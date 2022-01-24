@@ -5,11 +5,13 @@ import { OffsetRenderable } from "../../common/rendering/OffsetRenderable";
 import { StackRenderable } from "../../common/rendering/StackRenderable";
 import Assets from "../Assets";
 import Entity from "../Entity";
-import PlayerWeapon from "./PlayerWeapon";
+import PlayerWeapon from "../weapons/PlayerWeapon";
 import * as C from '../Constants';
 import Sprite from "../../common/rendering/Sprite";
 import Rect from "../../common/position/Rectangle";
 import { HexToPixel } from "../Hex";
+import Sword from "../weapons/Sword";
+import Dagger from "../weapons/Dagger";
 
 export default class Player extends Entity {
 
@@ -20,8 +22,8 @@ export default class Player extends Entity {
     constructor(assets: Assets, pos: Point) {
         super(pos);
 
-        this.primary = new PlayerWeapon('primary', assets, new Point(8, 1));
-        this.secondary = new PlayerWeapon('secondary', assets, new Point(10, 0));
+        this.primary = new Sword(assets);
+        this.secondary = new Dagger(assets);
 
         this.renderable = new Sprite(assets.tiles.image, new Rect(C.TILE_WIDTH * 8, 0, C.TILE_WIDTH, C.TILE_HEIGHT));
     }

@@ -25,6 +25,10 @@ export default class GameState {
         this.player = new Player(assets, C.PLAYER_START_POSITION);
     }
 
+    entityAt(to: Point) {
+        return [this.player, ...this.enemies].find(e => e.position.equals(to));
+    }
+
     isValidMove(to: Point, flying: boolean) {
         const isValidTile = this.tiles.isInBounds(to.x, to.y) && 
             (this.tiles.get(to).isPathable || flying);

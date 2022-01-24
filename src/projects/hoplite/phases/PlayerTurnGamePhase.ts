@@ -38,7 +38,7 @@ export default class PlayerTurnGamePhase implements IGamePhase {
             if(!state.isValidMove(destination, false))
                 return this;
 
-            return new PlayerMoveAnimPhase(state.player.position, destination);
+            return PlayerMoveAnimPhase(state, state.player.position, destination);
         }
         return this;
     }

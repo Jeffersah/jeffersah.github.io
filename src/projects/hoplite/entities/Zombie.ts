@@ -33,7 +33,7 @@ export default class Zombie extends Enemy {
         return [];
     }
 
-    getMove(state: GameState, attack: AttackInfo[]): Point {
+    getMove(state: GameState, attack: AttackInfo[], disallowed: Point[]): Point {
         if(attack.length > 0) {
             // Don't move if you've attacked.
             return this.position;
@@ -44,6 +44,8 @@ export default class Zombie extends Enemy {
         let minMoveDist = 99;
         for(let i = 0; i < possibleMoves.length; i++) {
             if(!state.isValidMove(possibleMoves[i], false)) 
+                continue;
+            if(disallowed.some(p => p.equals(possibleMoves[i])))
                 continue;
 
             const ray = Point.subtract(state.player.position, possibleMoves[i]);

@@ -1,49 +1,30 @@
 import KeyboardManager from "../../common/input/KeyboardManager";
+import { Interpolated } from "../../common/interpolation/Interpolated";
 import Point from "../../common/position/Point";
+import EntityMoveAnimation from "../animation/EntityMoveAnimation";
+import IAnimation from "../animation/IAnimation";
 import AttackInfo from "../AttackInfo";
 import { Direction, DirectionHelper } from "../Direction";
 import Entity from "../Entity";
 import GameState from "../GameState";
+import AnimationPhase from "./AnimationPhase";
 import AttackAnimationPhase from "./AttackAnimationPhase";
 import IGamePhase from "./IGamePhase";
 import PlayerMoveAnimPhase from "./PlayerMoveAnimPhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 
 const duration = 20;
-export default class EnemyMovePhase implements IGamePhase {
 
-    timer = 0;
-    enemyMoves: {entity: Entity, from: Point, to: Point}[];
-    constructor(private enemyAttacks: AttackInfo[][]) {
-
-    }
-
-    init(state: GameState): void {
-        this.enemyMoves = [];
-        for(let i = 0; i < state.enemies.length; i++) { 
-            this.enemyMoves[i] = {
-                entity: state.enemies[i],
-                from: state.enemies[i].position,
-                to: state.enemies[i].getMove(state, this.enemyAttacks[i])
-            };
+export default function EnemyMovePhase(state: GameState, enemyAttacks: AttackInfo[][]): IGamePhase {
+    const disallowed: Point[] = [];
+    const animations: IAnimation[] = [];
+    for(let i = 0; i < state.enemies.length; i++) { 
+        const destination = state.enemies[i].getMove(state, enemyAttacks[i], disallowed);
+        if(!destination.equals(state.enemies[i].position)) {
+            animations.push(new EntityMoveAnimation(state.enemies[i], Interpolated.linear<Point>(Point.interpolate, state.enemies[i].position, destination), destination, duration));
+            disallowed.push(destination);
         }
     }
 
-    tick(state: GameState, keys: KeyboardManager): IGamePhase {
-        if(this.timer >= duration) { return new PlayerTurnGamePhase(); }
-        else {
-            this.timer++;
-        }
-
-        return this;
-    }
-
-    draw(ctx: CanvasRenderingContext2D, state: GameState): void {
-        const p = this.timer / duration;
-        for(let i = 0; i < this.enemyMoves.length; i++) {
-            this.enemyMoves[i].entity.position = Point.interpolate(this.enemyMoves[i].from, this.enemyMoves[i].to, p);
-        }
-        state.draw(ctx);
-    }
-
+    return new AnimationPhase(animations, () => new PlayerTurnGamePhase());
 }
