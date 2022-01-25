@@ -1,19 +1,36 @@
 import AssetLoader from "../common/assets/AssetLoader";
 import { SpriteSheet } from "../common/assets/SpriteSheet";
 import hoplite_tiles_url from './assets/hoplite_tiles.png';
-import floor_and_digits from './assets/floor_and_digits.png';
+import floor_digits_url from './assets/floor_and_digits.png';
+import hp_image_url from './assets/hp.png';
+import impact_url from './assets/hoplite_impacts.png';
 import ImageLoader from "../common/assets/ImageLoader";
 import Sprite from "../common/rendering/Sprite";
 import Rect from "../common/position/Rectangle";
 import Point from "../common/position/Point";
+import HpRenderer from "./HpRenderer";
+import { SpriteAnimation } from "../common/rendering/SpriteAnimation";
 
 export default class Assets {
     tiles: SpriteSheet;
     floor_and_digits: ImageLoader;
+    hpImage: ImageLoader;
+    hpRenderer: HpRenderer;
+    impacts: ImageLoader;
 
     constructor(loader: AssetLoader) {
         this.tiles = new SpriteSheet(32, 32, hoplite_tiles_url, loader.registerAssetLoadCallback());
-        this.floor_and_digits = new ImageLoader(floor_and_digits, loader.registerAssetLoadCallback());
+        this.floor_and_digits = new ImageLoader(floor_digits_url, loader.registerAssetLoadCallback());
+        this.hpImage = new ImageLoader(hp_image_url, loader.registerAssetLoadCallback());
+        this.impacts = new ImageLoader(impact_url, loader.registerAssetLoadCallback());
+    }
+
+    getImpactAnimation(row: number) {
+        return new SpriteAnimation(this.impacts.image, new Rect(0, row * 32, 32, 32), new Point(0, 0), new Point(32, 0), 8, 16, false);
+    }
+
+    onLoadFinished(){
+        this.hpRenderer = new HpRenderer(this.hpImage);
     }
 
     getDigitSprite(digit: number):Sprite {

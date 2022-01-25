@@ -10,6 +10,7 @@ import GameState from "../GameState";
 import { HexToPixel, PixelToHex } from "../Hex";
 import HexCell, { DownStairs } from "../HexCell";
 import AnimationPhase from "./AnimationPhase";
+import AttackResolutionPhase from "./AttackResolutionPhase";
 import EnemyAttackPhase from "./EnemyAttackPhase";
 import FloorTransitionPhase from "./FloorTransitionPhase";
 import IGamePhase from "./IGamePhase";
@@ -43,6 +44,6 @@ export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: P
         ];
         if(attacks.length === 0) return playerMove;
         const animation = new SequentialAnimation(attacks.map(attack => new ParallelAnimation(attack.toAnimations())));
-        return new AnimationPhase([animation], () => playerMove);
+        return new AnimationPhase([animation], state => AttackResolutionPhase(state, attacks, state => playerMove));
     }
 } 

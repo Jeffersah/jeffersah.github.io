@@ -1,5 +1,6 @@
 import { timeStamp } from "console";
 import Point from "../../common/position/Point";
+import IRenderableSource from "../../common/rendering/IRenderableSource";
 import Assets from "../Assets";
 import AttackInfo from "../AttackInfo";
 import Player from "../entities/Player";
@@ -8,6 +9,9 @@ import GameState from "../GameState";
 import SimpleWeapon from "./SimpleWeapon";
 
 export default class Sword extends SimpleWeapon {
+
+    impactAnimation: IRenderableSource;
+
     constructor(assets: Assets) {
         super('primary', assets, new Point(8, 1), 
         {
@@ -15,11 +19,13 @@ export default class Sword extends SimpleWeapon {
             pattern: [new Point(0, -1), new Point(1, -1), new Point(-1, 1), new Point(0, 1)],
             attack: (s,p,t) => this.getAttack(s,p,t)
         });
+
+        this.impactAnimation = assets.getImpactAnimation(0);
     }
 
     getAttack(state: GameState, player: Player, target: Point): AttackInfo | undefined {
         const e = state.entityAt(target);
         if(e === undefined || Entity.IsPlayer(e)) return undefined;
-        return new AttackInfo(player, target, [target], 2, false, /* ATTACK ANIMATION HERE */ null, null); 
+        return AttackInfo.animationAttack(player, e, 2, this.impactAnimation, false);
     }
 }

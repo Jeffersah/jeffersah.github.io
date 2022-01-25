@@ -31,6 +31,8 @@ export default function Run(): (()=>void) {
     assetLoader.onAllFinished(assetLoadDone);
     
     function assetLoadDone() {
+        assets.onLoadFinished();
+        
         const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
         ctx = canvas.getContext('2d');
         scaleHelper = new NearestNeighborScalingHelper(

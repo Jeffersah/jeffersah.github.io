@@ -38,6 +38,7 @@ export default class GameState {
     }
 
     changeFloor(floorNum: number, generator: IMapGen) {
+        this.enemies = [];
         generator.generateMap(this.assets, floorNum, this);
         this.currentFloor = floorNum;
         this.tiles.iterate((x, y, tile) =>{
@@ -58,6 +59,9 @@ export default class GameState {
                 return;
             }
             entity.draw(ctx);
+            if(entity.hp != entity.maxHp){
+                this.assets.hpRenderer.draw(ctx, entity.position, entity.hp, entity.maxHp);
+            }
         });
     }
 }

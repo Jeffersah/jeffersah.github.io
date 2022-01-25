@@ -8,18 +8,17 @@ import { Direction, DirectionHelper } from "../Direction";
 import Entity from "../Entity";
 import GameState from "../GameState";
 import AnimationPhase from "./AnimationPhase";
-import AttackAnimationPhase from "./AttackAnimationPhase";
 import IGamePhase from "./IGamePhase";
 import PlayerMoveAnimPhase from "./PlayerMoveAnimPhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 
 const duration = 20;
 
-export default function EnemyMovePhase(state: GameState, enemyAttacks: AttackInfo[][]): IGamePhase {
+export default function EnemyMovePhase(state: GameState): IGamePhase {
     const disallowed: Point[] = [];
     const animations: IAnimation[] = [];
     for(let i = 0; i < state.enemies.length; i++) { 
-        const destination = state.enemies[i].getMove(state, enemyAttacks[i], disallowed);
+        const destination = state.enemies[i].getMove(state, state.enemies[i].lastAttacks, disallowed);
         if(!destination.equals(state.enemies[i].position)) {
             animations.push(new EntityMoveAnimation(state.enemies[i], Interpolated.linear<Point>(Point.interpolate, state.enemies[i].position, destination), destination, duration));
             disallowed.push(destination);

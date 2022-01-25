@@ -5,6 +5,8 @@ import GameState from "../GameState";
 
 export default abstract class Enemy extends SimpleEnemy {
 
+    lastAttacks: AttackInfo[];
+
     abstract getAttacks(state: GameState): AttackInfo[];
     abstract getMove(state: GameState, attack: AttackInfo[], disallow: Point[]): Point;
 }
