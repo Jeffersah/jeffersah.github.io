@@ -20,7 +20,7 @@ export default class Zombie extends Enemy {
 
     constructor(position: Point) {
         super(position);
-        this.hp = this.maxHp = 3;
+        this.hp = this.maxHp = 1;
         this.isFlying = false;
     }
 

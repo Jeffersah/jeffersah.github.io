@@ -13,6 +13,8 @@ import { HexToPixel } from "../Hex";
 import Sword from "../weapons/Sword";
 import Dagger from "../weapons/Dagger";
 import HpRenderer from "../HpRenderer";
+import Spear from "../weapons/Spear";
+import Hammer from "../weapons/Hammer";
 
 export default class Player extends Entity {
 

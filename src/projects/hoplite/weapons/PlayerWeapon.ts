@@ -35,6 +35,7 @@ export default abstract class PlayerWeapon {
                 new Rect(artTile.x * C.TILE_WIDTH, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
         }
     }
-
-    abstract getAttacks(state: GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[];
+    abstract enableAdditionalMoves(state: GameState, player: Player): {dest: Point, forceMove: Point}[];
+    abstract getBeforeMoveAttacks(state: GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[];
+    abstract getAfterMoveAttacks(state: GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[];
 }

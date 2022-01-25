@@ -17,8 +17,7 @@ import IGamePhase from "./IGamePhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 
 
-export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: Point):IGamePhase {
-
+export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: Point, forceMotion: Point):IGamePhase {
     const onFinish = (gs: GameState) => {
         if(gs.tiles.get(gs.player.position).typeId === DownStairs.TypeID) {
             return new FloorTransitionPhase();
@@ -29,21 +28,36 @@ export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: P
         else return EnemyAttackPhase(state);
     }
 
-    const playerMove = new AnimationPhase(
-        [new EntityMoveAnimation(state.player, Interpolated.linear<Point>(Point.interpolate, from, to), to, state.enemies.length === 0 ? 2 : 10)],
-        onFinish
-    );
+    const postMoveAttacks: (gs:GameState)=>IGamePhase = (gs: GameState) => {
+        const attacks = [
+            ...state.player.primary.getAfterMoveAttacks(state, state.player, from, to),
+            ...state.player.secondary.getAfterMoveAttacks(state, state.player, from, to)
+        ];
+        if(attacks.length === 0) return onFinish(gs);
+        const animation = new SequentialAnimation(attacks.map(attack => new ParallelAnimation(attack.toAnimations())));
+        return new AnimationPhase([animation], state => AttackResolutionPhase(state, attacks, onFinish));
+    };
+
+    const playerMove = (state: GameState) => {
+        if(!state.isValidMove(forceMotion, false)) {
+            return postMoveAttacks(state);
+        }
+        return new AnimationPhase(
+            [new EntityMoveAnimation(state.player, Interpolated.linear<Point>(Point.interpolate, from, forceMotion), forceMotion, state.enemies.length === 0 ? 2 : 10)],
+            postMoveAttacks
+        );
+    };
 
     if(state.enemies.length === 0) {
-        return playerMove;
+        return playerMove(state);
     }
     if(state.enemies.length > 0) {
         const attacks = [
-            ...state.player.primary.getAttacks(state, state.player, from, to),
-            ...state.player.secondary.getAttacks(state, state.player, from, to)
+            ...state.player.primary.getBeforeMoveAttacks(state, state.player, from, to),
+            ...state.player.secondary.getBeforeMoveAttacks(state, state.player, from, to)
         ];
-        if(attacks.length === 0) return playerMove;
+        if(attacks.length === 0) return playerMove(state);
         const animation = new SequentialAnimation(attacks.map(attack => new ParallelAnimation(attack.toAnimations())));
-        return new AnimationPhase([animation], state => AttackResolutionPhase(state, attacks, state => playerMove));
+        return new AnimationPhase([animation], state => AttackResolutionPhase(state, attacks, playerMove));
     }
 } 

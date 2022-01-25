@@ -8,24 +8,24 @@ import Entity from "../Entity";
 import GameState from "../GameState";
 import SimpleWeapon from "./SimpleWeapon";
 
-export default class Sword extends SimpleWeapon {
+export default class Spear extends SimpleWeapon {
 
     impactAnimation: IRenderableSource;
 
     constructor(assets: Assets) {
-        super('primary', assets, new Point(8, 1), true,
+        super('primary', assets, new Point(9, 1), false,
         {
             onMove: new Point(1, 0),
-            pattern: [new Point(0, -1), new Point(1, -1), new Point(-1, 1), new Point(0, 1)],
+            pattern: [new Point(2, 0)],
             attack: (s,p,t) => this.getAttack(s,p,t)
         });
 
-        this.impactAnimation = assets.getImpactAnimation(0);
+        this.impactAnimation = assets.getImpactAnimation(1);
     }
 
     getAttack(state: GameState, player: Player, target: Point): AttackInfo | undefined {
         const e = state.entityAt(target);
         if(e === undefined || Entity.IsPlayer(e)) return undefined;
-        return AttackInfo.animationAttack(player, e, 2, this.impactAnimation, false);
+        return AttackInfo.animationAttack(player, e, 2, this.impactAnimation, true);
     }
 }

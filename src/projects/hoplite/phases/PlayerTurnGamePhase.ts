@@ -34,11 +34,17 @@ export default class PlayerTurnGamePhase implements IGamePhase {
         const dir = this.tryGetDirection(keys);
         if(dir !== undefined) {
             const destination = Point.add(state.player.position, DirectionHelper.ToPoint(dir));
+            const additionalMoves = [...state.player.primary.enableAdditionalMoves(state, state.player), ...state.player.secondary.enableAdditionalMoves(state, state.player)];
 
-            if(!state.isValidMove(destination, false))
+            if(!state.isValidMove(destination, false)) {
+                const specialMove = additionalMoves.find(move => move.dest.equals(destination));
+                if(specialMove !== undefined){
+                    return PlayerMoveAnimPhase(state, state.player.position, destination, specialMove.forceMove);
+                }
                 return this;
+            }
 
-            return PlayerMoveAnimPhase(state, state.player.position, destination);
+            return PlayerMoveAnimPhase(state, state.player.position, destination, destination);
         }
         return this;
     }
