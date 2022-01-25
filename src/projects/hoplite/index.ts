@@ -44,7 +44,6 @@ export default function Run(): (()=>void) {
             () => { return; }
         );
 
-        Zombie.onAssetsLoaded(assets);
         state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
         NearestNeighborScaling(ctx);
         tick();

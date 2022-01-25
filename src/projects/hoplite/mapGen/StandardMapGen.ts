@@ -6,6 +6,8 @@ import HexArray from "../HexArray";
 import Assets from "../Assets";
 import Point from "../../common/position/Point";
 import Zombie from "../entities/Zombie";
+import Archer from "../entities/Archer";
+import Mage from "../entities/Mage";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -32,6 +34,20 @@ export default class StandardMapGen implements IMapGen {
             const [pos] = validEnemySpawns.splice(spawnId, 1);
             const zombie = new Zombie(pos);
             state.enemies.push(zombie);
+        }
+
+        for(let i = 0; i < Math.min(6, (floor - 2) / 2); i++) {
+            let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
+            const [pos] = validEnemySpawns.splice(spawnId, 1);
+            const archer = new Archer(pos);
+            state.enemies.push(archer);
+        }
+        
+        for(let i = 0; i < Math.min(3, (floor - 3) / 3); i++) {
+            let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
+            const [pos] = validEnemySpawns.splice(spawnId, 1);
+            const mage = new Mage(pos);
+            state.enemies.push(mage);
         }
     }
 }

@@ -10,6 +10,9 @@ import Rect from "../common/position/Rectangle";
 import Point from "../common/position/Point";
 import HpRenderer from "./HpRenderer";
 import { SpriteAnimation } from "../common/rendering/SpriteAnimation";
+import Zombie from "./entities/Zombie";
+import Archer from "./entities/Archer";
+import Mage from "./entities/Mage";
 
 export default class Assets {
     tiles: SpriteSheet;
@@ -31,6 +34,9 @@ export default class Assets {
 
     onLoadFinished(){
         this.hpRenderer = new HpRenderer(this.hpImage);
+        Zombie.onAssetsLoaded(this);
+        Archer.onAssetsLoaded(this);
+        Mage.onAssetsLoaded(this);
     }
 
     getDigitSprite(digit: number):Sprite {

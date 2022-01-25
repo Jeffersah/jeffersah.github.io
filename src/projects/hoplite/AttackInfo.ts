@@ -7,14 +7,17 @@ import IAnimation from "./animation/IAnimation";
 import RenderableAnimation from "./animation/RenderableAnimation";
 import Entity from "./Entity";
 import * as C from "./Constants";
-import { HexToPixel } from "./Hex";
+import { HexLength, HexToPixel } from "./Hex";
 import { Interpolated, InterpolationTimer, LinkedInterpolation } from "../common/interpolation/Interpolated";
+import { CreateProjectileAnimation } from "./animation/ProjectileAnimation";
+import Sprite from "../common/rendering/Sprite";
 
 const BUMP_ANIMATION_TIME = 10;
+const PROJECTILE_TIME = 10;
 
 export default class AttackInfo {
     public startPoint: Point;
-    constructor(public attacker: Entity, public target: Point, public affectedTiles: Point[], public damage: number, public bumpAnimation: boolean, public impactAnimation: IRenderableSource, public projectile: IRenderableSource) {
+    constructor(public attacker: Entity, public target: Point, public affectedTiles: Point[], public damage: number, public bumpAnimation: boolean, public impactAnimation: IRenderableSource, public projectile: Sprite) {
         this.startPoint = attacker.position;
     }
 
@@ -26,8 +29,8 @@ export default class AttackInfo {
         return new AttackInfo(attacker, target.position, [target.position], damage, bumpAnimation??false, impactAnimation, null);
     }
 
-    static projectileAttack(attacker:Entity, target: Entity, damage: number, projectile: IRenderableSource) {
-        return new AttackInfo(attacker, target.position, [target.position], damage, false, null, projectile);
+    static projectileAttack(attacker:Entity, target: Entity, damage: number, projectile: Sprite, impactAnimation?: IRenderableSource) {
+        return new AttackInfo(attacker, target.position, [target.position], damage, false, impactAnimation ?? null, projectile);
     }
 
     toAnimations():IAnimation[] {
@@ -43,7 +46,8 @@ export default class AttackInfo {
                 BUMP_ANIMATION_TIME));
         }
         if(this.projectile) {
-            // TODO
+            const time = PROJECTILE_TIME * HexLength(Point.subtract(this.startPoint, this.target));
+            return [CreateProjectileAnimation(this.projectile, this.startPoint, this.target, time, this.impactAnimation)];
         }
         if(this.impactAnimation) {
             const pixTarget = HexToPixel(this.target);
