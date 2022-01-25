@@ -75,9 +75,10 @@ export default class Mage extends Enemy {
 
             const ray = Point.subtract(state.player.position, possibleMoves[i]);
             const len = HexLength(ray);
-            if(len === 1) {
-                continue; // Dont move within 1 of the player if you can avoid it.
-            }
+            // // Mages COULD be smarter by trying to avoid ending up directly next to the player, but doing so makes them a little bit too strong.
+            // if(len === 1) {
+            //     continue;
+            // }
             if(len < minMoveDist) { 
                 minMoveDist = len;
                 minMoves = [possibleMoves[i]];
