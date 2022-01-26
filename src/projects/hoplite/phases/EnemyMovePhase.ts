@@ -3,7 +3,7 @@ import { Interpolated } from "../../common/interpolation/Interpolated";
 import Point from "../../common/position/Point";
 import EntityMoveAnimation from "../animation/EntityMoveAnimation";
 import IAnimation from "../animation/IAnimation";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import { Direction, DirectionHelper } from "../Direction";
 import Entity from "../Entity";
 import GameState from "../GameState";

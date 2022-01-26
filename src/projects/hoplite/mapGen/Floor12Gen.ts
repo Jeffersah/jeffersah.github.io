@@ -6,6 +6,8 @@ import HexArray from "../HexArray";
 import Assets from "../Assets";
 import { GetRing } from "../Hex";
 import Point from "../../common/position/Point";
+import Giant from "../entities/Giant";
+import Archer from "../entities/Archer";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -15,5 +17,9 @@ export default class Floor12Gen implements IMapGen {
         for (let i = 0; i < ring.length; i++) {
             state.tiles.set(new Floor(assets, new Point(12, 0)), ring[i]);
         }
+
+        state.enemies.push(new Giant(new Point(0, 0)));
+        state.enemies.push(new Archer(new Point(0, -2)));
+        state.enemies.push(new Archer(new Point(2, -2)));
     }
 }

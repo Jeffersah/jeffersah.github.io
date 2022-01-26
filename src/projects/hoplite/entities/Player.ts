@@ -1,8 +1,4 @@
-import { LinkedInterpolation } from "../../common/interpolation/Interpolated";
 import Point from "../../common/position/Point";
-import IRenderable from "../../common/rendering/IRenderable";
-import { OffsetRenderable } from "../../common/rendering/OffsetRenderable";
-import { StackRenderable } from "../../common/rendering/StackRenderable";
 import Assets from "../Assets";
 import Entity from "../Entity";
 import PlayerWeapon from "../weapons/PlayerWeapon";
@@ -13,8 +9,6 @@ import { HexToPixel } from "../Hex";
 import Sword from "../weapons/Sword";
 import Dagger from "../weapons/Dagger";
 import HpRenderer from "../HpRenderer";
-import Spear from "../weapons/Spear";
-import Hammer from "../weapons/Hammer";
 
 export default class Player extends Entity {
 

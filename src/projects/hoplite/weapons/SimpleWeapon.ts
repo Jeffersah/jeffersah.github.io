@@ -1,6 +1,6 @@
 import Point from "../../common/position/Point";
 import Assets from "../Assets";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import Player from "../entities/Player";
 import GameState from "../GameState";
 import { HexLength, TurnLeft, TurnRight } from "../Hex";

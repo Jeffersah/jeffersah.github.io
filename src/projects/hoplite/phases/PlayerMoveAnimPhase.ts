@@ -4,7 +4,7 @@ import Point from "../../common/position/Point";
 import EntityMoveAnimation from "../animation/EntityMoveAnimation";
 import ParallelAnimation from "../animation/ParallelAnimation";
 import SequentialAnimation from "../animation/SequentialAnimation";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { HexToPixel, PixelToHex } from "../Hex";

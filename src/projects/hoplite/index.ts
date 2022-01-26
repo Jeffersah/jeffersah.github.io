@@ -14,6 +14,7 @@ import IGamePhase from './phases/IGamePhase';
 import GameStartAnimationPhase from './phases/GameStartAnimationPhase';
 import FloorZeroGen from './mapGen/FloorZeroGen';
 import Zombie from './entities/Zombie';
+import Floor12Gen from './mapGen/Floor12Gen';
 
 export default function Run(): (()=>void) {
     let ctx: CanvasRenderingContext2D;

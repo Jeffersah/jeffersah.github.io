@@ -2,7 +2,7 @@ import { timeStamp } from "console";
 import Point from "../../common/position/Point";
 import IRenderableSource from "../../common/rendering/IRenderableSource";
 import Assets from "../Assets";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import Player from "../entities/Player";
 import Entity from "../Entity";
 import GameState from "../GameState";

@@ -1,12 +1,13 @@
 import Point from "../../common/position/Point";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
+import IAttackInfo from "../attackInfos/IAttackInfo";
 import { SimpleEnemy } from "../Entity";
 import GameState from "../GameState";
 
 export default abstract class Enemy extends SimpleEnemy {
 
-    lastAttacks: AttackInfo[];
+    lastAttacks: IAttackInfo[];
 
-    abstract getAttacks(state: GameState): AttackInfo[];
-    abstract getMove(state: GameState, attack: AttackInfo[], disallow: Point[]): Point;
+    abstract getAttacks(state: GameState): IAttackInfo[];
+    abstract getMove(state: GameState, attack: IAttackInfo[], disallow: Point[]): Point;
 }

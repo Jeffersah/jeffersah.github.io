@@ -3,7 +3,7 @@ import Rect from "../../common/position/Rectangle";
 import IRenderable from "../../common/rendering/IRenderable";
 import Sprite from "../../common/rendering/Sprite";
 import Assets from "../Assets";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import * as C from '../Constants';
 import Player from "../entities/Player";
 import GameState from "../GameState";

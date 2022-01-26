@@ -2,7 +2,7 @@ import { timeStamp } from "console";
 import Point from "../../common/position/Point";
 import IRenderableSource from "../../common/rendering/IRenderableSource";
 import Assets from "../Assets";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
 import Player from "../entities/Player";
 import Entity from "../Entity";
 import GameState from "../GameState";
@@ -26,6 +26,6 @@ export default class Sword extends SimpleWeapon {
     getAttack(state: GameState, player: Player, target: Point): AttackInfo | undefined {
         const e = state.entityAt(target);
         if(e === undefined || Entity.IsPlayer(e)) return undefined;
-        return AttackInfo.animationAttack(player, e, 2, this.impactAnimation, false);
+        return AttackInfo.animationAttack(player, e, 1, this.impactAnimation, false);
     }
 }

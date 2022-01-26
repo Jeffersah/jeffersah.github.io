@@ -4,7 +4,8 @@ import IRenderable from "../../common/rendering/IRenderable";
 import IRenderableSource from "../../common/rendering/IRenderableSource";
 import Sprite from "../../common/rendering/Sprite";
 import Assets from "../Assets";
-import AttackInfo from "../AttackInfo";
+import AttackInfo from "../attackInfos/AttackInfo";
+import IAttackInfo from "../attackInfos/IAttackInfo";
 import * as C from "../Constants";
 import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
@@ -38,7 +39,7 @@ export default class Mage extends Enemy {
         this.isFlying = false;
     }
 
-    getAttacks(state: GameState): AttackInfo[] {
+    getAttacks(state: GameState): IAttackInfo[] {
         const playerLocation = state.player.position;
         const len = HexLength(Point.subtract(playerLocation, this.position));
         if(len <= MAX_RANGE) {
@@ -58,7 +59,7 @@ export default class Mage extends Enemy {
         return [];
     }
 
-    getMove(state: GameState, attack: AttackInfo[], disallowed: Point[]): Point {
+    getMove(state: GameState, attack: IAttackInfo[], disallowed: Point[]): Point {
         if(attack.length > 0) {
             // Don't move if you've attacked.
             return this.position;
