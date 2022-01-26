@@ -7,6 +7,7 @@ import Assets from "../Assets";
 import { GetRing } from "../Hex";
 import Lava from "../LavaCell";
 import Point from "../../common/position/Point";
+import StoneEye from "../entities/StoneEye";
 
 const playerMoveTileArts = [
     new Point(6,2),

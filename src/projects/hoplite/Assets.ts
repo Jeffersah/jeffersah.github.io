@@ -14,6 +14,7 @@ import Zombie from "./entities/Zombie";
 import Archer from "./entities/Archer";
 import Mage from "./entities/Mage";
 import Giant from "./entities/Giant";
+import StoneEye from "./entities/StoneEye";
 
 export default class Assets {
     tiles: SpriteSheet;
@@ -39,6 +40,7 @@ export default class Assets {
         Archer.onAssetsLoaded(this);
         Mage.onAssetsLoaded(this);
         Giant.onAssetsLoaded(this);
+        StoneEye.onAssetsLoaded(this);
     }
 
     getDigitSprite(digit: number):Sprite {

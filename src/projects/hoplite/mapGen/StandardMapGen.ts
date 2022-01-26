@@ -10,7 +10,8 @@ import Archer from "../entities/Archer";
 import Mage from "../entities/Mage";
 import Lava from "../LavaCell";
 import { AllDirections, DirectionHelper } from "../Direction";
-import { AssurePathToEnd } from "./MapGenCommon";
+import { AssurePathTo, AssurePathToEnd } from "./MapGenCommon";
+import StoneEye from "../entities/StoneEye";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -33,7 +34,7 @@ export default class StandardMapGen implements IMapGen {
         state.tiles.set(new DownStairs(assets), downStairX, downStairY);
 
         // Replaces lava with floor to ensure there's a path from the start to the end.
-        AssurePathToEnd(state, assets);
+        AssurePathToEnd(state, assets, 1);
 
         let validEnemySpawns: Point[] = [];
         for(let y = -C.MAP_SIZE + 1; y <= 1; y++) {
@@ -62,8 +63,14 @@ export default class StandardMapGen implements IMapGen {
         for(let i = 0; i < Math.min(3, (floor - 3) / 3); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
-            const mage = new Mage(pos);
-            state.enemies.push(mage);
+            const enemy = (Math.random() < 0.2) ? new StoneEye(pos) : new Mage(pos);
+            state.enemies.push(enemy);
+        }
+        
+        // Don't spawn enemies where they can't get to you: Forge a path. (unless they're flying)
+        for(const enemy of state.enemies) {
+            if(enemy.isFlying) continue;
+            AssurePathTo(state, assets, (pt)=>pt.equals(enemy.position), 0.3);
         }
     }
 

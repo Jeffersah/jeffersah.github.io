@@ -1,12 +1,10 @@
-import { Interpolated, InterpolationTimer } from "../interpolation/Interpolated";
 import Point from "../position/Point";
 import Rectangle from "../position/Rectangle";
 import IRenderable from "./IRenderable";
-import IRenderableSource from "./IRenderableSource";
 
-export class OffsetRenderable implements IRenderable {
+export default class OffsetRenderable implements IRenderable {
 
-    constructor(private source: IRenderable, public offset: Point) {
+    constructor(private source: IRenderable, public offset: Point, public rotation?: number) {
     }
 
     tick(): boolean {
@@ -14,6 +12,6 @@ export class OffsetRenderable implements IRenderable {
     }
 
     draw(ctx: CanvasRenderingContext2D, position: Rectangle, rotation: number): void {
-        this.source.draw(ctx, position.shift(this.offset.x, this.offset.y), rotation);
+        this.source.draw(ctx, position.shift(this.offset.x, this.offset.y), rotation + (this?.rotation ?? 0));
     }
 }

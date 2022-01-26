@@ -44,9 +44,9 @@ export default class Zombie extends Enemy {
         let minMoves: Point[] = [];
         let minMoveDist = 99;
         for(let i = 0; i < possibleMoves.length; i++) {
-            if(!state.isValidMove(possibleMoves[i], false)) 
-                continue;
             if(disallowed.some(p => p.equals(possibleMoves[i])))
+                continue;
+            if(!state.isValidMoveIgnoreEnemies(possibleMoves[i], false)) 
                 continue;
 
             const ray = Point.subtract(state.player.position, possibleMoves[i]);

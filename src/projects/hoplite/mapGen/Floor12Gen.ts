@@ -8,6 +8,8 @@ import { GetRing } from "../Hex";
 import Point from "../../common/position/Point";
 import Giant from "../entities/Giant";
 import Archer from "../entities/Archer";
+import StoneEye from "../entities/StoneEye";
+import Lava from "../LavaCell";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -18,8 +20,17 @@ export default class Floor12Gen implements IMapGen {
             state.tiles.set(new Floor(assets, new Point(12, 0)), ring[i]);
         }
 
+        state.tiles.set(new Lava(assets), new Point(5, -1));
+        state.tiles.set(new Lava(assets), new Point(5, 0));
+        state.tiles.set(new Lava(assets), new Point(4, 1));
+        state.tiles.set(new Lava(assets), new Point(-4, -1));
+        state.tiles.set(new Lava(assets), new Point(-5, 0));
+        state.tiles.set(new Lava(assets), new Point(-5, 1));
+
         state.enemies.push(new Giant(new Point(0, 0)));
-        state.enemies.push(new Archer(new Point(0, -2)));
-        state.enemies.push(new Archer(new Point(2, -2)));
+        state.enemies.push(new StoneEye(new Point(0, -2)));
+        state.enemies.push(new StoneEye(new Point(2, -2)));
+        state.enemies.push(new StoneEye(new Point(2, 0)));
+        state.enemies.push(new StoneEye(new Point(-2, 0)));
     }
 }

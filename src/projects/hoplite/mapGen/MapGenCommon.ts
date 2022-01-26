@@ -6,13 +6,13 @@ import Point from "../../common/position/Point";
 import { AllDirections, DirectionHelper } from "../Direction";
 import Assets from "../Assets";
 
-export function AssurePathTo(state: GameState, assets: Assets, checkEnd: (isValidEnd: Point) => boolean) {
+export function AssurePathTo(state: GameState, assets: Assets, checkEnd: (isValidEnd: Point) => boolean, pathLengthNoise?: number) {
     function getNeighbors(point: Point):{to: Point, cost: number}[] {
         const neighbors = [];
         for(const dir of AllDirections) {
             const destPt = Point.add(point, DirectionHelper.ToPoint(dir));
             if(state.tiles.isInBounds(destPt.x, destPt.y)) {
-                neighbors.push({to: destPt, cost: state.tiles.get(destPt).isPathable ? 1 : 99 });
+                neighbors.push({to: destPt, cost: state.tiles.get(destPt).isPathable ? 1 - (Math.random() * (pathLengthNoise??0)) : 99 });
             }
         }
         return neighbors;
@@ -26,6 +26,6 @@ export function AssurePathTo(state: GameState, assets: Assets, checkEnd: (isVali
     }
 }
 
-export function AssurePathToEnd(state: GameState, assets: Assets) {
-    return AssurePathTo(state, assets, (pt) => state.tiles.get(pt).typeId === DownStairs.TypeID);
+export function AssurePathToEnd(state: GameState, assets: Assets, pathLengthNoise?: number) {
+    return AssurePathTo(state, assets, (pt) => state.tiles.get(pt).typeId === DownStairs.TypeID, pathLengthNoise);
 }

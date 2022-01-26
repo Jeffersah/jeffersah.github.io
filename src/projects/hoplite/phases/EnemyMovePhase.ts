@@ -15,13 +15,14 @@ import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 const duration = 20;
 
 export default function EnemyMovePhase(state: GameState): IGamePhase {
-    const disallowed: Point[] = [];
+    const disallowed: Point[] = state.enemies.map(e => e.position);
     const animations: IAnimation[] = [];
     for(let i = 0; i < state.enemies.length; i++) { 
         const destination = state.enemies[i].getMove(state, state.enemies[i].lastAttacks, disallowed);
         if(!destination.equals(state.enemies[i].position)) {
             animations.push(new EntityMoveAnimation(state.enemies[i], Interpolated.linear<Point>(Point.interpolate, state.enemies[i].position, destination), destination, duration));
-            disallowed.push(destination);
+            const rm = disallowed.findIndex(p => p.equals(state.enemies[i].position));
+            disallowed.splice(rm, 1, destination);
         }
     }
 

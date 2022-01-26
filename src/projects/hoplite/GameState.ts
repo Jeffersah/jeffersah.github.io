@@ -37,6 +37,13 @@ export default class GameState {
         return !this.enemies.some(e => e.position.equals(to));
     }
 
+    isValidMoveIgnoreEnemies(to: Point, flying: boolean) {
+        const isValidTile = this.tiles.isInBounds(to.x, to.y) && 
+            (this.tiles.get(to).isPathable || flying);
+        if(!isValidTile) return false;
+        return !to.equals(this.player.position);
+    }
+
     changeFloor(floorNum: number, generator: IMapGen) {
         this.enemies = [];
         generator.generateMap(this.assets, floorNum, this);
