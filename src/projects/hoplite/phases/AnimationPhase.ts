@@ -30,5 +30,4 @@ export default class AnimationPhase implements IGamePhase {
             animation.draw(ctx);
         }
     }
-
 }
