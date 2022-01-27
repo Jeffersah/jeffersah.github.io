@@ -1,14 +1,16 @@
 import GameState from "../GameState";
 import IMapGen from "./IMapGen";
 import * as C from "../Constants";
-import HexCell, { DownStairs, Floor } from "../HexCell";
+import HexCell from "../tiles/HexCell";
+import DownStairs from "../tiles/DownStairs";
+import Floor from "../tiles/Floor";
 import HexArray from "../HexArray";
 import Assets from "../Assets";
 import Point from "../../common/position/Point";
 import Zombie from "../entities/Zombie";
 import Archer from "../entities/Archer";
 import Mage from "../entities/Mage";
-import Lava from "../LavaCell";
+import Lava from "../tiles/Lava";
 import { AllDirections, DirectionHelper } from "../Direction";
 import { AssurePathTo, AssurePathToEnd } from "./MapGenCommon";
 import StoneEye from "../entities/StoneEye";

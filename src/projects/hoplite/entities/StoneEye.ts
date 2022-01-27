@@ -42,7 +42,7 @@ export default class StoneEye extends Enemy {
             const points: Point[] = [];
             const delta = DirectionHelper.ToPoint(this.prepFire);
             let pt = Point.add(this.position, delta);
-            for(let i = 1; i < MAX_RANGE && state.tiles.isInBounds(pt.x, pt.y); i++) {
+            for(let i = 0; i < MAX_RANGE && state.tiles.isInBounds(pt.x, pt.y); i++) {
                 points.push(pt);
                 pt = Point.add(pt, delta);
             }

@@ -1,15 +1,14 @@
-import Point from "../common/position/Point";
-import Assets from "./Assets";
-import Entity from "./Entity";
-import * as C from "./Constants";
-import IRenderableSource from "../common/rendering/IRenderableSource";
-import IRenderable from "../common/rendering/IRenderable";
-import Sprite from "../common/rendering/Sprite";
-import Rect from "../common/position/Rectangle";
-import GameState from "./GameState";
-import { HexToPixel } from "./Hex";
-import { DeltaRenderable } from "../common/rendering/DeltaRenderable";
-import { StackRenderable } from "../common/rendering/StackRenderable";
+import Point from "../../common/position/Point";
+import Assets from "../Assets";
+import Entity from "../Entity";
+import * as C from "../Constants";
+import IRenderable from "../../common/rendering/IRenderable";
+import Sprite from "../../common/rendering/Sprite";
+import Rect from "../../common/position/Rectangle";
+import GameState from "../GameState";
+import { HexToPixel } from "../Hex";
+import { DeltaRenderable } from "../../common/rendering/DeltaRenderable";
+import { StackRenderable } from "../../common/rendering/StackRenderable";
 
 export default abstract class HexCell {
     isPathable: boolean;
@@ -56,28 +55,5 @@ export abstract class SimpleCell extends HexCell{
 
         this.bg_renderable.draw(ctx, new Rect(target.x, target.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
         this.renderable.draw(ctx, new Rect(target.x, target.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
-    }
-}
-
-export class Floor extends SimpleCell {
-    public static TypeID = 0;
-
-    constructor(assets: Assets, customSprite?: Point) {
-        super(Floor.TypeID, assets, customSprite ?? new Point(0,0), true, customSprite !== undefined);
-    }
-
-    OnEntityStep(entity: Entity): void {
-    }
-}
-
-// TypeID 1 : Lava
-
-export class DownStairs extends SimpleCell {
-    public static TypeID = 2;
-    constructor(assets: Assets) {
-        super(DownStairs.TypeID, assets, new Point(5, 0), true, true);
-    }
-
-    OnEntityStep(entity: Entity): void {
     }
 }

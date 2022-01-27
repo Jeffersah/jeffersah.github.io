@@ -1,15 +1,15 @@
-import Point from "../common/position/Point";
-import Assets from "./Assets";
-import * as C from "./Constants";
-import IRenderable from "../common/rendering/IRenderable";
-import Sprite from "../common/rendering/Sprite";
-import Rect from "../common/position/Rectangle";
-import GameState from "./GameState";
-import { HexToPixel } from "./Hex";
+import Point from "../../common/position/Point";
+import Assets from "../Assets";
+import * as C from "../Constants";
+import IRenderable from "../../common/rendering/IRenderable";
+import Sprite from "../../common/rendering/Sprite";
+import Rect from "../../common/position/Rectangle";
+import GameState from "../GameState";
+import { HexToPixel } from "../Hex";
 import HexCell from "./HexCell";
-import { AllDirections, Direction, DirectionHelper } from "./Direction";
-import { StackRenderable } from "../common/rendering/StackRenderable";
-import { DeltaRenderable } from "../common/rendering/DeltaRenderable";
+import { AllDirections, Direction, DirectionHelper } from "../Direction";
+import { StackRenderable } from "../../common/rendering/StackRenderable";
+import { DeltaRenderable } from "../../common/rendering/DeltaRenderable";
 
 interface ITilePart {
     directions: Direction[];
@@ -56,7 +56,7 @@ const tileParts: ITilePart[] = [
     }
 ]
 
-export default abstract class MultiPartCell extends HexCell{
+export default abstract class MultiPartCell extends HexCell {
     private renderable: IRenderable;
     private bg_renderable: IRenderable;
     private assets: Assets;

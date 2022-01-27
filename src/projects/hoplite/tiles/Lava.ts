@@ -1,8 +1,8 @@
-import Point from "../common/position/Point";
-import { StackRenderable } from "../common/rendering/StackRenderable";
-import Assets from "./Assets";
-import Entity from "./Entity";
-import GameState from "./GameState";
+import Point from "../../common/position/Point";
+import { StackRenderable } from "../../common/rendering/StackRenderable";
+import Assets from "../Assets";
+import Entity from "../Entity";
+import GameState from "../GameState";
 import HexCell from "./HexCell";
 import MultiPartCell from "./MultiPartCell";
 

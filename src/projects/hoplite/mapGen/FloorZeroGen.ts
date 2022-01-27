@@ -1,11 +1,13 @@
 import GameState from "../GameState";
 import IMapGen from "./IMapGen";
 import * as C from "../Constants";
-import HexCell, { DownStairs, Floor } from "../HexCell";
+import HexCell from "../tiles/HexCell";
+import DownStairs from "../tiles/DownStairs";
+import Floor from "../tiles/Floor";
 import HexArray from "../HexArray";
 import Assets from "../Assets";
 import { GetRing } from "../Hex";
-import Lava from "../LavaCell";
+import Lava from "../tiles/Lava";
 import Point from "../../common/position/Point";
 import StoneEye from "../entities/StoneEye";
 

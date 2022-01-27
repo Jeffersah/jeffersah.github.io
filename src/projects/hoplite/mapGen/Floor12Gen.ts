@@ -1,7 +1,9 @@
 import GameState from "../GameState";
 import IMapGen from "./IMapGen";
 import * as C from "../Constants";
-import HexCell, { DownStairs, Floor } from "../HexCell";
+import HexCell from "../tiles/HexCell";
+import DownStairs from "../tiles/DownStairs";
+import Floor from "../tiles/Floor";
 import HexArray from "../HexArray";
 import Assets from "../Assets";
 import { GetRing } from "../Hex";
@@ -9,7 +11,7 @@ import Point from "../../common/position/Point";
 import Giant from "../entities/Giant";
 import Archer from "../entities/Archer";
 import StoneEye from "../entities/StoneEye";
-import Lava from "../LavaCell";
+import Lava from "../tiles/Lava";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {

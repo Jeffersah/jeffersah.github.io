@@ -1,7 +1,8 @@
 import DjikstraPath from "../DjikstraPath";
 import GameState from "../GameState";
 import * as C from "../Constants";
-import { DownStairs, Floor } from "../HexCell";
+import DownStairs from "../tiles/DownStairs";
+import Floor from "../tiles/Floor";
 import Point from "../../common/position/Point";
 import { AllDirections, DirectionHelper } from "../Direction";
 import Assets from "../Assets";

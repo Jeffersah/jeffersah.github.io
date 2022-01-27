@@ -2,7 +2,7 @@ import Point from "../common/position/Point";
 import Assets from "./Assets";
 import Player from "./entities/Player";
 import HexArray from "./HexArray";
-import HexCell from "./HexCell";
+import HexCell from "./tiles/HexCell";
 import IMapGen from "./mapGen/IMapGen";
 import * as C from "./Constants";
 import Entity from "./Entity";
