@@ -3,7 +3,7 @@ import * as React from 'react';
 export function TechRenderComponent() {
     React.useEffect(() => {
         import(
-            /* webpackChunkName: "techRender" */
+            /* webpackChunkName: "tech_render" */
             /* webpackMode: "lazy" */
             '../../../projects/tech-render').then(({ default: Run }) => {
             Run();

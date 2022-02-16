@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+// Threw this together as a simple little component to test Github Copilot
+// Turns out, it's pretty cool!
+
 export default function SimpleCypherComponent() {
     const [input, setInput] = React.useState('');
     const [cypherKey, setCypherKey] = React.useState('');

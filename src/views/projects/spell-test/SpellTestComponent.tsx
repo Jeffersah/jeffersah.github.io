@@ -3,7 +3,7 @@ import * as React from 'react';
 export function SpellTestComponent() {
     React.useEffect(() => {
         import(
-            /* webpackChunkName: "spellTest" */
+            /* webpackChunkName: "spell_test" */
             /* webpackMode: "lazy" */
             '../../../projects/spell-test').then(({ default: Run }) => {
             Run();

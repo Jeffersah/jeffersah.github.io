@@ -3,7 +3,7 @@ import * as React from 'react';
 export function RpgTestComponent() {
     React.useEffect(() => {
         import(
-            /* webpackChunkName: "rpgTest" */
+            /* webpackChunkName: "rpgt" */
             /* webpackMode: "lazy" */
             '../../../projects/rpgt').then(({ default: Run }) => {
             Run();

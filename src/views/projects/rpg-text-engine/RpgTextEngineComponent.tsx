@@ -7,7 +7,7 @@ export function RpgTextEngineComponent() {
 
     React.useEffect(() => {
         import(
-            /* webpackChunkName: "rpg-text-engine" */
+            /* webpackChunkName: "rpg_text_engine" */
             /* webpackMode: "lazy" */
             '../../../projects/rpg-text-engine').then(({ default: Run, SetInputText }) => {
             Run();
