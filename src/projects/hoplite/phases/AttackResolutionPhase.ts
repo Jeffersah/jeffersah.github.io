@@ -16,6 +16,11 @@ export default function AttackResolutionPhase(state: GameState, attacks: IAttack
         }
     }
 
+    let goldValues = state.enemies.filter(e => e.hp <= 0).map(e => e.goldValue);
+    if(goldValues.length > 0) {
+        state.gold += goldValues.reduce((a, b) => a + b, 0) * goldValues.length;
+    }
+
     state.enemies = state.enemies.filter(e => e.hp > 0);
     if(state.player.hp <= 0) {
         // TODO: GAME OVER

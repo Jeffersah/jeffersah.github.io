@@ -23,6 +23,8 @@ export default class Zombie extends Enemy {
         super(position);
         this.hp = this.maxHp = 1;
         this.isFlying = false;
+        
+        this.goldValue = 1;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {

@@ -35,6 +35,8 @@ export default class StoneEye extends Enemy {
         this.hp = this.maxHp = 3;
         this.isFlying = true;
         this.prepFire = undefined;
+
+        this.goldValue = 5;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {

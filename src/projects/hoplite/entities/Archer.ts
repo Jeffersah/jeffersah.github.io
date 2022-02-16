@@ -37,6 +37,8 @@ export default class Archer extends Enemy {
         super(position);
         this.hp = this.maxHp = 1;
         this.isFlying = false;
+        
+        this.goldValue = 3;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {

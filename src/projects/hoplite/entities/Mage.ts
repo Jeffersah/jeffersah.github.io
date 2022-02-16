@@ -37,6 +37,8 @@ export default class Mage extends Enemy {
         super(position);
         this.hp = this.maxHp = 1;
         this.isFlying = false;
+
+        this.goldValue = 5;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {

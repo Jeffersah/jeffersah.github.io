@@ -6,6 +6,7 @@ import GameState from "../GameState";
 
 export default abstract class Enemy extends SimpleEnemy {
 
+    goldValue: number;
     lastAttacks: IAttackInfo[];
 
     abstract getAttacks(state: GameState): IAttackInfo[];

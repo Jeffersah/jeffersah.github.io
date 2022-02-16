@@ -18,11 +18,14 @@ export default class GameState {
 
     public tiles: HexArray<HexCell>;
     public currentFloor: number;
+
+    public gold: number;
     
     constructor(private assets: Assets, size: number, floorNum: number, generator: IMapGen) {
         this.changeFloor(floorNum, generator);
 
         this.player = new Player(assets, C.PLAYER_START_POSITION);
+        this.gold = 0;
     }
 
     entityAt(to: Point) {
@@ -55,7 +58,10 @@ export default class GameState {
 
     draw(ctx: CanvasRenderingContext2D, excludeEntities?: Entity[]) {
         new Sprite(this.assets.floor_and_digits.image, new Rect(0, 0, 41, 13)).draw(ctx, new Rect(0, 0, 41, 13), 0);
-        this.assets.drawNumber(ctx, new Point(41, 0), this.currentFloor);
+        this.assets.drawNumber(ctx, new Point(42, 0), this.currentFloor);
+
+        new Sprite(this.assets.floor_and_digits.image, new Rect(0, 13*3, 41, 13)).draw(ctx, new Rect(0, 14, 41, 13), 0);
+        this.assets.drawNumber(ctx, new Point(42, 14), this.gold, 3);
 
         this.tiles.iterate((x, y, cell) => {
             cell.draw(ctx, this, new Point(x, y));

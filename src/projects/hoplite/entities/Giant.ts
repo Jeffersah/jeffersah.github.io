@@ -47,6 +47,8 @@ export default class Giant extends Enemy {
         this.isFlying = false;
         this.turnSequenceIndex = Math.floor(Math.random() * Giant.turnSequence.length);
         this.lastTurn = Giant.turnSequence[this.turnSequenceIndex === 0 ? Giant.turnSequence.length - 1 : this.turnSequenceIndex - 1];
+
+        this.goldValue = 15;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {
