@@ -15,6 +15,7 @@ const MAX_RANGE = 5;
 
 export default class Mage extends Enemy {
     static sprite: IRenderable;
+    static cooldownsprite: IRenderable;
     static projectileSprite: Sprite;
     static impactAnimation: IRenderableSource;
 
@@ -22,6 +23,10 @@ export default class Mage extends Enemy {
         Mage.sprite = new Sprite(
             assets.tiles.image,
             new Rect(2 * C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
+        );
+        Mage.cooldownsprite = new Sprite(
+            assets.tiles.image,
+            new Rect(2 * C.TILE_WIDTH, 11 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
         );
 
         Mage.projectileSprite = new Sprite(
@@ -33,6 +38,8 @@ export default class Mage extends Enemy {
         Mage.impactAnimation = assets.getImpactAnimation(2);
     }
 
+    attackOnCooldown: boolean;
+
     constructor(position: Point) {
         super(position);
         this.hp = this.maxHp = 1;
@@ -42,6 +49,10 @@ export default class Mage extends Enemy {
     }
 
     getAttacks(state: GameState): IAttackInfo[] {
+        if(this.attackOnCooldown){
+            return [];
+        }
+
         const playerLocation = state.player.position;
         const len = HexLength(Point.subtract(playerLocation, this.position));
         if(len <= MAX_RANGE) {
@@ -55,6 +66,7 @@ export default class Mage extends Enemy {
                     }
                     nextPt = Point.add(delta, nextPt);
                 }
+                this.attackOnCooldown = true;
                 return [AttackInfo.projectileAttack(this, state.player, 1, Mage.projectileSprite, Mage.impactAnimation)];
             }
         }
@@ -64,6 +76,12 @@ export default class Mage extends Enemy {
     getMove(state: GameState, attack: IAttackInfo[], disallowed: Point[]): Point {
         if(attack.length > 0) {
             // Don't move if you've attacked.
+            return this.position;
+        }
+
+        if(this.attackOnCooldown) {
+            // Don't move if you're on cooldown
+            this.attackOnCooldown = false;
             return this.position;
         }
 
@@ -96,6 +114,7 @@ export default class Mage extends Enemy {
     }
 
     override getRenderable(): IRenderable {
+        if(this.attackOnCooldown) return Mage.cooldownsprite;
         return Mage.sprite;
     }
 }

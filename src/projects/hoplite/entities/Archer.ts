@@ -15,6 +15,7 @@ const MAX_RANGE = 5;
 
 export default class Archer extends Enemy {
     static sprite: IRenderable;
+    static fearsprite: IRenderable;
     static projectileSprite: Sprite;
     static impactAnimation: IRenderableSource;
 
@@ -22,6 +23,11 @@ export default class Archer extends Enemy {
         Archer.sprite = new Sprite(
             assets.tiles.image,
             new Rect(C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
+        );
+
+        Archer.fearsprite = new Sprite(
+            assets.tiles.image,
+            new Rect(C.TILE_WIDTH, 11 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
         );
 
         Archer.projectileSprite = new Sprite(
@@ -33,10 +39,14 @@ export default class Archer extends Enemy {
         Archer.impactAnimation = assets.getImpactAnimation(1);
     }
 
+
+    isAfraid: boolean;
+
     constructor(position: Point) {
         super(position);
         this.hp = this.maxHp = 1;
         this.isFlying = false;
+        this.isAfraid = false;
         
         this.goldValue = 3;
     }
@@ -69,6 +79,7 @@ export default class Archer extends Enemy {
 
         let deltaPlayer = Point.subtract(state.player.position, this.position);
         if(HexLength(deltaPlayer) === 1) {
+            this.isAfraid = true;
             // If you're one away from the player, always run directly away from the player.
             let targetPosition = Point.subtract(this.position, deltaPlayer);
             if(state.isValidMoveIgnoreEnemies(targetPosition, false) && !disallowed.some(p => p.equals(targetPosition))) {
@@ -77,6 +88,8 @@ export default class Archer extends Enemy {
             // If you can't, don't move.
             // This makes it much easier to catch archers, as otherwise you have to trap them in a corner.
             return this.position;
+        } else {
+            this.isAfraid = false;
         }
 
         const possibleMoves = GetRing(1).map(rp => Point.add(this.position, rp));
@@ -107,6 +120,9 @@ export default class Archer extends Enemy {
     }
 
     override getRenderable(): IRenderable {
+        if(this.isAfraid) {
+            return Archer.fearsprite;
+        }
         return Archer.sprite;
     }
 }
