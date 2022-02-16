@@ -55,14 +55,14 @@ export default class StandardMapGen implements IMapGen {
             state.enemies.push(zombie);
         }
 
-        for(let i = 0; i < Math.min(6, (floor - 2) / 2); i++) {
+        for(let i = 0; i < Math.min(6, (floor - 3) / 3); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
             const archer = new Archer(pos);
             state.enemies.push(archer);
         }
         
-        for(let i = 0; i < Math.min(3, (floor - 3) / 3); i++) {
+        for(let i = 0; i < Math.min(3, (floor - 4) / 4); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
             const enemy = (Math.random() < 0.2) ? new StoneEye(pos) : new Mage(pos);

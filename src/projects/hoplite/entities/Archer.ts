@@ -67,6 +67,18 @@ export default class Archer extends Enemy {
             return this.position;
         }
 
+        let deltaPlayer = Point.subtract(state.player.position, this.position);
+        if(HexLength(deltaPlayer) === 1) {
+            // If you're one away from the player, always run directly away from the player.
+            let targetPosition = Point.subtract(this.position, deltaPlayer);
+            if(state.isValidMoveIgnoreEnemies(targetPosition, false) && !disallowed.some(p => p.equals(targetPosition))) {
+                return targetPosition;
+            }
+            // If you can't, don't move.
+            // This makes it much easier to catch archers, as otherwise you have to trap them in a corner.
+            return this.position;
+        }
+
         const possibleMoves = GetRing(1).map(rp => Point.add(this.position, rp));
         let minMoves: Point[] = [];
         let minMoveDist = 99;

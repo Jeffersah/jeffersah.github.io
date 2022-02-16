@@ -18,11 +18,13 @@ export default class GameState {
 
     public tiles: HexArray<HexCell>;
     public currentFloor: number;
+    public regionId: number;
 
     public gold: number;
     
     constructor(private assets: Assets, size: number, floorNum: number, generator: IMapGen) {
         this.changeFloor(floorNum, generator);
+        this.regionId = 0;
 
         this.player = new Player(assets, C.PLAYER_START_POSITION);
         this.gold = 0;
@@ -57,7 +59,7 @@ export default class GameState {
     }
 
     draw(ctx: CanvasRenderingContext2D, excludeEntities?: Entity[]) {
-        new Sprite(this.assets.floor_and_digits.image, new Rect(0, 0, 41, 13)).draw(ctx, new Rect(0, 0, 41, 13), 0);
+        new Sprite(this.assets.floor_and_digits.image, new Rect(0, 13*this.regionId, 41, 13)).draw(ctx, new Rect(0, 0, 41, 13), 0);
         this.assets.drawNumber(ctx, new Point(42, 0), this.currentFloor);
 
         new Sprite(this.assets.floor_and_digits.image, new Rect(0, 13*3, 41, 13)).draw(ctx, new Rect(0, 14, 41, 13), 0);
