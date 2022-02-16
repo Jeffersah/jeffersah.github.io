@@ -4,6 +4,7 @@ import hoplite_tiles_url from './assets/hoplite_tiles.png';
 import floor_digits_url from './assets/floor_and_digits.png';
 import hp_image_url from './assets/hp.png';
 import impact_url from './assets/hoplite_impacts.png';
+import lavaLayers_url from './assets/lava_layers.png';
 import ImageLoader from "../common/assets/ImageLoader";
 import Sprite from "../common/rendering/Sprite";
 import Rect from "../common/position/Rectangle";
@@ -18,6 +19,7 @@ import StoneEye from "./entities/StoneEye";
 
 export default class Assets {
     tiles: SpriteSheet;
+    lavaLayers: SpriteSheet;
     floor_and_digits: ImageLoader;
     hpImage: ImageLoader;
     hpRenderer: HpRenderer;
@@ -28,6 +30,7 @@ export default class Assets {
         this.floor_and_digits = new ImageLoader(floor_digits_url, loader.registerAssetLoadCallback());
         this.hpImage = new ImageLoader(hp_image_url, loader.registerAssetLoadCallback());
         this.impacts = new ImageLoader(impact_url, loader.registerAssetLoadCallback());
+        this.lavaLayers = new SpriteSheet(32, 32, lavaLayers_url, loader.registerAssetLoadCallback());
     }
 
     getImpactAnimation(row: number) {

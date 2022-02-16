@@ -21,6 +21,8 @@ export default class GameState {
     public regionId: number;
 
     public gold: number;
+
+    public renderTickNumber: number;
     
     constructor(private assets: Assets, size: number, floorNum: number, generator: IMapGen) {
         this.changeFloor(floorNum, generator);
@@ -28,6 +30,8 @@ export default class GameState {
 
         this.player = new Player(assets, C.PLAYER_START_POSITION);
         this.gold = 0;
+
+        this.renderTickNumber = 0;
     }
 
     entityAt(to: Point) {
@@ -78,5 +82,7 @@ export default class GameState {
                 this.assets.hpRenderer.draw(ctx, entity.position, entity.hp, entity.maxHp);
             }
         });
+
+        this.renderTickNumber ++;
     }
 }

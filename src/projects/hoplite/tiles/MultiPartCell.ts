@@ -56,6 +56,29 @@ const tileParts: ITilePart[] = [
     }
 ]
 
+export function StitchTileParts(source: CanvasImageSource, tx: number, ty: number, tw: number, th: number, isEdge: (dir: Direction) => boolean){
+    const adjacencyMap = AllDirections.map(isEdge);
+
+    const images = tileParts.map(part => {
+        const index = part.directions.reduceRight((acc, dir) => (acc << 1) + (adjacencyMap[dir] ? 1 : 0), 0);
+        const sourceBounds = new Rect(
+            (part.tileCoords.x + index + part.tileSlice.x + tx) * tw,
+            (part.tileCoords.y + part.tileSlice.y + ty) * th,
+            (part.tileSlice.w) * tw,
+            (part.tileSlice.h) * th
+        );
+        return new DeltaRenderable(
+            new Sprite(source, sourceBounds),
+            part.tileSlice
+        );
+    });
+
+    return new StackRenderable(
+        images,
+        'all'
+    );
+}
+
 export default abstract class MultiPartCell extends HexCell {
     private renderable: IRenderable;
     private bg_renderable: IRenderable;
@@ -69,7 +92,7 @@ export default abstract class MultiPartCell extends HexCell {
     }
 
     override AfterWorldLoad(world: GameState, pt: Point): void {
-        const adjacencyMap = AllDirections.map(d => {
+        this.renderable = StitchTileParts(this.assets.tiles.image, this.spriteSheetPosition.x, this.spriteSheetPosition.y, C.TILE_WIDTH, C.TILE_HEIGHT, (d:Direction) => {
             const hexPt = Point.add(pt, DirectionHelper.ToPoint(d));
             if(world.tiles.isInBounds(hexPt.x, hexPt.y)) {
                 return world.tiles.get(pt).typeId !== world.tiles.get(hexPt).typeId;
@@ -78,25 +101,6 @@ export default abstract class MultiPartCell extends HexCell {
                 return true;
             }
         });
-
-        const images = tileParts.map(part => {
-            const index = part.directions.reduceRight((acc, dir) => (acc << 1) + (adjacencyMap[dir] ? 1 : 0), 0);
-            const sourceBounds = new Rect(
-                (part.tileCoords.x + index + part.tileSlice.x + this.spriteSheetPosition.x) * C.TILE_WIDTH,
-                (part.tileCoords.y + part.tileSlice.y + this.spriteSheetPosition.y) * C.TILE_HEIGHT,
-                (part.tileSlice.w) * C.TILE_WIDTH,
-                (part.tileSlice.h) * C.TILE_HEIGHT
-            );
-            return new DeltaRenderable(
-                new Sprite(this.assets.tiles.image, sourceBounds),
-                part.tileSlice
-            );
-        });
-
-        this.renderable = new StackRenderable(
-            images,
-            'all'
-        );
     }
 
     override draw(ctx: CanvasRenderingContext2D, world: GameState, pt: Point): void {
