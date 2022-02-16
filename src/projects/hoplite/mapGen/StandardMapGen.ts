@@ -14,6 +14,7 @@ import Lava from "../tiles/Lava";
 import { AllDirections, DirectionHelper } from "../Direction";
 import { AssurePathTo, AssurePathToEnd } from "./MapGenCommon";
 import StoneEye from "../entities/StoneEye";
+import Trap, { TrapDamage } from "../tiles/Trap";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -73,6 +74,18 @@ export default class StandardMapGen implements IMapGen {
         for(const enemy of state.enemies) {
             if(enemy.isFlying) continue;
             AssurePathTo(state, assets, (pt)=>pt.equals(enemy.position), 0.3);
+        }
+
+        let floorPositions: Point[] = [];
+        state.tiles.iterate((x, y, c) => {
+            if(c.typeId === Floor.TypeID) {
+                floorPositions.push(new Point(x, y));
+            }
+        });
+
+        for(let i = 0; i < 3 + Math.min(3, (floor - 4) / 4); i++) {
+            let replaceFloor = floorPositions.splice(Math.floor(Math.random() * floorPositions.length), 1)[0];
+            state.tiles.set(new Trap(assets, [1,3,5][Math.floor(Math.random() * 3)] as TrapDamage), replaceFloor.x, replaceFloor.y);
         }
     }
 

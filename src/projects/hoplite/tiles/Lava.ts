@@ -11,6 +11,8 @@ import HexCell from "./HexCell";
 import MultiPartCell, { StitchTileParts } from "./MultiPartCell";
 import * as C from "../Constants";
 import { HexToPixel } from "../Hex";
+import IAttackInfo from "../attackInfos/IAttackInfo";
+import TileAttackInfo from "../attackInfos/TileAttackInfo";
 
 export default class Lava extends HexCell {
     public static TypeID = 1;
@@ -28,9 +30,17 @@ export default class Lava extends HexCell {
         this.bg_renderable = new Sprite(assets.tiles.image, new Rect(11 * C.TILE_WIDTH, 0, C.TILE_WIDTH, C.TILE_HEIGHT));
     }
 
+    override AfterEnemyTurn(state: GameState, x: number, y: number): IAttackInfo[] {
+        const steppingEnemy = state.enemies.find(e => e.position.x == x && e.position.y == y);
+        if(steppingEnemy !== undefined && !steppingEnemy.isFlying){
+            return [
+                new TileAttackInfo(new Point(x, y), [{ damage: 999, positions: [new Point(x,y)] }], 0, this.assets.getImpactAnimation(2))
+            ]
+        }
+        return [];
+    }
+
     OnEntityStep(entity: Entity): void {
-        if(!entity.isFlying)
-            entity.hp -= 100;
     }
 
     override AfterWorldLoad(world: GameState, pt: Point): void {

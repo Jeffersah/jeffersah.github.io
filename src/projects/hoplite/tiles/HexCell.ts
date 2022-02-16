@@ -9,6 +9,7 @@ import GameState from "../GameState";
 import { HexToPixel } from "../Hex";
 import { DeltaRenderable } from "../../common/rendering/DeltaRenderable";
 import { StackRenderable } from "../../common/rendering/StackRenderable";
+import IAttackInfo from "../attackInfos/IAttackInfo";
 
 export default abstract class HexCell {
     isPathable: boolean;
@@ -19,6 +20,9 @@ export default abstract class HexCell {
         this.isPathable = pathable;
     }
 
+    AfterPlayerTurn(state: GameState, x: number, y: number): IAttackInfo[] { return []; }
+    AfterEnemyTurn(state: GameState, x: number, y: number): IAttackInfo[] { return []; }
+
     abstract OnEntityStep(entity: Entity): void;
     abstract AfterWorldLoad(world: GameState, pt: Point): void;
     abstract draw(ctx: CanvasRenderingContext2D, world: GameState, pt: Point): void;
@@ -26,7 +30,7 @@ export default abstract class HexCell {
 
 export abstract class SimpleCell extends HexCell{
 
-    private renderable: IRenderable;
+    protected renderable: IRenderable;
     private bg_renderable: IRenderable;
 
     constructor(typeId: number, assets: Assets, spriteSheetPosition: Point, isPathable: boolean, includeDefaultRenderable?: boolean){

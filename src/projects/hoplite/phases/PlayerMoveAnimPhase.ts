@@ -16,17 +16,22 @@ import EnemyAttackPhase from "./EnemyAttackPhase";
 import FloorTransitionPhase from "./FloorTransitionPhase";
 import IGamePhase from "./IGamePhase";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
+import AfterMovePhase from "./AfterMovePhase";
 
 
 export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: Point, forceMotion: Point):IGamePhase {
     const onFinish = (gs: GameState) => {
+        if(!forceMotion.equals(from)) {
+            gs.tiles.get(forceMotion).OnEntityStep(gs.player);
+        }
+
         if(gs.tiles.get(gs.player.position).typeId === DownStairs.TypeID) {
             return new FloorTransitionPhase();
         }
         else if(gs.enemies.length === 0) {
-            return new PlayerTurnGamePhase();
+            return AfterMovePhase(gs, true, (gs) => AfterMovePhase(gs, false, () => new PlayerTurnGamePhase()));
         }
-        else return EnemyAttackPhase(state);
+        else return AfterMovePhase(gs, true, (gs) => EnemyAttackPhase(gs));
     }
 
     const postMoveAttacks: (gs:GameState)=>IGamePhase = (gs: GameState) => {
