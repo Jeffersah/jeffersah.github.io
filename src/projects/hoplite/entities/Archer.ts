@@ -74,6 +74,7 @@ export default class Archer extends Enemy {
     getMove(state: GameState, attack: IAttackInfo[], disallowed: Point[]): Point {
         if(attack.length > 0) {
             // Don't move if you've attacked.
+            this.isAfraid = false;
             return this.position;
         }
 
