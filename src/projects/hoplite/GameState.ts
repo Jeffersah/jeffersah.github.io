@@ -46,6 +46,13 @@ export default class GameState {
         return !this.enemies.some(e => e.position.equals(to));
     }
 
+    isValidMoveIgnorePlayer(to: Point, flying: boolean) {
+        const isValidTile = this.tiles.isInBounds(to.x, to.y) && 
+            (this.tiles.get(to).isPathable || flying);
+        if(!isValidTile) return false;
+        return !this.enemies.some(e => e.position.equals(to));
+    }
+
     isValidMoveIgnoreEnemies(to: Point, flying: boolean) {
         const isValidTile = this.tiles.isInBounds(to.x, to.y) && 
             (this.tiles.get(to).isPathable || flying);

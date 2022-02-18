@@ -5,6 +5,8 @@ import GameState from "../GameState";
 import IGamePhase from "./IGamePhase";
 import PlayerMoveAnimPhase from "./PlayerMoveAnimPhase";
 
+type Move = Direction | 6 | undefined;
+
 const dirKeys = [
     { key: 'a', dir: Direction.Left },
     { key: '4', dir: Direction.Left },
@@ -23,6 +25,9 @@ const dirKeys = [
 
     { key: 'z', dir: Direction.DownLeft },
     { key: '1', dir: Direction.DownLeft },
+
+    { key: 's', dir: 6 },
+    { key: '5', dir: 6 },
 ]
 
 export default class PlayerTurnGamePhase implements IGamePhase {
@@ -33,10 +38,10 @@ export default class PlayerTurnGamePhase implements IGamePhase {
     tick(state: GameState, keys: KeyboardManager): IGamePhase {
         const dir = this.tryGetDirection(keys);
         if(dir !== undefined) {
-            const destination = Point.add(state.player.position, DirectionHelper.ToPoint(dir));
+            const destination = dir === 6 ? state.player.position : Point.add(state.player.position, DirectionHelper.ToPoint(dir));
             const additionalMoves = [...state.player.primary.enableAdditionalMoves(state, state.player), ...state.player.secondary.enableAdditionalMoves(state, state.player)];
 
-            if(!state.isValidMove(destination, false)) {
+            if(!state.isValidMoveIgnorePlayer(destination, false)) {
                 const specialMove = additionalMoves.find(move => move.dest.equals(destination));
                 if(specialMove !== undefined){
                     return PlayerMoveAnimPhase(state, state.player.position, destination, specialMove.forceMove);
@@ -49,7 +54,7 @@ export default class PlayerTurnGamePhase implements IGamePhase {
         return this;
     }
 
-    tryGetDirection(keys: KeyboardManager): Direction | undefined {
+    tryGetDirection(keys: KeyboardManager): Move {
         for(let i = 0; i < dirKeys.length; i++) {
             if(keys.isKeyPressed(dirKeys[i].key)) {
                 return dirKeys[i].dir;
