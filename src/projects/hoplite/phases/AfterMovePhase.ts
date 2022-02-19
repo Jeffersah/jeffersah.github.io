@@ -1,5 +1,7 @@
+import SequentialAnimation from "../animation/SequentialAnimation";
 import IAttackInfo from "../attackInfos/IAttackInfo";
 import GameState from "../GameState";
+import AnimationPhase from "./AnimationPhase";
 import AttackResolutionPhase from "./AttackResolutionPhase";
 import IGamePhase from "./IGamePhase";
 
@@ -24,5 +26,8 @@ export default function AfterMovePhase(state: GameState, isPlayerTurn: boolean, 
     }
 
     if(allAttacks.length === 0) return next(state);
-    else return AttackResolutionPhase(state, allAttacks, next);
+    else 
+    {
+        return new AnimationPhase(allAttacks.map(atk => new SequentialAnimation(atk.toAnimations(state))), gs=>AttackResolutionPhase(gs, allAttacks, next));
+    }
 }
