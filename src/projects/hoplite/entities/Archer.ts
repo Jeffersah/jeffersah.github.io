@@ -9,6 +9,7 @@ import IAttackInfo from "../attackInfos/IAttackInfo";
 import * as C from "../Constants";
 import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
+import Lava from "../tiles/Lava";
 import Enemy from "./Enemy";
 
 const MAX_RANGE = 5;
@@ -79,16 +80,27 @@ export default class Archer extends Enemy {
         }
 
         let deltaPlayer = Point.subtract(state.player.position, this.position);
+        // IF the player is one hex away, the archer will become "Afraid" and run directly away.
+        // If they can't move away, they won't move. This makes them easier to catch.
+        // You can also scare them into lava, which is unhealthy.
         if(HexLength(deltaPlayer) === 1) {
             this.isAfraid = true;
-            // If you're one away from the player, always run directly away from the player.
+            
             let targetPosition = Point.subtract(this.position, deltaPlayer);
-            if(state.isValidMoveIgnoreEnemies(targetPosition, false) && !disallowed.some(p => p.equals(targetPosition))) {
-                return targetPosition;
+            const tile = state.tiles.isInBounds(targetPosition.x, targetPosition.y) ? state.tiles.get(targetPosition) : undefined;
+            if(tile === undefined || targetPosition.equals(state.player.position)) { 
+                return this.position; 
             }
-            // If you can't, don't move.
-            // This makes it much easier to catch archers, as otherwise you have to trap them in a corner.
-            return this.position;
+            if(!tile.isPathable && tile.typeId !== Lava.TypeID) {
+                 // If the tile isn't pathable don't move
+                 // We DO allow archers to run into lava if they're afraid.
+                return this.position;
+            }
+            if(disallowed.some(p => p.equals(targetPosition))) {
+                return this.position;
+            }
+
+            return targetPosition;
         } else {
             this.isAfraid = false;
         }

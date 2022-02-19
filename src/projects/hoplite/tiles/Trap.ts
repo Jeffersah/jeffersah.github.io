@@ -15,12 +15,18 @@ const trapSprites: { [key in TrapDamage]: Point } = {
     3: new Point(0, 7),
     5: new Point(0, 8)
 }
+const trapCooldown: { [key in TrapDamage]: number } = {
+    1: 0,
+    3: 1,
+    5: 2
+}
 
 export default class Trap extends SimpleCell {
     public static TypeID = 5;
 
     public damage: TrapDamage;
     public state: 'wait'|'prep'|'fire' = 'wait';
+    private cooldown = 0;
     private assets: Assets;
 
     constructor(assets: Assets, damage: TrapDamage) {
@@ -28,6 +34,7 @@ export default class Trap extends SimpleCell {
         this.assets = assets;
         this.damage = damage;
         this.state = 'wait';
+        this.cooldown = trapCooldown[damage];
     }
 
     override OnEntityStep(entity: Entity): void {
@@ -44,7 +51,8 @@ export default class Trap extends SimpleCell {
                 this.state = 'prep';
             }
         }
-        else if(this.state === 'prep') {
+        
+        if(this.state === 'prep' && this.cooldown === 0) {
             this.state = 'fire';
             const spritePos = trapSprites[this.damage];
             super.renderable = new Sprite(this.assets.tiles.image, new Rect((spritePos.x+2) * C.TILE_WIDTH, spritePos.y * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT));
@@ -55,6 +63,7 @@ export default class Trap extends SimpleCell {
                 ]
             }
         }
+        else if(this.state === 'prep') { this.cooldown --; }
         return [];
     }
 }
