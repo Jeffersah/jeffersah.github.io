@@ -16,6 +16,8 @@ import Archer from "./entities/Archer";
 import Mage from "./entities/Mage";
 import Giant from "./entities/Giant";
 import StoneEye from "./entities/StoneEye";
+import LifeGem from "./features/LifeGem";
+import Stairs from "./features/Stairs";
 
 export default class Assets {
     tiles: SpriteSheet;
@@ -39,11 +41,15 @@ export default class Assets {
 
     onLoadFinished(){
         this.hpRenderer = new HpRenderer(this.hpImage);
+        
         Zombie.onAssetsLoaded(this);
         Archer.onAssetsLoaded(this);
         Mage.onAssetsLoaded(this);
         Giant.onAssetsLoaded(this);
         StoneEye.onAssetsLoaded(this);
+        
+        LifeGem.onAssetsLoaded(this);
+        Stairs.onAssetsLoaded(this);
     }
 
     getDigitSprite(digit: number, digitRow ?: number):Sprite {

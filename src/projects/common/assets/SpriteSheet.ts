@@ -1,4 +1,6 @@
 import { RotTransformCanvas } from "../CanvasHelpers";
+import Rect from "../position/Rectangle";
+import Sprite from "../rendering/Sprite";
 
 export class SpriteSheet {
     public image: HTMLImageElement;
@@ -18,6 +20,10 @@ export class SpriteSheet {
 
     private isTuple(v: number|{x: number, y: number}): v is {x: number, y: number} {
         return (v as any).y !== undefined;
+    }
+
+    public getSprite(x: number, y: number, w: number, h: number) {
+        return new Sprite(this.image, new Rect(x * w, y * h, w, h));
     }
 
     render(ctx: CanvasRenderingContext2D, tx: number, ty: number, tw: number, th: number, srcx: number, srcy: number): void;

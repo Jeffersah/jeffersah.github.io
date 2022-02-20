@@ -15,10 +15,13 @@ import { AllDirections, DirectionHelper } from "../Direction";
 import { AssurePathTo, AssurePathToEnd } from "./MapGenCommon";
 import StoneEye from "../entities/StoneEye";
 import Trap, { TrapDamage } from "../tiles/Trap";
+import IFeature from "../features/IFeature";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
         state.tiles = new HexArray<HexCell>(C.MAP_SIZE, new Floor(assets));
+        state.features = new HexArray<IFeature>(C.MAP_SIZE, undefined);
+        
         state.enemies = [];
 
         let leftLavaY = Math.floor(Math.random() * (C.MAP_SIZE - 2)) * (Math.random() >= 0.5 ? 1 : -1);

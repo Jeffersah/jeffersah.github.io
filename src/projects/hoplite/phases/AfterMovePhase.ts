@@ -4,9 +4,9 @@ import GameState from "../GameState";
 import AnimationPhase from "./AnimationPhase";
 import AttackResolutionPhase from "./AttackResolutionPhase";
 import IGamePhase from "./IGamePhase";
+import PhaseBuilder from "./PhaseBuilder";
 
 export default function AfterMovePhase(state: GameState, isPlayerTurn: boolean, next: (state: GameState) => IGamePhase): IGamePhase {
-
     let allAttacks: IAttackInfo[] = []
     if(isPlayerTurn) {
         state.tiles.iterate((x, y, c) => {
@@ -25,9 +25,31 @@ export default function AfterMovePhase(state: GameState, isPlayerTurn: boolean, 
         });
     }
 
-    if(allAttacks.length === 0) return next(state);
-    else 
-    {
-        return new AnimationPhase(allAttacks.map(atk => new SequentialAnimation(atk.toAnimations(state))), gs=>AttackResolutionPhase(gs, allAttacks, next));
+    
+    var phaseBuilder = PhaseBuilder.New();
+    if(allAttacks.length > 0) {
+        phaseBuilder = phaseBuilder
+            .thenAnimate(allAttacks.map(atk => new SequentialAnimation(atk.toAnimations(state))))
+            .thenResolve(allAttacks);
     }
+
+    return phaseBuilder.finally(gs => AfterMovePhase_Features(gs, isPlayerTurn, next))(state);
+}
+
+
+function AfterMovePhase_Features(state: GameState, isPlayerTurn: boolean, next: (state: GameState) => IGamePhase): IGamePhase {
+    if(isPlayerTurn) {
+        state.features.iterate((x, y, c) => {
+            const newNext = c?.afterPlayerTurn(state, x, y, next);
+            if(newNext !== undefined) next = newNext;
+        });
+    }
+    else {
+        state.features.iterate((x, y, c) => {
+            const newNext = c?.afterEnemyTurn(state, x, y, next);
+            if(newNext !== undefined) next = newNext;
+        });
+    }
+
+    return next(state);
 }

@@ -10,6 +10,7 @@ import { HexToPixel } from "./Hex";
 import Rect from "../common/position/Rectangle";
 import Sprite from "../common/rendering/Sprite";
 import Enemy from "./entities/Enemy";
+import IFeature from "./features/IFeature";
 
 export default class GameState {
 
@@ -17,6 +18,7 @@ export default class GameState {
     public enemies: Enemy[] = [];
 
     public tiles: HexArray<HexCell>;
+    public features: HexArray<IFeature | undefined>;
     public currentFloor: number;
     public regionId: number;
 
@@ -78,6 +80,10 @@ export default class GameState {
 
         this.tiles.iterate((x, y, cell) => {
             cell.draw(ctx, this, new Point(x, y));
+        });
+        
+        this.features.iterate((x, y, feat) => {
+            feat?.draw(ctx, this, new Point(x, y));
         });
 
         [this.player, ...this.enemies].forEach(entity => {

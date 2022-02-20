@@ -12,10 +12,12 @@ import Giant from "../entities/Giant";
 import Archer from "../entities/Archer";
 import StoneEye from "../entities/StoneEye";
 import Lava from "../tiles/Lava";
+import IFeature from "../features/IFeature";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
         state.tiles = new HexArray<HexCell>(C.MAP_SIZE, new Floor(assets));
+        state.features = new HexArray<IFeature>(C.MAP_SIZE, undefined);
         state.tiles.set(new DownStairs(assets), 0, 0);
         const ring = GetRing(2);
         for (let i = 0; i < ring.length; i++) {
