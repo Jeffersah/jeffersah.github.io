@@ -9,7 +9,6 @@ import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { HexToPixel, PixelToHex } from "../Hex";
 import HexCell from "../tiles/HexCell";
-import DownStairs from "../tiles/DownStairs";
 import AnimationPhase from "./AnimationPhase";
 import AttackResolutionPhase from "./AttackResolutionPhase";
 import EnemyAttackPhase from "./EnemyAttackPhase";
@@ -25,12 +24,10 @@ export default function PlayerMoveAnimPhase(state: GameState, from: Point, to: P
             gs.tiles.get(forceMotion).OnEntityStep(gs.player);
         }
 
-        if(gs.tiles.get(gs.player.position).typeId === DownStairs.TypeID) {
-            return new FloorTransitionPhase();
-        }
-        else if(gs.enemies.length === 0) {
+        if(gs.enemies.length === 0) {
             return AfterMovePhase(gs, true, (gs) => AfterMovePhase(gs, false, () => new PlayerTurnGamePhase()));
         }
+        
         else return AfterMovePhase(gs, true, (gs) => EnemyAttackPhase(gs));
     }
 

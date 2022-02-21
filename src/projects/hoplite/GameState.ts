@@ -11,6 +11,7 @@ import Rect from "../common/position/Rectangle";
 import Sprite from "../common/rendering/Sprite";
 import Enemy from "./entities/Enemy";
 import IFeature from "./features/IFeature";
+import Cell from "../rpgt/world/Cell";
 
 export default class GameState {
 
@@ -69,6 +70,18 @@ export default class GameState {
         this.tiles.iterate((x, y, tile) =>{
             tile.AfterWorldLoad(this, new Point(x, y));
         });
+    }
+
+    getCells(predicate: (point: Point, tile: HexCell, feature: IFeature) => boolean) {
+        let results: Point[] = [];
+        this.tiles.iterate((x, y, cell) => {
+            const pt = new Point(x,y);
+            const feature = this.features.get(pt);
+            if(predicate(pt, cell, feature)) {
+                results.push(pt);
+            }
+        });
+        return results;
     }
 
     draw(ctx: CanvasRenderingContext2D, excludeEntities?: Entity[]) {

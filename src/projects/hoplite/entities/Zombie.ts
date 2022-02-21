@@ -13,10 +13,7 @@ import Enemy from "./Enemy";
 export default class Zombie extends Enemy {
     static sprite: IRenderable;
     static onAssetsLoaded(assets:Assets) {
-        Zombie.sprite = new Sprite(
-            assets.tiles.image,
-            new Rect(0, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-        )
+        Zombie.sprite = assets.getAsset('zombie').getRenderable();
     }
 
     constructor(position: Point) {

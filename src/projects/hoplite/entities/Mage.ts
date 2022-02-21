@@ -20,22 +20,13 @@ export default class Mage extends Enemy {
     static impactAnimation: IRenderableSource;
 
     static onAssetsLoaded(assets:Assets) {
-        Mage.sprite = new Sprite(
-            assets.tiles.image,
-            new Rect(2 * C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-        );
-        Mage.cooldownsprite = new Sprite(
-            assets.tiles.image,
-            new Rect(2 * C.TILE_WIDTH, 11 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-        );
+        Mage.sprite = assets.getAsset('mage') as Sprite;
 
-        Mage.projectileSprite = new Sprite(
-            assets.tiles.image,
-            new Rect(178, 100, 14, 4),
-            new Point(7, 2),
-        );
+        Mage.cooldownsprite = assets.getAsset('mage_cooldown') as Sprite;
 
-        Mage.impactAnimation = assets.getImpactAnimation(2);
+        Mage.projectileSprite = assets.getAsset('projectile_fire') as Sprite;
+
+        Mage.impactAnimation = assets.getAsset('impact_fire');
     }
 
     attackOnCooldown: boolean;

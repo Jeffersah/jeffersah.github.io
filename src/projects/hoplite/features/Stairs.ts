@@ -11,11 +11,11 @@ export default class Stairs extends SimpleFeature {
     static sprite: Sprite;
 
     static onAssetsLoaded(assets:Assets) {
-        Stairs.sprite = assets.tiles.getSprite(5, 0, C.TILE_WIDTH, C.TILE_HEIGHT);
+        Stairs.sprite = assets.getAsset('down_stairs') as Sprite;
     }
 
     constructor() { 
-        super(Stairs.sprite);
+        super(Stairs.sprite, 'Stairs');
     }
 
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {

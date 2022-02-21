@@ -2,7 +2,6 @@ import GameState from "../GameState";
 import IMapGen from "./IMapGen";
 import * as C from "../Constants";
 import HexCell from "../tiles/HexCell";
-import DownStairs from "../tiles/DownStairs";
 import Floor from "../tiles/Floor";
 import HexArray from "../HexArray";
 import Assets from "../Assets";
@@ -45,8 +44,6 @@ export default class FloorZeroGen implements IMapGen {
             )
         }
 
-
-        state.tiles.set(new DownStairs(assets), 2, -4);
-        state.features.set(new Stairs(), 3, -4);
+        state.features.set(new Stairs(), 2, -4);
     }
 }

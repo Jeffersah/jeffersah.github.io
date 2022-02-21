@@ -1,4 +1,5 @@
 import IAnimation from "../animation/IAnimation";
+import SequentialAnimation from "../animation/SequentialAnimation";
 import IAttackInfo from "../attackInfos/IAttackInfo";
 import GameState from "../GameState";
 import AnimationPhase from "./AnimationPhase";
@@ -20,7 +21,6 @@ export default class PhaseBuilder {
         this.chain.push((_, next) => 
             new AnimationPhase(animations, next)
         );
-        console.log(this.chain);
         return this;
     }
 
@@ -28,13 +28,19 @@ export default class PhaseBuilder {
         this.chain.push((gs, next) =>
             AttackResolutionPhase(gs, attacks, next)
         );
-        console.log(this.chain);
+        return this;
+    }
+
+    public thenAnimateAndResolve(attacks: IAttackInfo[]) {
+        this.chain.push((gs, next) => {
+            const animations = attacks.map(atk => new SequentialAnimation(atk.toAnimations(gs)));
+            return new AnimationPhase(animations, () => AttackResolutionPhase(gs, attacks, next));
+        })
         return this;
     }
 
     public then(next: ((gs: GameState, next:(gs: GameState)=>IGamePhase) => IGamePhase)) {
         this.chain.push(next);
-        console.log(this.chain);
         return this;
     }
 

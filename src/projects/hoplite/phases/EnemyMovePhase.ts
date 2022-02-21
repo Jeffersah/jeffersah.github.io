@@ -6,6 +6,7 @@ import GameState from "../GameState";
 import AfterMovePhase from "./AfterMovePhase";
 import AnimationPhase from "./AnimationPhase";
 import IGamePhase from "./IGamePhase";
+import PhaseBuilder from "./PhaseBuilder";
 import PlayerTurnGamePhase from "./PlayerTurnGamePhase";
 
 const duration = 20;
@@ -27,7 +28,10 @@ export default function EnemyMovePhase(state: GameState): IGamePhase {
         }
     }
 
-    return new AnimationPhase(animations, (gs) => AfterEnemyMovePhase(gs, stepped));
+    return PhaseBuilder.New()
+        .thenAnimate(animations)
+        .finally(gs => AfterEnemyMovePhase(gs, stepped))
+        (state);
 }
 
 function AfterEnemyMovePhase(state: GameState, didMove: boolean[]): IGamePhase {

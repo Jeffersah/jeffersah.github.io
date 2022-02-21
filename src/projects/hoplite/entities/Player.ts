@@ -27,7 +27,7 @@ export default class Player extends Entity {
         this.primary = new Sword(assets);
         this.secondary = new Dagger(assets);
 
-        this.renderable = new Sprite(assets.tiles.image, new Rect(C.TILE_WIDTH * 8, 0, C.TILE_WIDTH, C.TILE_HEIGHT));
+        this.renderable = assets.getAsset('player') as Sprite;
     }
 
     draw(ctx: CanvasRenderingContext2D): void {

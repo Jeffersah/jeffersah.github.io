@@ -21,23 +21,13 @@ export default class Archer extends Enemy {
     static impactAnimation: IRenderableSource;
 
     static onAssetsLoaded(assets:Assets) {
-        Archer.sprite = new Sprite(
-            assets.tiles.image,
-            new Rect(C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-        );
+        Archer.sprite = assets.getAsset('archer') as Sprite;
 
-        Archer.fearsprite = new Sprite(
-            assets.tiles.image,
-            new Rect(C.TILE_WIDTH, 11 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-        );
+        Archer.fearsprite = assets.getAsset('archer_afraid') as Sprite;
 
-        Archer.projectileSprite = new Sprite(
-            assets.tiles.image,
-            new Rect(178, 96, 14, 4),
-            new Point(7, 2),
-        );
+        Archer.projectileSprite = assets.getAsset('projectile_arrow') as Sprite;
 
-        Archer.impactAnimation = assets.getImpactAnimation(1);
+        Archer.impactAnimation = assets.getAsset('impact_point');
     }
 
 

@@ -20,13 +20,9 @@ export default class StoneEye extends Enemy {
     static impactAnimation: IRenderableSource;
 
     static onAssetsLoaded(assets:Assets) {
-        StoneEye.sprite = new Sprite(
-            assets.tiles.image,
-            new Rect(4*C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT),
-            new Point(C.TILE_WIDTH / 2, C.TILE_HEIGHT / 2),
-        );
+        StoneEye.sprite = assets.getAsset('stone_eye') as Sprite;
 
-        StoneEye.impactAnimation = assets.getImpactAnimation(2);
+        StoneEye.impactAnimation = assets.getAsset('impact_fire');
     }
 
     prepFire: Direction|undefined;

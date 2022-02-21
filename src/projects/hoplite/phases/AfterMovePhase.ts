@@ -28,9 +28,7 @@ export default function AfterMovePhase(state: GameState, isPlayerTurn: boolean, 
     
     var phaseBuilder = PhaseBuilder.New();
     if(allAttacks.length > 0) {
-        phaseBuilder = phaseBuilder
-            .thenAnimate(allAttacks.map(atk => new SequentialAnimation(atk.toAnimations(state))))
-            .thenResolve(allAttacks);
+        phaseBuilder = phaseBuilder.thenAnimateAndResolve(allAttacks);
     }
 
     return phaseBuilder.finally(gs => AfterMovePhase_Features(gs, isPlayerTurn, next))(state);

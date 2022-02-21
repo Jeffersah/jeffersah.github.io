@@ -2,7 +2,6 @@ import GameState from "../GameState";
 import IMapGen from "./IMapGen";
 import * as C from "../Constants";
 import HexCell from "../tiles/HexCell";
-import DownStairs from "../tiles/DownStairs";
 import Floor from "../tiles/Floor";
 import HexArray from "../HexArray";
 import Assets from "../Assets";
@@ -16,6 +15,9 @@ import { AssurePathTo, AssurePathToEnd } from "./MapGenCommon";
 import StoneEye from "../entities/StoneEye";
 import Trap, { TrapDamage } from "../tiles/Trap";
 import IFeature from "../features/IFeature";
+import Stairs from "../features/Stairs";
+import LifeGem from "../features/LifeGem";
+import Shrine from "../features/Shrine";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -37,7 +39,17 @@ export default class StandardMapGen implements IMapGen {
         const downStairY = -C.MAP_SIZE + 1 + Math.floor(Math.random() * 3);
         const [xMin, xMax] = state.tiles.getXRange(downStairY);
         const downStairX = Math.floor(Math.random() * (xMax - xMin)) + xMin;
-        state.tiles.set(new DownStairs(assets), downStairX, downStairY);
+        state.features.set(new Stairs(), downStairX, downStairY);
+
+        const gemPositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
+        const gemPos = gemPositions[Math.floor(Math.random() * gemPositions.length)];
+        state.features.set(new LifeGem(), gemPos.x, gemPos.y);
+
+        if(floor % 3 === 0) {
+            const shrinePositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
+            const shrinePosition = shrinePositions[Math.floor(Math.random() * gemPositions.length)];
+            state.features.set(new Shrine(), shrinePosition.x, shrinePosition.y);
+        }
 
         // Replaces lava with floor to ensure there's a path from the start to the end.
         AssurePathToEnd(state, assets, 1);
@@ -76,12 +88,12 @@ export default class StandardMapGen implements IMapGen {
         // Don't spawn enemies where they can't get to you: Forge a path. (unless they're flying)
         for(const enemy of state.enemies) {
             if(enemy.isFlying) continue;
-            AssurePathTo(state, assets, (pt)=>pt.equals(enemy.position), 0.3);
+            AssurePathTo(state, assets, _ => true, (pt)=>pt.equals(enemy.position), 0.3);
         }
 
         let floorPositions: Point[] = [];
         state.tiles.iterate((x, y, c) => {
-            if(c.typeId === Floor.TypeID) {
+            if(c.typeId === Floor.TypeID && state.features.get(x, y) === undefined) {
                 floorPositions.push(new Point(x, y));
             }
         });
@@ -90,6 +102,7 @@ export default class StandardMapGen implements IMapGen {
             let replaceFloor = floorPositions.splice(Math.floor(Math.random() * floorPositions.length), 1)[0];
             state.tiles.set(new Trap(assets, [1,3,5][Math.floor(Math.random() * 3)] as TrapDamage), replaceFloor.x, replaceFloor.y);
         }
+
     }
 
     genLava(assets: Assets, state: GameState, pt: Point, len: number) {

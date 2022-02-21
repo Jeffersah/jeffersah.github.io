@@ -6,28 +6,24 @@ import IGamePhase from "../phases/IGamePhase";
 import IFeature, { SimpleFeature } from "./IFeature";
 import * as C from '../Constants';
 
-export default class LifeGem extends SimpleFeature {
+export default class Shrine extends SimpleFeature {
     static sprite: Sprite;
-    static brokenSprite: Sprite;
 
     static onAssetsLoaded(assets:Assets) {
-        LifeGem.sprite = assets.getAsset('life_gem') as Sprite;
-        LifeGem.brokenSprite = assets.getAsset('life_gem_broken') as Sprite;
+        Shrine.sprite = assets.getAsset('shrine') as Sprite;
     }
 
-    isBroken: boolean;
+    isUsed: boolean;
 
     constructor() { 
-        super(LifeGem.sprite, 'LifeGem');
-        this.isBroken = false;
+        super(Shrine.sprite, 'Shrine');
+        this.isUsed = false;
     }
 
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {
-        if(x === state.player.position.x && y === state.player.position.y && !this.isBroken) {
-            this.isBroken = true;
-            state.player.hp += 1;
-            state.player.maxHp += 1;
-            this.sprite = LifeGem.brokenSprite;
+        if(x === state.player.position.x && y === state.player.position.y && !this.isUsed) {
+            this.isUsed = true;
+            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 3);
         }
         return nextPhase;
     }

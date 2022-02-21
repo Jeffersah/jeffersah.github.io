@@ -25,17 +25,11 @@ export default class Giant extends Enemy {
     ];
 
     static onAssetsLoaded(assets:Assets) {
-        Giant.renderable = new DeltaRenderable(new Sprite(
-            assets.tiles.image,
-            new Rect(7 * C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT * 2),
-        ), new Rect(0, -1, 1, 2));
+        Giant.renderable = new DeltaRenderable(assets.getAsset('giant') as Sprite, new Rect(0, -1, 1, 2));
 
-        Giant.bigAttackPrepImage = new DeltaRenderable(new Sprite(
-            assets.tiles.image,
-            new Rect(8 * C.TILE_WIDTH, 10 * C.TILE_HEIGHT, C.TILE_WIDTH, C.TILE_HEIGHT * 2),
-        ), new Rect(0, -1, 1, 2));
+        Giant.bigAttackPrepImage = new DeltaRenderable(assets.getAsset('giant_prep') as Sprite, new Rect(0, -1, 1, 2));
 
-        this.radialSmashAnimation = assets.getImpactAnimation(3);
+        this.radialSmashAnimation = assets.getAsset('impact_dirt');
     }
 
     turnSequenceIndex: number;

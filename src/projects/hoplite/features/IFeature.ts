@@ -7,6 +7,8 @@ import * as C from '../Constants';
 import Rect from "../../common/position/Rectangle";
 
 export default interface IFeature {
+    name: string;
+
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState)=>IGamePhase): undefined | ((gs: GameState)=>IGamePhase);
     afterEnemyTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState)=>IGamePhase): undefined | ((gs: GameState)=>IGamePhase);
 
@@ -15,7 +17,7 @@ export default interface IFeature {
 
 export class SimpleFeature implements IFeature {
 
-    constructor(protected sprite: Sprite) {
+    constructor(protected sprite: Sprite, public name: string) {
     }
 
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {
