@@ -45,7 +45,7 @@ export default function Run(): (()=>void) {
             () => { return; }
         );
 
-        state = new GameState(assets, C.MAP_SIZE, 11, new StandardMapGen());
+        state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
         NearestNeighborScaling(ctx);
         tick();
     }

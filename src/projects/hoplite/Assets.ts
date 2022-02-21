@@ -24,8 +24,12 @@ import { IAssetSheet, IsAnimationAsset } from "./assets/IAssetSheet";
 import IRenderable from "../common/rendering/IRenderable";
 import IRenderableSource from "../common/rendering/IRenderableSource";
 import * as C from './Constants';
+import Spider from "./entities/Spider";
+
+
 
 export default class Assets {
+
     tiles: SpriteSheet;
     features: SpriteSheet;
     lavaLayers: SpriteSheet;
@@ -47,7 +51,7 @@ export default class Assets {
 
         const jsonCallback = loader.registerAssetLoadCallback();
         import(
-            /* webpackChunkName: "bullets-ship-definitions" */
+            /* webpackChunkName: "hoplite-asset-definitions" */
             './assets/AssetSheet.json'
         ).then(value => {
             console.log(value.default);
@@ -71,11 +75,13 @@ export default class Assets {
             'features': this.features.image
         }
         
+
         Zombie.onAssetsLoaded(this);
         Archer.onAssetsLoaded(this);
         Mage.onAssetsLoaded(this);
         Giant.onAssetsLoaded(this);
         StoneEye.onAssetsLoaded(this);
+        Spider.onAssetsLoaded(this);
 
         LifeGem.onAssetsLoaded(this);
         Stairs.onAssetsLoaded(this);

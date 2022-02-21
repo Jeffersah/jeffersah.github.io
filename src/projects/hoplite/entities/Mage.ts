@@ -11,7 +11,7 @@ import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
 import Enemy from "./Enemy";
 
-const MAX_RANGE = 5;
+const MAX_RANGE = 3;
 
 export default class Mage extends Enemy {
     static sprite: IRenderable;

@@ -18,6 +18,7 @@ import IFeature from "../features/IFeature";
 import Stairs from "../features/Stairs";
 import LifeGem from "../features/LifeGem";
 import Shrine from "../features/Shrine";
+import Spider from "../entities/Spider";
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -67,8 +68,8 @@ export default class StandardMapGen implements IMapGen {
         for(let i = 0; i < Math.min(12, floor); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
-            const zombie = new Zombie(pos);
-            state.enemies.push(zombie);
+            const entity = (Math.random() < 0.85) ? new Zombie(pos) : new Spider(pos);
+            state.enemies.push(entity);
         }
 
         for(let i = 0; i < Math.min(6, (floor - 3) / 3); i++) {
@@ -78,7 +79,7 @@ export default class StandardMapGen implements IMapGen {
             state.enemies.push(archer);
         }
         
-        for(let i = 0; i < Math.min(3, (floor - 4) / 4); i++) {
+        for(let i = 0; i < Math.min(3, (floor - 5) / 3); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
             const enemy = (Math.random() < 0.2) ? new StoneEye(pos) : new Mage(pos);
