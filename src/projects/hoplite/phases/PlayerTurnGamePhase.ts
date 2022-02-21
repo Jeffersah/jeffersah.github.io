@@ -6,7 +6,7 @@ import Sprite from "../../common/rendering/Sprite";
 import Assets from "../Assets";
 import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
-import { HexToPixel, PixelToHex } from "../Hex";
+import { HexLength, HexToPixel, PixelToHex } from "../Hex";
 import IGamePhase from "./IGamePhase";
 import PlayerMoveAnimPhase from "./PlayerMoveAnimPhase";
 import * as C from '../Constants';
@@ -44,14 +44,14 @@ export default class PlayerTurnGamePhase implements IGamePhase {
         this.cellHighlightSprite = assets.getAsset('select_blue') as Sprite;
     }
 
-    ptr: Point;
+    mouseTile: Point;
 
     init(state: GameState): void {
-        this.ptr = undefined;
+        this.mouseTile = undefined;
     }
 
     tick(state: GameState, keys: KeyboardManager, mouse: MouseManager): IGamePhase {
-        const dir = this.tryGetDirection(keys, mouse);
+        const dir = this.tryGetDirection(state, keys, mouse);
         if(dir !== undefined) {
             const destination = dir === 6 ? state.player.position : Point.add(state.player.position, DirectionHelper.ToPoint(dir));
             const additionalMoves = [...state.player.primary.enableAdditionalMoves(state, state.player), ...state.player.secondary.enableAdditionalMoves(state, state.player)];
@@ -69,17 +69,21 @@ export default class PlayerTurnGamePhase implements IGamePhase {
         return this;
     }
 
-    tryGetDirection(keys: KeyboardManager, mouse: MouseManager): Move {
+    tryGetDirection(state:GameState, keys: KeyboardManager, mouse: MouseManager): Move {
         for(let i = 0; i < dirKeys.length; i++) {
             if(keys.isKeyPressed(dirKeys[i].key)) {
                 return dirKeys[i].dir;
             }
         }
 
-        // const mouseClick = mouse.tryGetClick(0);
-        const mp = mouse.position();
-        if(mp !== undefined) {
-            this.ptr = PixelToHex(HopliteProgram.scaleHelper.ScreenToPixel(mp));
+        const mouseClick = mouse.tryGetClick(0);
+        if(mouseClick !== undefined) {
+            this.mouseTile = PixelToHex(HopliteProgram.scaleHelper.ScreenToPixel(mouseClick.position));
+
+            if(HexLength(Point.subtract(this.mouseTile, state.player.position)) <= 1) {
+                if(this.mouseTile.equals(state.player.position)) return 6;
+                else return DirectionHelper.FromPoint(Point.subtract(this.mouseTile, state.player.position));
+            }
         }
 
         return undefined;
@@ -88,8 +92,8 @@ export default class PlayerTurnGamePhase implements IGamePhase {
     draw(ctx: CanvasRenderingContext2D, state: GameState): void {
         state.draw(ctx);
 
-        if(this.ptr !== undefined) {
-            const tgt = HexToPixel(this.ptr);
+        if(this.mouseTile !== undefined) {
+            const tgt = HexToPixel(this.mouseTile);
             PlayerTurnGamePhase.cellHighlightSprite.draw(ctx, new Rect(tgt.x, tgt.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
         }
     }
