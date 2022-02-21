@@ -45,7 +45,7 @@ export default class StandardMapGen implements IMapGen {
         const gemPos = gemPositions[Math.floor(Math.random() * gemPositions.length)];
         state.features.set(new LifeGem(), gemPos.x, gemPos.y);
 
-        if(floor % 3 === 0) {
+        if(floor % 3 === 0 || floor === 11) {
             const shrinePositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
             const shrinePosition = shrinePositions[Math.floor(Math.random() * gemPositions.length)];
             state.features.set(new Shrine(), shrinePosition.x, shrinePosition.y);

@@ -39,18 +39,6 @@
         "file": "hoplite_tiles",
         "pos": [2, 8]
     },
-    "down_stairs": {
-        "file": "hoplite_tiles",
-        "pos": [5, 0]
-    },
-    "up_stairs": {
-        "file": "hoplite_tiles",
-        "pos": [6, 0]
-    },
-    "life_gem": {
-        "file": "hoplite_tiles",
-        "pos": [7, 0]
-    },
     "player": {
         "file": "hoplite_tiles",
         "pos": [8, 0]
@@ -67,14 +55,6 @@
         "file": "hoplite_tiles",
         "pos": [11, 0]
     },
-    "shop": {
-        "file": "hoplite_tiles",
-        "pos": [0, 1]
-    },
-    "shop_broken": {
-        "file": "hoplite_tiles",
-        "pos": [1, 1]
-    },
     "select_blue": {
         "file": "hoplite_tiles",
         "pos": [2, 1]
@@ -90,14 +70,6 @@
     "select_white": {
         "file": "hoplite_tiles",
         "pos": [5, 1]
-    },
-    "shrine": {
-        "file": "hoplite_tiles",
-        "pos": [6, 1]
-    },
-    "life_gem_broken": {
-        "file": "hoplite_tiles",
-        "pos": [7, 1]
     },
     "sword": {
         "file": "hoplite_tiles",
@@ -190,6 +162,52 @@
     "mage_cooldown": {
         "file": "hoplite_tiles",
         "pos": [2, 11]
+    },
+
+    
+    "down_stairs": {
+        "file": "features",
+        "pos": [0, 0]
+    },
+    "up_stairs": {
+        "file": "features",
+        "pos": [1, 0]
+    },
+    "life_gem": {
+        "file": "features",
+        "pos": [2, 0]
+    },
+    "life_gem_broken": {
+        "file": "features",
+        "pos": [3, 0]
+    },
+    "shrine": {
+        "file": "features",
+        "pos": [4, 0]
+    },
+    "shrine_used": {
+        "file": "features",
+        "pos": [5, 0]
+    },
+    "shop": {
+        "file": "features",
+        "pos": [6, 0]
+    },
+    "shop_broken": {
+        "file": "features",
+        "pos": [7, 0]
+    },
+    "down_stairs_locked": {
+        "file": "features",
+        "pos": [0, 1]
+    },
+    "life_gem_runes": {
+        "file": "features",
+        "pos": [2, 1]
+    },
+    "life_gem_broken_runes": {
+        "file": "features",
+        "pos": [3, 1]
     },
 
     "impact_slash": {

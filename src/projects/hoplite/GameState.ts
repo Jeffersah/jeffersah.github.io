@@ -26,6 +26,8 @@ export default class GameState {
     public gold: number;
 
     public renderTickNumber: number;
+
+    public brokenGems: {[floor: number]: boolean} = {};
     
     constructor(private assets: Assets, size: number, floorNum: number, generator: IMapGen) {
         this.changeFloor(floorNum, generator);

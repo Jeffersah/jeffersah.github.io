@@ -1,10 +1,8 @@
-import Point from "../../common/position/Point";
 import Sprite from "../../common/rendering/Sprite";
 import Assets from "../assets";
 import GameState from "../GameState";
 import IGamePhase from "../phases/IGamePhase";
-import IFeature, { SimpleFeature } from "./IFeature";
-import * as C from '../Constants';
+import { SimpleFeature } from "./IFeature";
 
 export default class Shrine extends SimpleFeature {
     static sprite: Sprite;
@@ -23,7 +21,7 @@ export default class Shrine extends SimpleFeature {
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {
         if(x === state.player.position.x && y === state.player.position.y && !this.isUsed) {
             this.isUsed = true;
-            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 3);
+            state.player.hp = state.player.maxHp;
         }
         return nextPhase;
     }

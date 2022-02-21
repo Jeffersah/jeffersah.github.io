@@ -25,3 +25,23 @@ export default class Stairs extends SimpleFeature {
         return undefined;
     }
 }
+
+export class LockedStairs extends SimpleFeature {
+    static sprite: Sprite;
+
+    static onAssetsLoaded(assets:Assets) {
+        LockedStairs.sprite = assets.getAsset('down_stairs_locked') as Sprite;
+    }
+
+    constructor() { 
+        super(LockedStairs.sprite, 'LockedStairs');
+    }
+
+    afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {
+        if(state.enemies.length === 0 && Object.keys(state.brokenGems).length === 0) {
+            // TODO: Some kind of unlock animation?
+            state.features.set(new Stairs(), x, y);
+            return undefined;
+        }
+    }
+}

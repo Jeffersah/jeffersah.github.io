@@ -12,16 +12,19 @@ import Archer from "../entities/Archer";
 import StoneEye from "../entities/StoneEye";
 import Lava from "../tiles/Lava";
 import IFeature from "../features/IFeature";
-import Stairs from "../features/Stairs";
+import Stairs, { LockedStairs } from "../features/Stairs";
+import { RunicLifeGem } from "../features/LifeGem";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
         state.tiles = new HexArray<HexCell>(C.MAP_SIZE, new Floor(assets));
         state.features = new HexArray<IFeature>(C.MAP_SIZE, undefined);
-        state.features.set(new Stairs(), 0, 0);
+        state.features.set(new LockedStairs(), 0, 0);
+
         const ring = GetRing(2);
         for (let i = 0; i < ring.length; i++) {
             state.tiles.set(new Floor(assets, new Point(12, 0)), ring[i]);
+            state.features.set(new RunicLifeGem(state.brokenGems[i] === undefined ? false : state.brokenGems[i], i), ring[i].x, ring[i].y);
         }
 
         state.tiles.set(new Lava(assets), new Point(5, -1));

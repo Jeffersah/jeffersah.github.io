@@ -1,6 +1,7 @@
 import AssetLoader from "../common/assets/AssetLoader";
 import { SpriteSheet } from "../common/assets/SpriteSheet";
 import hoplite_tiles_url from './assets/hoplite_tiles.png';
+import features_url from './assets/hoplite_features.png';
 import floor_digits_url from './assets/floor_and_digits.png';
 import hp_image_url from './assets/hp.png';
 import impact_url from './assets/hoplite_impacts.png';
@@ -16,8 +17,8 @@ import Archer from "./entities/Archer";
 import Mage from "./entities/Mage";
 import Giant from "./entities/Giant";
 import StoneEye from "./entities/StoneEye";
-import LifeGem from "./features/LifeGem";
-import Stairs from "./features/Stairs";
+import LifeGem, { RunicLifeGem } from "./features/LifeGem";
+import Stairs, { LockedStairs } from "./features/Stairs";
 import Shrine from "./features/Shrine";
 import { IAssetSheet, IsAnimationAsset } from "./assets/IAssetSheet";
 import IRenderable from "../common/rendering/IRenderable";
@@ -26,6 +27,7 @@ import * as C from './Constants';
 
 export default class Assets {
     tiles: SpriteSheet;
+    features: SpriteSheet;
     lavaLayers: SpriteSheet;
     floor_and_digits: ImageLoader;
     hpImage: ImageLoader;
@@ -37,6 +39,7 @@ export default class Assets {
 
     constructor(loader: AssetLoader) {
         this.tiles = new SpriteSheet(32, 32, hoplite_tiles_url, loader.registerAssetLoadCallback());
+        this.features = new SpriteSheet(32, 32, features_url, loader.registerAssetLoadCallback());
         this.floor_and_digits = new ImageLoader(floor_digits_url, loader.registerAssetLoadCallback());
         this.hpImage = new ImageLoader(hp_image_url, loader.registerAssetLoadCallback());
         this.impacts = new ImageLoader(impact_url, loader.registerAssetLoadCallback());
@@ -65,6 +68,7 @@ export default class Assets {
             'floor_and_digits': this.floor_and_digits.image,
             'hp': this.hpImage.image,
             'lava_layers': this.lavaLayers.image,
+            'features': this.features.image
         }
         
         Zombie.onAssetsLoaded(this);
@@ -76,6 +80,8 @@ export default class Assets {
         LifeGem.onAssetsLoaded(this);
         Stairs.onAssetsLoaded(this);
         Shrine.onAssetsLoaded(this);
+        RunicLifeGem.onAssetsLoaded(this);
+        LockedStairs.onAssetsLoaded(this);
     }
 
     getAsset(name: string): IRenderableSource {
@@ -105,7 +111,7 @@ export default class Assets {
                     file,
                     new Rect(x * scaleFactor, y * scaleFactor, w * scaleFactor, h * scaleFactor),
                     new Point(origin_x, origin_y),
-                    new Point(1, 0),
+                    new Point(w * scaleFactor, 0),
                     definition.numFrames,
                     definition.duration,
                     false
