@@ -21,10 +21,9 @@ export default class Floor12Gen implements IMapGen {
         state.features = new HexArray<IFeature>(C.MAP_SIZE, undefined);
         state.features.set(new LockedStairs(), 0, 0);
 
-        const ring = GetRing(2);
-        for (let i = 0; i < ring.length; i++) {
-            state.tiles.set(new Floor(assets, new Point(12, 0)), ring[i]);
-            state.features.set(new RunicLifeGem(state.brokenGems[i] === undefined ? false : state.brokenGems[i], i), ring[i].x, ring[i].y);
+        const ring = GetRing(4);
+        for (let i = 0; i < ring.length/2; i++) {
+            state.features.set(new RunicLifeGem(state.brokenGems[i] === undefined ? false : state.brokenGems[i], i), ring[i*2].x, ring[i*2].y);
         }
 
         state.tiles.set(new Lava(assets), new Point(5, -1));

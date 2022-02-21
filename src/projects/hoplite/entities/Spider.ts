@@ -34,7 +34,6 @@ export default class Spider extends Enemy {
     }
 
     getMove(state: GameState, attack: IAttackInfo[], disallowed: Point[]): Point {
-        
         const possibleMoves = GetRing(2).map(rp => Point.add(this.position, rp));
         let minMoves: Point[] = [];
         let minMoveDist = 99;

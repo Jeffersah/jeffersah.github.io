@@ -16,14 +16,20 @@ export function TurnLeft(pt: Point, amt?: number) {
     return pt;
 }
 
+// px = 16 * t.y + t.x * 32 + c.x
+// py = 24 * t.y + c.y
 export function HexToPixel(point: Point) {
-    return Point.add(Point.multiply(PIX_PER_CELL_Y, point.y), point.x * PIX_PER_CELL_X + MAP_CENTER_POSITION.x, MAP_CENTER_POSITION.y);
+    return Point.add(
+        Point.multiply(PIX_PER_CELL_Y, point.y), 
+        point.x * PIX_PER_CELL_X + MAP_CENTER_POSITION.x, MAP_CENTER_POSITION.y);
 }
 
+// (px - c.x - 16 ty) / 32 = t.x
+// (py - c.y) / 24 = t.y
 export function PixelToHex(point: Point) {
-    let tilesY = point.y / PIX_PER_CELL_Y.y;
-    let tilesX = (point.x - (tilesY * PIX_PER_CELL_Y.x)) / PIX_PER_CELL_X;
-    return new Point(tilesX, tilesY);
+    const tile_y = Math.floor((point.y - MAP_CENTER_POSITION.y) / PIX_PER_CELL_Y.y);
+    const tile_x = Math.floor((point.x - MAP_CENTER_POSITION.x - PIX_PER_CELL_Y.x * tile_y) / PIX_PER_CELL_X);
+    return new Point(tile_x, tile_y);
 }
 
 export function HexLength(point: Point): number {

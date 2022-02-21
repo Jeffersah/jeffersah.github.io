@@ -1,4 +1,5 @@
 import { ResizeCanvas } from './CanvasHelpers';
+import Point from './position/Point';
 
 export default class NearestNeighborScalingHelper {
 
@@ -44,6 +45,10 @@ export default class NearestNeighborScalingHelper {
         if (this.onResize !== undefined) {
             this.onResize();
         }
+    }
+
+    public ScreenToPixel(point: Point) :Point {
+        return new Point(point.x / this.scaleFactor, point.y / this.scaleFactor);
     }
 
     public TryRescale() {

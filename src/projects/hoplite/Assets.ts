@@ -25,6 +25,7 @@ import IRenderable from "../common/rendering/IRenderable";
 import IRenderableSource from "../common/rendering/IRenderableSource";
 import * as C from './Constants';
 import Spider from "./entities/Spider";
+import PlayerTurnGamePhase from "./phases/PlayerTurnGamePhase";
 
 
 
@@ -75,6 +76,7 @@ export default class Assets {
             'features': this.features.image
         }
         
+        PlayerTurnGamePhase.onAssetsLoaded(this);
 
         Zombie.onAssetsLoaded(this);
         Archer.onAssetsLoaded(this);

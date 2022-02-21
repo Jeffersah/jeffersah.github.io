@@ -13,8 +13,6 @@ import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
 import Enemy from "./Enemy";
 
-const MAX_RANGE = 5;
-
 export default class Giant extends Enemy {
     static renderable: IRenderable;
     static bigAttackPrepImage: IRenderable;

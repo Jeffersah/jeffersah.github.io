@@ -15,61 +15,69 @@ import GameStartAnimationPhase from './phases/GameStartAnimationPhase';
 import FloorZeroGen from './mapGen/FloorZeroGen';
 import Zombie from './entities/Zombie';
 import Floor12Gen from './mapGen/Floor12Gen';
+import MouseManager from '../common/input/MouseManager';
 
-export default function Run(): (()=>void) {
-    let ctx: CanvasRenderingContext2D;
-    
-    let keys: KeyboardManager;
-    let scaleHelper: NearestNeighborScalingHelper;
-    
-    const assetLoader = new AssetLoader();
-    const assets = new Assets(assetLoader);
+let scaleHelper: NearestNeighborScalingHelper;
 
-    let state: GameState;
-    let currentPhase: IGamePhase = new GameStartAnimationPhase();
+export default class HopliteProgram {
+    static keys: KeyboardManager;
+    static mouse: MouseManager;
+    static scaleHelper: NearestNeighborScalingHelper;
 
-    keys = new KeyboardManager(document.body);
-    assetLoader.onAllFinished(assetLoadDone);
-    
-    function assetLoadDone() {
-        assets.onLoadFinished();
+    public static run(): (()=>void) {
+        let ctx: CanvasRenderingContext2D;
         
-        const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-        ctx = canvas.getContext('2d');
-        scaleHelper = new NearestNeighborScalingHelper(
-            canvas, 
-            ctx, 
-            C.MAP_PIXEL_SIZE, 
-            C.MAP_PIXEL_SIZE, 
-            true, 
-            () => { return; }
-        );
+        const assetLoader = new AssetLoader();
+        const assets = new Assets(assetLoader);
 
-        state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
-        NearestNeighborScaling(ctx);
-        tick();
-    }
-    
-    function tick() {
-        scaleHelper.TryRescale();
-        NearestNeighborScaling(ctx);
+        let state: GameState;
+        let currentPhase: IGamePhase = new GameStartAnimationPhase();
 
-        const nextPhase = currentPhase.tick(state, keys);
+        HopliteProgram.keys = new KeyboardManager(document.body);
+        assetLoader.onAllFinished(assetLoadDone);
+        
+        function assetLoadDone() {
+            assets.onLoadFinished();
+            
+            const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+            ctx = canvas.getContext('2d');
+            HopliteProgram.mouse = new MouseManager(canvas);
+            HopliteProgram.scaleHelper = new NearestNeighborScalingHelper(
+                canvas, 
+                ctx, 
+                C.MAP_PIXEL_SIZE, 
+                C.MAP_PIXEL_SIZE, 
+                true, 
+                () => { return; }
+            );
 
-        ctx.clearRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
+            state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
+            NearestNeighborScaling(ctx);
+            tick();
+        }
+        
+        function tick() {
+            HopliteProgram.scaleHelper.TryRescale();
+            NearestNeighborScaling(ctx);
+            HopliteProgram.mouse.update();
 
-        currentPhase.draw(ctx, state);
+            const nextPhase = currentPhase.tick(state, HopliteProgram.keys, HopliteProgram.mouse);
 
-        if(nextPhase !== currentPhase) {
-            currentPhase = nextPhase;
-            nextPhase.init(state);
+            ctx.clearRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, C.MAP_PIXEL_SIZE, C.MAP_PIXEL_SIZE);
+
+            currentPhase.draw(ctx, state);
+
+            if(nextPhase !== currentPhase) {
+                currentPhase = nextPhase;
+                nextPhase.init(state);
+            }
+
+            HopliteProgram.keys.update();
+            requestAnimationFrame(() => tick());
         }
 
-        keys.update();
-        requestAnimationFrame(() => tick());
+        return (() => HopliteProgram.scaleHelper.Detatch());
     }
-
-    return (() => scaleHelper.Detatch());
 }

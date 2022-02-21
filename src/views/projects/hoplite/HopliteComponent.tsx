@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Run from '../../../projects/hoplite/index';
+import HopliteProgram from '../../../projects/hoplite/index';
 
 export default function HopliteComponent() {
-    React.useEffect(()=>Run());
+    React.useEffect(()=>HopliteProgram.run());
     return <div className='rpgt rpgt_body full_body center' style={{background: "black"}}>
         <canvas id="mainCanvas"></canvas>
     </div>;
