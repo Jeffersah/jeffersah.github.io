@@ -5,6 +5,7 @@ import { HexToPixel } from "../Hex";
 import IGamePhase from "../phases/IGamePhase";
 import * as C from '../Constants';
 import Rect from "../../common/position/Rectangle";
+import IRenderable from "../../common/rendering/IRenderable";
 
 export default interface IFeature {
     name: string;
@@ -17,7 +18,7 @@ export default interface IFeature {
 
 export class SimpleFeature implements IFeature {
 
-    constructor(protected sprite: Sprite, public name: string) {
+    constructor(protected sprite: IRenderable, public name: string) {
     }
 
     afterPlayerTurn(state: GameState, x: number, y: number, nextPhase: (gs: GameState) => IGamePhase): (gs: GameState) => IGamePhase {

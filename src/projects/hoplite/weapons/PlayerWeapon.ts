@@ -9,7 +9,8 @@ import Player from "../entities/Player";
 import GameState from "../GameState";
 
 export default abstract class PlayerWeapon {
-
+    public name: string;
+    public description: string;
     public iconImage: IRenderable;
     public sprite: IRenderable;
 

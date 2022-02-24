@@ -1,4 +1,5 @@
 import Point from "../common/position/Point";
+import { HexLength } from "./Hex";
 
 export enum Direction {
     Right = 0,
@@ -42,6 +43,13 @@ export class DirectionHelper {
         if(pt.x === 0 && pt.y < 0) return Direction.UpLeft;
         if(pt.x > 0 && pt.x === -pt.y) return Direction.UpRight;
         if(pt.x < 0 && pt.x === -pt.y) return Direction.DownLeft;
+        return undefined;
+    }
+
+    public static TryGetDirectionAndDistance(ray: Point): { direction: Direction, distance: number } | undefined {
+        if(ray.x === 0 || ray.y === 0 || ray.x === -ray.y) {
+            return { direction: this.FromPoint(new Point(Math.sign(ray.x), Math.sign(ray.y))), distance: HexLength(ray)};
+        }
         return undefined;
     }
 

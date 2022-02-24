@@ -20,6 +20,7 @@ export interface IAnimationAsset {
     units?: 'tiles' | 'pixels',
     size?: [number, number]
     origin?: [number, number],
+    loop?: boolean
 }
 
 export function IsAnimationAsset(asset: ISpriteAsset | IAnimationAsset): asset is IAnimationAsset {

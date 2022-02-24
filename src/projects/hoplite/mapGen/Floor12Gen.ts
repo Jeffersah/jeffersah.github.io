@@ -14,6 +14,8 @@ import Lava from "../tiles/Lava";
 import IFeature from "../features/IFeature";
 import Stairs, { LockedStairs } from "../features/Stairs";
 import { RunicLifeGem } from "../features/LifeGem";
+import Portal from "../features/Portal";
+import MathHelpers from "../../common/MathHelpers";
 
 export default class Floor12Gen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -22,9 +24,15 @@ export default class Floor12Gen implements IMapGen {
         state.features.set(new LockedStairs(), 0, 0);
 
         const ring = GetRing(4);
-        for (let i = 0; i < ring.length/2; i++) {
-            state.features.set(new RunicLifeGem(state.brokenGems[i] === undefined ? false : state.brokenGems[i], i), ring[i*2].x, ring[i*2].y);
+        for (let i = 0; i < ring.length/2-1; i++) {
+            const floor = i + 1;
+
+            const ringIndex = MathHelpers.wrap((i-4) * 2, ring.length);
+
+            state.features.set(new RunicLifeGem(state.brokenGems[floor] === undefined ? false : state.brokenGems[floor], floor), ring[ringIndex].x, ring[ringIndex].y);
         }
+
+        state.features.set(new Portal(), -2, 4);
 
         state.tiles.set(new Lava(assets), new Point(5, -1));
         state.tiles.set(new Lava(assets), new Point(5, 0));

@@ -26,6 +26,7 @@ import IRenderableSource from "../common/rendering/IRenderableSource";
 import * as C from './Constants';
 import Spider from "./entities/Spider";
 import PlayerTurnGamePhase from "./phases/PlayerTurnGamePhase";
+import Portal from "./features/Portal";
 
 
 
@@ -90,18 +91,21 @@ export default class Assets {
         Shrine.onAssetsLoaded(this);
         RunicLifeGem.onAssetsLoaded(this);
         LockedStairs.onAssetsLoaded(this);
+        Portal.onAssetsLoaded(this);
     }
 
-    getAsset(name: string): IRenderableSource {
+    getAsset(name: string, suppressErrors?: boolean): IRenderableSource {
         const definition = this.assetSheet[name];
         if(definition === undefined) {
-            console.error('Asset not found: ' + name);
+            if(!suppressErrors)
+                console.error('Asset not found: ' + name);
             return undefined;
         }
         else {
             var file = this.assetFilesByName[definition.file];
             if(file === undefined){ 
-                console.error('Asset ' + name + ' references missing file: ' + definition.file);
+                if(!suppressErrors)
+                    console.error('Asset ' + name + ' references missing file: ' + definition.file);
                 return undefined;
             }
             const units = definition.units ?? 'tiles';
@@ -122,7 +126,7 @@ export default class Assets {
                     new Point(w * scaleFactor, 0),
                     definition.numFrames,
                     definition.duration,
-                    false
+                    definition.loop === undefined ? false : definition.loop
                 );
             }
             else {

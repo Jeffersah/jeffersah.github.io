@@ -17,6 +17,9 @@ export default class Hammer extends PlayerWeapon {
         super('primary', assets, new Point(10, 1));
 
         this.impactAnimation = assets.getImpactAnimation(0);
+
+        this.name = 'Hammer';
+        this.description = 'A primary weapon which allows you to attack an enemy by walking into them, dealing damage to them and adjacent enemies.';
     }
 
     override enableAdditionalMoves(state: GameState, player: Player): {dest: Point, forceMove: Point}[] {

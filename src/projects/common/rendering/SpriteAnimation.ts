@@ -63,3 +63,33 @@ export class SpriteAnimationInstance implements ISimpleRenderable, IRenderable {
         this.getSprite().draw(ctx, position, rotation);
     }
 }
+
+
+export class DelaySpriteAnimationInstance implements ISimpleRenderable, IRenderable {
+
+    private duration: number;
+    private currentTick: number;
+
+    constructor(public source: SpriteAnimationInstance, delayDuration: number) {
+        this.duration = delayDuration;
+        this.currentTick = 0;
+    }
+
+    tick(): boolean {
+        if(this.currentTick >= this.duration){
+            return this.source.tick();
+        }
+        else{
+            this.currentTick++;
+            return false;
+        }
+    }
+
+    getSprite(): Sprite {
+        return this.source.getSprite();
+    }
+
+    draw(ctx: CanvasRenderingContext2D, position: Rect, rotation: number): void {
+        this.getSprite().draw(ctx, position, rotation);
+    }
+}

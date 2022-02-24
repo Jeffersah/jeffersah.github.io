@@ -10,9 +10,9 @@ interface ISimpleAttack { onMove: Point, pattern: Point[], attack: (state: GameS
 
 export default class SimpleWeapon extends PlayerWeapon{
     private attacks: ISimpleAttack[];
-    constructor(type: 'primary'|'secondary', assets: Assets, artTile: Point, private beforeMove: boolean, ...attacks: ISimpleAttack[]) {
+    constructor(type: 'primary'|'secondary', assets: Assets, artTile: Point, private beforeMove: boolean, ...simpleAttacks: ISimpleAttack[]) {
         super(type, assets, artTile);
-        this.attacks = attacks;
+        this.attacks = simpleAttacks;
     }
 
     private getAttacks(state:GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[] {

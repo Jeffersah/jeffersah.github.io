@@ -21,6 +21,9 @@ export default class Sword extends SimpleWeapon {
         });
 
         this.impactAnimation = assets.getImpactAnimation(0);
+
+        this.name = 'Sword';
+        this.description = 'A versatile weapon which strikes all adjacent enemies (except those directly behind you) when you move.'
     }
 
     getAttack(state: GameState, player: Player, target: Point): AttackInfo | undefined {

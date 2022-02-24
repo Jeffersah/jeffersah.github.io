@@ -97,5 +97,4 @@ export default class PlayerTurnGamePhase implements IGamePhase {
             PlayerTurnGamePhase.cellHighlightSprite.draw(ctx, new Rect(tgt.x, tgt.y, C.TILE_WIDTH, C.TILE_HEIGHT), 0);
         }
     }
-
 }

@@ -7,6 +7,7 @@ import Assets from "../Assets";
 import AttackInfo from "../attackInfos/AttackInfo";
 import IAttackInfo from "../attackInfos/IAttackInfo";
 import * as C from "../Constants";
+import { Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
 import Lava from "../tiles/Lava";
@@ -22,11 +23,8 @@ export default class Archer extends Enemy {
 
     static onAssetsLoaded(assets:Assets) {
         Archer.sprite = assets.getAsset('archer') as Sprite;
-
         Archer.fearsprite = assets.getAsset('archer_afraid') as Sprite;
-
         Archer.projectileSprite = assets.getAsset('projectile_arrow') as Sprite;
-
         Archer.impactAnimation = assets.getAsset('impact_point');
     }
 
@@ -43,6 +41,9 @@ export default class Archer extends Enemy {
     }
 
     getAttacks(state: GameState): IAttackInfo[] {
+
+        if(this.isAfraid) return []; // Don't attack after being afraid.
+
         const playerLocation = state.player.position;
         const len = HexLength(Point.subtract(playerLocation, this.position));
         if(len > 1 && len <= MAX_RANGE) {
@@ -96,8 +97,12 @@ export default class Archer extends Enemy {
         }
 
         const possibleMoves = GetRing(1).map(rp => Point.add(this.position, rp));
+        possibleMoves.push(this.position);
+
         let minMoves: Point[] = [];
         let minMoveDist = 99;
+        let hasAttackOpportunity = false;
+
         for(let i = 0; i < possibleMoves.length; i++) {
             if(!state.isValidMoveIgnoreEnemies(possibleMoves[i], false)) 
                 continue;
@@ -105,15 +110,23 @@ export default class Archer extends Enemy {
                 continue;
 
             const ray = Point.subtract(state.player.position, possibleMoves[i]);
+            const dirAndDist = DirectionHelper.TryGetDirectionAndDistance(ray);
+            const couldAttack = dirAndDist !== undefined && dirAndDist.distance <= MAX_RANGE;
+
             const len = HexLength(ray);
             if(len === 1) {
                 continue; // Dont move within 1 of the player if you can avoid it.
             }
-            if(len < minMoveDist) { 
+            else if(couldAttack && !hasAttackOpportunity) {
+                minMoveDist = len;
+                minMoves = [possibleMoves[i]];
+                hasAttackOpportunity = true;
+            }
+            else if(len < minMoveDist && (!hasAttackOpportunity || couldAttack)) { 
                 minMoveDist = len;
                 minMoves = [possibleMoves[i]];
             }
-            else if(len === minMoveDist) {
+            else if(len === minMoveDist && (!hasAttackOpportunity || couldAttack)) {
                 minMoves.push(possibleMoves[i]);
             }
         }

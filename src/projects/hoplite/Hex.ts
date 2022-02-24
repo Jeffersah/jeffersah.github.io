@@ -41,6 +41,11 @@ export function HexLength(point: Point): number {
     }
 }
 
+export function IsStraightLine(ray: Point): boolean {
+    if(ray.x === 0 || ray.y === 0 || ray.x === -ray.y) return true;
+    return false;
+}
+
 export function GetRing(radius: number) {
     if(radius === 0) return [new Point(0,0)];
 

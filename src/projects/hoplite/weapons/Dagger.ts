@@ -15,6 +15,9 @@ export default class Dagger extends SimpleWeapon {
             pattern: [new Point(1, -1), new Point(0, 1)],
             attack: (s,p,t) => this.getAttack(s,p,t)
         });
+
+        this.name = 'Dagger';
+        this.description = 'A secondary weapon which attacks enemies forward-left and forward-right of you when you move.'
     }
 
     getAttack(state: GameState, player: Player, target: Point): AttackInfo | undefined {

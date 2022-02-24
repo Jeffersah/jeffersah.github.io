@@ -209,6 +209,44 @@
         "file": "features",
         "pos": [3, 1]
     },
+    "portal_closed": {
+        "file": "features",
+        "pos": [4, 1]
+    },
+    "portal_open_0": {
+        "file": "features",
+        "pos": [5, 1]
+    },
+    "portal_open_1": {
+        "file": "features",
+        "pos": [6, 1]
+    },
+    "portal_open_2": {
+        "file": "features",
+        "pos": [7, 1]
+    },
+    "portal_open_anim": {
+        "file": "features",
+        "pos": [5, 1],
+        "size": [1, 1],
+        "numFrames": 3,
+        "duration": 20,
+        "loop": true
+    },
+    "life_gem_flash_animation": {
+        "file": "features",
+        "pos": [0, 2],
+        "size": [1, 1],
+        "numFrames": 8,
+        "duration": 32
+    },
+    "down_stairs_unlock_animation": {
+        "file": "features",
+        "pos": [0, 3],
+        "size": [1, 1],
+        "numFrames": 8,
+        "duration": 128
+    },
 
     "impact_slash": {
         "file": "hoplite_impacts",
