@@ -3,6 +3,7 @@ import { SpriteSheet } from "../common/assets/SpriteSheet";
 import hoplite_tiles_url from './assets/hoplite_tiles.png';
 import features_url from './assets/hoplite_features.png';
 import floor_digits_url from './assets/floor_and_digits.png';
+import enemies_url from './assets/hoplite_enemies.png';
 import hp_image_url from './assets/hp.png';
 import impact_url from './assets/hoplite_impacts.png';
 import lavaLayers_url from './assets/lava_layers.png';
@@ -27,12 +28,16 @@ import * as C from './Constants';
 import Spider from "./entities/Spider";
 import PlayerTurnGamePhase from "./phases/PlayerTurnGamePhase";
 import Portal from "./features/Portal";
+import StoneDisc from "./entities/StoneDisc";
+import BlueMage from "./entities/BlueMage";
+import BlueBurstDisc from "./entities/BlueBurstDisc";
 
 
 
 export default class Assets {
 
     tiles: SpriteSheet;
+    enemies: SpriteSheet;
     features: SpriteSheet;
     lavaLayers: SpriteSheet;
     floor_and_digits: ImageLoader;
@@ -45,6 +50,7 @@ export default class Assets {
 
     constructor(loader: AssetLoader) {
         this.tiles = new SpriteSheet(32, 32, hoplite_tiles_url, loader.registerAssetLoadCallback());
+        this.enemies = new SpriteSheet(32, 32, enemies_url, loader.registerAssetLoadCallback());
         this.features = new SpriteSheet(32, 32, features_url, loader.registerAssetLoadCallback());
         this.floor_and_digits = new ImageLoader(floor_digits_url, loader.registerAssetLoadCallback());
         this.hpImage = new ImageLoader(hp_image_url, loader.registerAssetLoadCallback());
@@ -74,7 +80,8 @@ export default class Assets {
             'floor_and_digits': this.floor_and_digits.image,
             'hp': this.hpImage.image,
             'lava_layers': this.lavaLayers.image,
-            'features': this.features.image
+            'features': this.features.image,
+            'enemies': this.enemies.image
         }
         
         PlayerTurnGamePhase.onAssetsLoaded(this);
@@ -85,6 +92,9 @@ export default class Assets {
         Giant.onAssetsLoaded(this);
         StoneEye.onAssetsLoaded(this);
         Spider.onAssetsLoaded(this);
+        StoneDisc.onAssetsLoaded(this);
+        BlueMage.onAssetsLoaded(this);
+        BlueBurstDisc.onAssetsLoaded(this);
 
         LifeGem.onAssetsLoaded(this);
         Stairs.onAssetsLoaded(this);
@@ -119,11 +129,13 @@ export default class Assets {
             const origin_y = definition.origin === undefined ? 0 : definition.origin[1];
 
             if(IsAnimationAsset(definition)) {
+                const advx = definition.advance === undefined ? 1: definition.advance[0];
+                const advy = definition.advance === undefined ? 0: definition.advance[1];
                 return new SpriteAnimation(
                     file,
                     new Rect(x * scaleFactor, y * scaleFactor, w * scaleFactor, h * scaleFactor),
                     new Point(origin_x, origin_y),
-                    new Point(w * scaleFactor, 0),
+                    new Point(advx * w * scaleFactor, advy * h * scaleFactor),
                     definition.numFrames,
                     definition.duration,
                     definition.loop === undefined ? false : definition.loop

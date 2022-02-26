@@ -18,7 +18,8 @@ export interface IAnimationAsset {
     numFrames: number,
     duration: number,
     units?: 'tiles' | 'pixels',
-    size?: [number, number]
+    size?: [number, number],
+    advance?: [number, number],
     origin?: [number, number],
     loop?: boolean
 }

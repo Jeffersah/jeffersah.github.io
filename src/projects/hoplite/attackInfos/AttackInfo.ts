@@ -61,4 +61,7 @@ export default class AttackInfo implements IAttackInfo {
         }
         return animations;
     }
+
+    applyExtraEffects(state: GameState): void {
+    }
 }

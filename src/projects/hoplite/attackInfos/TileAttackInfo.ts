@@ -38,4 +38,7 @@ export default class TileAttackInfo implements IAttackInfo {
             )
         ];
     }
+    
+    applyExtraEffects(state: GameState): void {
+    }
 }

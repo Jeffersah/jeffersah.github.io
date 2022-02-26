@@ -8,9 +8,9 @@ import Assets from "../Assets";
 import { GetRing } from "../Hex";
 import Lava from "../tiles/Lava";
 import Point from "../../common/position/Point";
-import StoneEye from "../entities/StoneEye";
 import IFeature from "../features/IFeature";
 import Stairs from "../features/Stairs";
+import BlueMage from "../entities/BlueMage";
 
 const playerMoveTileArts = [
     new Point(6,2),
@@ -43,7 +43,7 @@ export default class FloorZeroGen implements IMapGen {
                 playerRing[i]
             )
         }
-
+        
         state.features.set(new Stairs(), 2, -4);
     }
 }

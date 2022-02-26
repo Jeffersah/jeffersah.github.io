@@ -1,75 +1,65 @@
 import Point from "../../common/position/Point";
-import Rect from "../../common/position/Rectangle";
 import IRenderable from "../../common/rendering/IRenderable";
 import IRenderableSource from "../../common/rendering/IRenderableSource";
 import OffsetRenderable from '../../common/rendering/OffsetRenderable';
-import Sprite from "../../common/rendering/Sprite";
 import Assets from "../Assets";
 import IAttackInfo from "../attackInfos/IAttackInfo";
 import TileAttackInfo from "../attackInfos/TileAttackInfo";
 import * as C from "../Constants";
-import { Direction, DirectionHelper } from "../Direction";
+import { AllDirections, Direction, DirectionHelper } from "../Direction";
 import GameState from "../GameState";
 import { GetRing, HexLength } from "../Hex";
 import Enemy from "./Enemy";
 
 const MAX_RANGE = 5;
 
-export default class StoneEye extends Enemy {
-    static sprites: IRenderable[];
+export default class StoneDisc extends Enemy {
+    static sprite: IRenderable;
     static readySprite: IRenderable;
     static impactAnimation: IRenderableSource;
 
     static onAssetsLoaded(assets:Assets) {
-        StoneEye.sprites = [
-            assets.getAsset('stone_eye_0').getRenderable(),
-            assets.getAsset('stone_eye_1').getRenderable(),
-            assets.getAsset('stone_eye_2').getRenderable()
-        ]
-        StoneEye.readySprite = assets.getAsset('stone_eye_ready').getRenderable()
-
-        StoneEye.impactAnimation = assets.getAsset('impact_fire');
+        StoneDisc.sprite = assets.getAsset('stone_disc').getRenderable();
+        StoneDisc.readySprite = assets.getAsset('stone_disc_ready').getRenderable();
+        StoneDisc.impactAnimation = assets.getAsset('impact_fire');
     }
 
-    prepFire: Direction|undefined;
-    randart: number;
+    isReadyToFire: boolean;
     constructor(position: Point) {
         super(position);
-        this.hp = this.maxHp = 3;
+        this.hp = this.maxHp = 5;
         this.isFlying = true;
-        this.prepFire = undefined;
+        this.isReadyToFire = false;
 
-        this.goldValue = 5;
-        this.randart = 0;
+        this.goldValue = 8;
     }
 
     getAttacks(state: GameState): IAttackInfo[] {
-        if(this.prepFire !== undefined) {
+        if(this.isReadyToFire) {
             const points: Point[] = [];
-            const delta = DirectionHelper.ToPoint(this.prepFire);
-            let pt = Point.add(this.position, delta);
-            for(let i = 0; i < MAX_RANGE && state.tiles.isInBounds(pt.x, pt.y); i++) {
-                points.push(pt);
-                pt = Point.add(pt, delta);
+            for(const dir of AllDirections){
+                const delta = DirectionHelper.ToPoint(dir);
+                let pt = Point.add(this.position, delta);
+                for(let i = 0; i < MAX_RANGE && state.tiles.isInBounds(pt.x, pt.y); i++) {
+                    points.push(pt);
+                    pt = Point.add(pt, delta);
+                }
             }
-            this.prepFire = undefined;
-            return [new TileAttackInfo(this.position, [{damage: 1, positions: points}], 4, StoneEye.impactAnimation)];
+            this.isReadyToFire = false;
+            return [new TileAttackInfo(this.position, [{damage: 1, positions: points}], 4, StoneDisc.impactAnimation)];
         }
 
         const playerLocation = state.player.position;
         const len = HexLength(Point.subtract(playerLocation, this.position));
         if(len <= MAX_RANGE) {
-            let ray = Point.subtract(playerLocation, this.position);
-            this.prepFire = DirectionHelper.FromPoint(ray);
+            let ray = DirectionHelper.FromPoint(Point.subtract(playerLocation, this.position));
+            if(ray !== undefined) this.isReadyToFire = true;
         }
         return [];
     }
 
     getMove(state: GameState, attack: IAttackInfo[], disallowed: Point[]): Point {
-
-        this.randart = Math.floor(Math.random() * StoneEye.sprites.length);
-
-        if(attack.length > 0 || (this.prepFire !== undefined)) {
+        if(attack.length > 0 || this.isReadyToFire) {
             // Don't move if you've attacked.
             return this.position;
         }
@@ -107,11 +97,9 @@ export default class StoneEye extends Enemy {
     }
 
     override getRenderable(): IRenderable {
-        if(this.prepFire !== undefined) {
-            return new OffsetRenderable(StoneEye.readySprite, new Point(C.TILE_WIDTH/2, C.TILE_HEIGHT/2), DirectionHelper.ToAngle(this.prepFire));
+        if(this.isReadyToFire) {
+            return StoneDisc.readySprite;
         }
-
-        // The origin of the eye sprite is the center (to support rotation), so we need to offset it
-        return new OffsetRenderable(StoneEye.sprites[this.randart], new Point(C.TILE_WIDTH/2, C.TILE_HEIGHT/2));
+        return StoneDisc.sprite;
     }
 }

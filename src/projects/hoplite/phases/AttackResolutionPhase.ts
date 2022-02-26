@@ -15,6 +15,9 @@ export default function AttackResolutionPhase(state: GameState, attacks: IAttack
             }
         }
     }
+    for(const attack of attacks) {
+        attack.applyExtraEffects(state);
+    }
 
     let goldValues = state.enemies.filter(e => e.hp <= 0).map(e => e.goldValue);
     if(goldValues.length > 0) {

@@ -11,4 +11,5 @@ export interface IAttackDamageInfo {
 export default interface IAttackInfo {
     getAffectedTiles(state: GameState): IAttackDamageInfo[];
     toAnimations(state: GameState): IAnimation[];
+    applyExtraEffects(state: GameState): void;
 }

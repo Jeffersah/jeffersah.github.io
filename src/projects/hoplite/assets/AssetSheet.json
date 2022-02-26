@@ -117,51 +117,87 @@
     },
 
     "zombie": {
-        "file": "hoplite_tiles",
-        "pos": [0, 10]
+        "file": "enemies",
+        "pos": [0, 0]
     },
     "archer": {
-        "file": "hoplite_tiles",
-        "pos": [1, 10]
+        "file": "enemies",
+        "pos": [1, 0]
     },
     "mage": {
-        "file": "hoplite_tiles",
-        "pos": [2, 10]
+        "file": "enemies",
+        "pos": [2, 0]
     },
     "spider": {
-        "file": "hoplite_tiles",
-        "pos": [3, 10]
+        "file": "enemies",
+        "pos": [3, 0]
     },
-    "stone_eye": {
-        "file": "hoplite_tiles",
-        "pos": [4, 10],
+    "stone_eye_0": {
+        "file": "enemies",
+        "pos": [4, 0],
         "origin": [16, 16]
     },
     "robot": {
-        "file": "hoplite_tiles",
-        "pos": [5, 10]
+        "file": "enemies",
+        "pos": [5, 0]
     },
     "drone": {
-        "file": "hoplite_tiles",
-        "pos": [6, 10]
+        "file": "enemies",
+        "pos": [6, 0]
+    },
+    "stone_disc": {
+        "file": "enemies",
+        "pos": [0, 1]
+    },
+    "archer_afraid": {
+        "file": "enemies",
+        "pos": [1, 1]
+    },
+    "mage_cooldown": {
+        "file": "enemies",
+        "pos": [2, 1]
+    },
+    "stone_eye_1": {
+        "file": "enemies",
+        "pos": [3, 1]
+    },
+    "stone_eye_ready": {
+        "file": "enemies",
+        "pos": [4, 1]
+    },
+    "stone_eye_2": {
+        "file": "enemies",
+        "pos": [5, 1]
     },
     "giant": {
-        "file": "hoplite_tiles",
-        "pos": [7, 10],
+        "file": "enemies",
+        "pos": [6, 1],
         "size": [1, 2]
     },
     "giant_prep": {
-        "file": "hoplite_tiles",
-        "pos": [8, 10],
+        "file": "enemies",
+        "pos": [7, 1],
         "size": [1, 2]
     },
-    "archer_afraid": {
-        "file": "hoplite_tiles",
-        "pos": [1, 11]
+    "stone_disc_ready": {
+        "file": "enemies",
+        "pos": [0, 2]
     },
-    "mage_cooldown": {
-        "file": "hoplite_tiles",
-        "pos": [2, 11]
+    "blue_mage": {
+        "file": "enemies",
+        "pos": [1, 2]
+    },
+    "blue_mage_cooldown": {
+        "file": "enemies",
+        "pos": [2, 2]
+    },
+    "blue_sphere": {
+        "file": "enemies",
+        "pos": [3, 2]
+    },
+    "blue_sphere_exploding": {
+        "file": "enemies",
+        "pos": [4, 2]
     },
 
     
@@ -273,6 +309,21 @@
         "file": "hoplite_impacts",
         "pos": [0, 3],
         "size": [1, 1],
+        "numFrames": 8,
+        "duration": 16
+    },
+    "impact_blue_magic": {
+        "file": "hoplite_impacts",
+        "pos": [0, 5],
+        "size": [1, 1],
+        "numFrames": 8,
+        "duration": 16
+    },
+    "impact_blue_magic_backwards": {
+        "file": "hoplite_impacts",
+        "pos": [7, 5],
+        "size": [1, 1],
+        "advance": [-1, 0],
         "numFrames": 8,
         "duration": 16
     },

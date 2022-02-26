@@ -39,4 +39,7 @@ export default class RadialAreaAttackInfo implements IAttackInfo {
 
         return [new ParallelAnimation(innerAnimations)];
     }
+    
+    applyExtraEffects(state: GameState): void {
+    }
 }
