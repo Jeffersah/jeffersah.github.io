@@ -159,15 +159,18 @@
     },
     "stone_eye_1": {
         "file": "enemies",
-        "pos": [3, 1]
+        "pos": [3, 1],
+        "origin": [16, 16]
     },
     "stone_eye_ready": {
         "file": "enemies",
-        "pos": [4, 1]
+        "pos": [4, 1],
+        "origin": [16, 16]
     },
     "stone_eye_2": {
         "file": "enemies",
-        "pos": [5, 1]
+        "pos": [5, 1],
+        "origin": [16, 16]
     },
     "giant": {
         "file": "enemies",
