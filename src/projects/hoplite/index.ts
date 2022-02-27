@@ -16,6 +16,11 @@ import FloorZeroGen from './mapGen/FloorZeroGen';
 import Zombie from './entities/Zombie';
 import Floor12Gen from './mapGen/Floor12Gen';
 import MouseManager from '../common/input/MouseManager';
+import ShopPhase from './phases/ShopPhase';
+import WeaponSaleItem from './shopItems/WeaponSaleItem';
+import Sword from './weapons/Sword';
+import Dagger from './weapons/Dagger';
+import Kunai from './weapons/Kunai';
 
 let scaleHelper: NearestNeighborScalingHelper;
 
@@ -52,6 +57,7 @@ export default class HopliteProgram {
             );
 
             state = new GameState(assets, C.MAP_SIZE, 0, new FloorZeroGen());
+
             NearestNeighborScaling(ctx);
             tick();
         }

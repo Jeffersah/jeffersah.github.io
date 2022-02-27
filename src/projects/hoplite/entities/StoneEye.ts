@@ -103,7 +103,16 @@ export default class StoneEye extends Enemy {
         }
 
         if(minMoves.length === 0) return this.position;
-        return minMoves[Math.floor(Math.random() * minMoves.length)];
+        const moveTarget = minMoves[Math.floor(Math.random() * minMoves.length)];
+        
+
+        const playerLocation = state.player.position;
+        const len = HexLength(Point.subtract(playerLocation, moveTarget));
+        if(len <= MAX_RANGE) {
+            let ray = Point.subtract(playerLocation, moveTarget);
+            this.prepFire = DirectionHelper.FromPoint(ray);
+        }
+        return moveTarget;
     }
 
     override getRenderable(): IRenderable {

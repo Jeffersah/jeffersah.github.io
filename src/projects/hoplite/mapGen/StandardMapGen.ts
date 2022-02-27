@@ -19,6 +19,26 @@ import Stairs from "../features/Stairs";
 import LifeGem from "../features/LifeGem";
 import Shrine from "../features/Shrine";
 import Spider from "../entities/Spider";
+import Shop from "../features/Shop";
+import ISaleItem from "../shopItems/ISaleItem";
+import Sword from "../weapons/Sword";
+import Spear from "../weapons/Spear";
+import Hammer from "../weapons/Hammer";
+import Dagger from "../weapons/Dagger";
+import Kunai from "../weapons/Kunai";
+import WeaponSaleItem from "../shopItems/WeaponSaleItem";
+import FullHealItem from "../shopItems/FullHealItem";
+
+const allPrimaryWeapons = [
+    { cost: 50, generateItem: (assets: Assets) => new Sword(assets) },
+    { cost: 50, generateItem: (assets: Assets) => new Spear(assets) },
+    { cost: 50, generateItem: (assets: Assets) => new Hammer(assets) },
+]
+
+const allSecondaryWeapons = [
+    { cost: 10, generateItem: (assets: Assets) => new Dagger(assets) },
+    { cost: 20, generateItem: (assets: Assets) => new Kunai(assets) },
+]
 
 export default class StandardMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
@@ -30,12 +50,12 @@ export default class StandardMapGen implements IMapGen {
         let leftLavaY = Math.floor(Math.random() * (C.MAP_SIZE - 2)) * (Math.random() >= 0.5 ? 1 : -1);
         let leftLavaX = state.tiles.getMinX(leftLavaY);
 
-        this.genLava(assets, state, new Point(leftLavaX, leftLavaY), Math.floor(Math.random() * 20) + 8);
+        this.genLava(assets, state, new Point(leftLavaX, leftLavaY), Math.floor(Math.random() * 12) + 4);
 
         let rightLavaY = Math.floor(Math.random() * (C.MAP_SIZE - 2)) * (Math.random() >= 0.5 ? 1 : -1);
         let rightLavaX = state.tiles.getXRange(rightLavaY)[1]-1;
 
-        this.genLava(assets, state, new Point(rightLavaX, rightLavaY), Math.floor(Math.random() * 20) + 8);
+        this.genLava(assets, state, new Point(rightLavaX, rightLavaY), Math.floor(Math.random() * 12) + 4);
 
         const downStairY = -C.MAP_SIZE + 1 + Math.floor(Math.random() * 3);
         const [xMin, xMax] = state.tiles.getXRange(downStairY);
@@ -48,8 +68,21 @@ export default class StandardMapGen implements IMapGen {
 
         if(floor % 3 === 0 || floor === 11) {
             const shrinePositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
-            const shrinePosition = shrinePositions[Math.floor(Math.random() * gemPositions.length)];
+            const shrinePosition = shrinePositions[Math.floor(Math.random() * shrinePositions.length)];
             state.features.set(new Shrine(), shrinePosition.x, shrinePosition.y);
+        }
+        
+        if(floor % 4 === 0 || floor === 11) {
+            const shopPositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
+            const shopPosition = shopPositions[Math.floor(Math.random() * shopPositions.length)];
+            const primary = allPrimaryWeapons[Math.floor(Math.random() * allPrimaryWeapons.length)];
+            const secondary = allSecondaryWeapons[Math.floor(Math.random() * allSecondaryWeapons.length)];
+            const shopItems: ISaleItem[] = [
+                new WeaponSaleItem(primary.generateItem(assets), primary.cost),
+                new WeaponSaleItem(secondary.generateItem(assets), secondary.cost),
+                new FullHealItem(100, assets)
+            ];
+            state.features.set(new Shop(shopItems), shopPosition.x, shopPosition.y);
         }
 
         // Replaces lava with floor to ensure there's a path from the start to the end.

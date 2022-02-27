@@ -9,7 +9,7 @@ import SimpleWeapon from "./SimpleWeapon";
 
 export default class Dagger extends SimpleWeapon {
     constructor(assets: Assets) {
-        super('secondary', assets, new Point(10, 0), true,
+        super('secondary', assets, new Point(0, 1), true,
         {
             onMove: new Point(1, 0),
             pattern: [new Point(1, -1), new Point(0, 1)],

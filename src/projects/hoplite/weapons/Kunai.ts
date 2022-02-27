@@ -9,7 +9,7 @@ import SimpleWeapon from "./SimpleWeapon";
 
 export default class Kunai extends SimpleWeapon {
     constructor(assets: Assets) {
-        super('secondary', assets, new Point(11, 1), true,
+        super('secondary', assets, new Point(1, 1), true,
         {
             onMove: new Point(1, 0),
             pattern: [new Point(2, -2), new Point(0, 2)],

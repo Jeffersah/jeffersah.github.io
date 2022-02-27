@@ -13,7 +13,7 @@ export default class Spear extends SimpleWeapon {
     impactAnimation: IRenderableSource;
 
     constructor(assets: Assets) {
-        super('primary', assets, new Point(9, 1), false,
+        super('primary', assets, new Point(1, 0), false,
         {
             onMove: new Point(1, 0),
             pattern: [new Point(2, 0)],

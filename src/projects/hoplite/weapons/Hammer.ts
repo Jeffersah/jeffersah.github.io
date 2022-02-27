@@ -14,7 +14,7 @@ export default class Hammer extends PlayerWeapon {
     impactAnimation: IRenderableSource;
 
     constructor(assets: Assets) {
-        super('primary', assets, new Point(10, 1));
+        super('primary', assets, new Point(2, 0));
 
         this.impactAnimation = assets.getImpactAnimation(0);
 

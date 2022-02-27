@@ -7,6 +7,10 @@ import enemies_url from './assets/hoplite_enemies.png';
 import hp_image_url from './assets/hp.png';
 import impact_url from './assets/hoplite_impacts.png';
 import lavaLayers_url from './assets/lava_layers.png';
+import shop_url from './assets/shopUI.png';
+import weapon_url from './assets/hoplite_weapons.png';
+import ascii_url from '../common-assets/ascii.png';
+import ascii_sm_url from '../common-assets/ascii_6x8.png';
 import ImageLoader from "../common/assets/ImageLoader";
 import Sprite from "../common/rendering/Sprite";
 import Rect from "../common/position/Rectangle";
@@ -31,6 +35,8 @@ import Portal from "./features/Portal";
 import StoneDisc from "./entities/StoneDisc";
 import BlueMage from "./entities/BlueMage";
 import BlueBurstDisc from "./entities/BlueBurstDisc";
+import ShopPhase from "./phases/ShopPhase";
+import Shop from "./features/Shop";
 
 
 
@@ -45,6 +51,11 @@ export default class Assets {
     hpRenderer: HpRenderer;
     impacts: ImageLoader;
     assetSheet: IAssetSheet;
+    weapons: ImageLoader;
+    shopUI: ImageLoader;
+    
+    ascii: SpriteSheet;
+    asciiSmall: SpriteSheet;
 
     assetFilesByName: {[key: string]: CanvasImageSource} = {};
 
@@ -56,6 +67,10 @@ export default class Assets {
         this.hpImage = new ImageLoader(hp_image_url, loader.registerAssetLoadCallback());
         this.impacts = new ImageLoader(impact_url, loader.registerAssetLoadCallback());
         this.lavaLayers = new SpriteSheet(32, 32, lavaLayers_url, loader.registerAssetLoadCallback());
+        this.weapons = new ImageLoader(weapon_url, loader.registerAssetLoadCallback());
+        this.shopUI = new ImageLoader(shop_url, loader.registerAssetLoadCallback());
+        this.ascii = new SpriteSheet(8, 16, ascii_url, loader.registerAssetLoadCallback());
+        this.asciiSmall = new SpriteSheet(6, 8, ascii_sm_url, loader.registerAssetLoadCallback());
 
         const jsonCallback = loader.registerAssetLoadCallback();
         import(
@@ -81,10 +96,13 @@ export default class Assets {
             'hp': this.hpImage.image,
             'lava_layers': this.lavaLayers.image,
             'features': this.features.image,
-            'enemies': this.enemies.image
+            'enemies': this.enemies.image,
+            'weapons': this.weapons.image,
+            'shop_ui': this.shopUI.image,
         }
         
         PlayerTurnGamePhase.onAssetsLoaded(this);
+        ShopPhase.onAssetsLoaded(this);
 
         Zombie.onAssetsLoaded(this);
         Archer.onAssetsLoaded(this);
@@ -102,6 +120,7 @@ export default class Assets {
         RunicLifeGem.onAssetsLoaded(this);
         LockedStairs.onAssetsLoaded(this);
         Portal.onAssetsLoaded(this);
+        Shop.onAssetsLoaded(this);
     }
 
     getAsset(name: string, suppressErrors?: boolean): IRenderableSource {
@@ -163,6 +182,22 @@ export default class Assets {
         const digits = value.toString().split('').map(s => parseInt(s));
         for(var i = 0; i < digits.length; i++) {
             this.getDigitSprite(digits[i], digitRow).draw(ctx, new Rect(position.x + i * 7, position.y, 7, 13), 0);
+        }
+    }
+
+    drawString(ctx: CanvasRenderingContext2D, position: Point, text: string){
+        for(var i = 0; i < text.length; i++) {
+            const charCode = text.charCodeAt(i);
+            const sprite = this.ascii.getSprite(charCode % 16, Math.floor(charCode / 16), 8, 16);
+            sprite.draw(ctx, new Rect(position.x + i * 8, position.y, 8, 16), 0);
+        }
+    }
+    
+    drawSmallString(ctx: CanvasRenderingContext2D, position: Point, text: string){
+        for(var i = 0; i < text.length; i++) {
+            const charCode = text.charCodeAt(i);
+            const sprite = this.asciiSmall.getSprite(charCode % 16, Math.floor(charCode / 16), 6, 8);
+            sprite.draw(ctx, new Rect(position.x + i * 6, position.y, 6, 8), 0);
         }
     }
 }

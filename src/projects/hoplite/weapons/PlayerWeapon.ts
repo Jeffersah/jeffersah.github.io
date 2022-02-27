@@ -13,28 +13,32 @@ export default abstract class PlayerWeapon {
     public description: string;
     public iconImage: IRenderable;
     public sprite: IRenderable;
+    public shopImage: IRenderable;
 
     constructor(public type: 'primary'|'secondary', assets: Assets, artTile: Point) {
         if(this.type === 'primary') {
-
             this.sprite = new Sprite(
-                assets.tiles.image, 
+                assets.weapons.image, 
                 new Rect(artTile.x * C.TILE_WIDTH, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
 
             this.iconImage = new Sprite(
-                assets.tiles.image, 
+                assets.weapons.image, 
                 new Rect(artTile.x * C.TILE_WIDTH + C.TILE_WIDTH / 2, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
         }
         else {
-
             this.sprite = new Sprite(
-                assets.tiles.image, 
+                assets.weapons.image, 
                 new Rect(artTile.x * C.TILE_WIDTH + C.TILE_WIDTH / 2, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
 
             this.iconImage = new Sprite(
-                assets.tiles.image, 
+                assets.weapons.image, 
                 new Rect(artTile.x * C.TILE_WIDTH, artTile.y * C.TILE_HEIGHT, C.TILE_WIDTH / 2, C.TILE_HEIGHT));
         }
+
+        this.shopImage = new Sprite(
+            assets.weapons.image,
+            new Rect(artTile.x * C.TILE_WIDTH, artTile.y * (C.TILE_HEIGHT*1.5) + C.TILE_HEIGHT * 2, C.TILE_WIDTH, C.TILE_HEIGHT * 1.5)
+        );
     }
     abstract enableAdditionalMoves(state: GameState, player: Player): {dest: Point, forceMove: Point}[];
     abstract getBeforeMoveAttacks(state: GameState, player: Player, moveFrom: Point, moveTo: Point): AttackInfo[];

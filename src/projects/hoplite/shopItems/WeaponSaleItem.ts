@@ -14,7 +14,7 @@ export default class WeaponSaleItem implements ISaleItem {
     {
         this.name = weapon.name;
         this.description = weapon.description;
-        this.icon = weapon.iconImage;
+        this.icon = weapon.shopImage;
     }
 
     onBuy(state: GameState, player: Player): void {

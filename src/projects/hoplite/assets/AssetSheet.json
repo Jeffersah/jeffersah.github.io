@@ -344,5 +344,42 @@
         "pos": [178, 100],
         "size": [14, 4],
         "origin": [7, 2]
+    },
+
+    "shop_entry": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [0, 0],
+        "size": [256, 53]
+    },
+    "shop_entry_selected": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [0, 53],
+        "size": [256, 53]
+    },
+    "shop_entry_nomoney": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [0, 106],
+        "size": [256, 53]
+    },
+    "close_button_selected": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [140, 159],
+        "size": [58, 19]
+    },
+    "close_button": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [198, 159],
+        "size": [58, 19]
+    },
+    "shop_heart+1_icon": {
+        "file": "shop_ui",
+        "units": "pixels",
+        "pos": [480, 112],
+        "size": [32, 48]
     }
 }

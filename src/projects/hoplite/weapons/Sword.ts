@@ -13,7 +13,7 @@ export default class Sword extends SimpleWeapon {
     impactAnimation: IRenderableSource;
 
     constructor(assets: Assets) {
-        super('primary', assets, new Point(8, 1), true,
+        super('primary', assets, new Point(0, 0), true,
         {
             onMove: new Point(1, 0),
             pattern: [new Point(0, -1), new Point(1, -1), new Point(-1, 1), new Point(0, 1)],
