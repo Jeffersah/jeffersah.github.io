@@ -8,5 +8,5 @@ export default interface ISaleItem {
     description: string;
     icon: IRenderable;
 
-    onBuy(state: GameState, player: Player): void;
+    onBuy(state: GameState, player: Player): { replaceItem?: ISaleItem } | void;
 }

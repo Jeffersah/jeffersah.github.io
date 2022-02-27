@@ -9,6 +9,7 @@ import { HexToPixel } from "../Hex";
 import Sword from "../weapons/Sword";
 import Dagger from "../weapons/Dagger";
 import HpRenderer from "../HpRenderer";
+import Kunai from "../weapons/Kunai";
 
 export default class Player extends Entity {
 
@@ -25,7 +26,7 @@ export default class Player extends Entity {
         this.maxHp = this.hp = 3;
 
         this.primary = new Sword(assets);
-        this.secondary = new Dagger(assets);
+        this.secondary = new Kunai(assets);// new Dagger(assets);
 
         this.renderable = assets.getAsset('player') as Sprite;
     }

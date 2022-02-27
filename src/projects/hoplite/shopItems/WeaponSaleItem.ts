@@ -17,8 +17,16 @@ export default class WeaponSaleItem implements ISaleItem {
         this.icon = weapon.shopImage;
     }
 
-    onBuy(state: GameState, player: Player): void {
-        if(this.weapon.type === 'primary') player.primary = this.weapon;
-        else player.secondary = this.weapon;
+    onBuy(state: GameState, player: Player): { replaceItem?: ISaleItem }  {
+        if(this.weapon.type === 'primary') {
+            const oldPrimary = player.primary;
+            player.primary = this.weapon;
+            return { replaceItem: new WeaponSaleItem(oldPrimary, 0) };
+        }
+        else { 
+            const oldSecondary = player.secondary;
+            player.secondary = this.weapon;
+            return { replaceItem: new WeaponSaleItem(oldSecondary, 0) };
+        }
     }
 }

@@ -345,6 +345,13 @@
         "size": [14, 4],
         "origin": [7, 2]
     },
+    "projectile_kunai": {
+        "file": "hoplite_tiles",
+        "units": "pixels",
+        "pos": [160, 101],
+        "size": [7, 3],
+        "origin": [3.5, 1.5]
+    },
 
     "shop_entry": {
         "file": "shop_ui",

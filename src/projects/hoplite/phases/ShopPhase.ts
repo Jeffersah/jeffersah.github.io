@@ -74,7 +74,11 @@ export default class ShopPhase implements IGamePhase {
             else if(item.price <= state.gold) {
                 state.gold -= item.price;
                 this.items[this.selectedItem] = undefined;
-                item.onBuy(state, state.player);
+                const result = item.onBuy(state, state.player);
+                if((result as any)?.replaceItem !== undefined) {
+                    this.items[this.selectedItem] = (result as any)?.replaceItem;
+                    this.wrappedTexts[this.selectedItem] = wrapText(this.items[this.selectedItem].description, 38);
+                }
             }
         }
 

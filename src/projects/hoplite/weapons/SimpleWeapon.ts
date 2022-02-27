@@ -6,7 +6,13 @@ import GameState from "../GameState";
 import { HexLength, TurnLeft, TurnRight } from "../Hex";
 import PlayerWeapon from "./PlayerWeapon";
 
-interface ISimpleAttack { onMove: Point, pattern: Point[], attack: (state: GameState, player:Player, target: Point) => AttackInfo | undefined}
+interface ISimpleAttack { onMove: Point, pattern: WeaponPattern[], attack: (state: GameState, player:Player, target: Point) => AttackInfo | undefined}
+
+type WeaponPattern = Point | { empty: Point[], target: Point };
+
+function patternIsPoint(pattern: WeaponPattern): pattern is Point {
+    return (pattern as Point).x !== undefined;
+}
 
 export default class SimpleWeapon extends PlayerWeapon{
     private attacks: ISimpleAttack[];
@@ -23,9 +29,14 @@ export default class SimpleWeapon extends PlayerWeapon{
             const rot = SimpleWeapon.getRotation(moveDelta, attack.onMove);
             if(rot === undefined) continue;
             for(const pattern of attack.pattern) {
-                const target = Point.add(moveFrom, TurnLeft(pattern, rot));
-                const attackInfo = attack.attack(state, player, target);
-                if(attackInfo !== undefined) attacks.push(attackInfo);
+                const requireEmpty = patternIsPoint(pattern) ? [] : pattern.empty;
+
+                const target = Point.add(moveFrom, TurnLeft(patternIsPoint(pattern) ? pattern : pattern.target, rot));
+                const isEmptyRequirementFulfilled = requireEmpty.every(p => state.entityAt(Point.add(moveFrom, TurnLeft(p, rot))) === undefined);
+                if(requireEmpty.length === 0 || isEmptyRequirementFulfilled) {
+                    const attackInfo = attack.attack(state, player, target);
+                    if(attackInfo !== undefined) attacks.push(attackInfo);
+                }
             }
         }
         return attacks;
