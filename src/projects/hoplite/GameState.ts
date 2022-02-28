@@ -13,6 +13,11 @@ import Enemy from "./entities/Enemy";
 import IFeature from "./features/IFeature";
 import Cell from "../rpgt/world/Cell";
 
+const regions = [
+    { region: 0, from: 0, to: 13 },
+    { region: 1, from: 13, to: -1 },
+]
+
 export default class GameState {
 
     public player: Player;
@@ -21,6 +26,7 @@ export default class GameState {
     public tiles: HexArray<HexCell>;
     public features: HexArray<IFeature | undefined>;
     public currentFloor: number;
+    public displayFloor: number;
     public regionId: number;
 
     public gold: number;
@@ -69,9 +75,20 @@ export default class GameState {
         this.enemies = [];
         generator.generateMap(this.assets, floorNum, this);
         this.currentFloor = floorNum;
+        this.setCorrectRegion();
         this.tiles.iterate((x, y, tile) =>{
             tile.AfterWorldLoad(this, new Point(x, y));
         });
+    }
+
+    private setCorrectRegion(){
+        for(const region of regions) {
+            if(this.currentFloor >= region.from && (this.currentFloor < region.to || region.to === -1 )) {
+                this.regionId = region.region;
+                this.displayFloor = this.currentFloor - region.from + 1;
+                return;
+            }
+        }
     }
 
     getCells(predicate: (point: Point, tile: HexCell, feature: IFeature) => boolean) {
@@ -88,7 +105,7 @@ export default class GameState {
 
     draw(ctx: CanvasRenderingContext2D, excludeEntities?: Entity[]) {
         new Sprite(this.assets.floor_and_digits.image, new Rect(0, 13*this.regionId, 41, 13)).draw(ctx, new Rect(0, 0, 41, 13), 0);
-        this.assets.drawNumber(ctx, new Point(42, 0), this.currentFloor);
+        this.assets.drawNumber(ctx, new Point(42, 0), this.displayFloor, this.regionId);
 
         new Sprite(this.assets.floor_and_digits.image, new Rect(0, 13*3, 41, 13)).draw(ctx, new Rect(0, 14, 41, 13), 0);
         this.assets.drawNumber(ctx, new Point(42, 14), this.gold, 3);

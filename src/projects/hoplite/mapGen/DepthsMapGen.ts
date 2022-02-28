@@ -28,24 +28,23 @@ import Dagger from "../weapons/Dagger";
 import Kunai from "../weapons/Kunai";
 import WeaponSaleItem from "../shopItems/WeaponSaleItem";
 import FullHealItem from "../shopItems/FullHealItem";
-import Caltrops from "../weapons/Caltrops";
 
-export const allPrimaryWeapons = [
+const allPrimaryWeapons = [
     { cost: 50, generateItem: (assets: Assets) => new Sword(assets) },
     { cost: 50, generateItem: (assets: Assets) => new Spear(assets) },
     { cost: 50, generateItem: (assets: Assets) => new Hammer(assets) },
 ]
 
-export const allSecondaryWeapons = [
+const allSecondaryWeapons = [
     { cost: 10, generateItem: (assets: Assets) => new Dagger(assets) },
     { cost: 20, generateItem: (assets: Assets) => new Kunai(assets) },
-    { cost: 20, generateItem: (assets: Assets) => new Caltrops(assets) },
 ]
 
-export default class StandardMapGen implements IMapGen {
+export default class DepthsMapGen implements IMapGen {
     generateMap(assets: Assets, floor: number, state: GameState): void {
         state.tiles = new HexArray<HexCell>(C.MAP_SIZE, new Floor(assets));
         state.features = new HexArray<IFeature>(C.MAP_SIZE, undefined);
+        state.regionId = 1;
         
         state.enemies = [];
 
@@ -63,10 +62,6 @@ export default class StandardMapGen implements IMapGen {
         const [xMin, xMax] = state.tiles.getXRange(downStairY);
         const downStairX = Math.floor(Math.random() * (xMax - xMin)) + xMin;
         state.features.set(new Stairs(), downStairX, downStairY);
-
-        const gemPositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
-        const gemPos = gemPositions[Math.floor(Math.random() * gemPositions.length)];
-        state.features.set(new LifeGem(), gemPos.x, gemPos.y);
 
         if(floor % 3 === 0 || floor === 11) {
             const shrinePositions = state.getCells((_, tile, feat) => tile.typeId === Floor.TypeID && feat === undefined);
@@ -100,26 +95,13 @@ export default class StandardMapGen implements IMapGen {
             }
         }
 
-        for(let i = 0; i < Math.min(12, floor); i++) {
+        for(let i = 0; i < Math.min(8, floor); i++) {
             let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
             const [pos] = validEnemySpawns.splice(spawnId, 1);
             const entity = (Math.random() < 0.85) ? new Zombie(pos) : new Spider(pos);
             state.enemies.push(entity);
         }
-
-        for(let i = 0; i < Math.min(6, (floor - 3) / 3); i++) {
-            let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
-            const [pos] = validEnemySpawns.splice(spawnId, 1);
-            const archer = new Archer(pos);
-            state.enemies.push(archer);
-        }
         
-        for(let i = 0; i < Math.min(3, (floor - 5) / 3); i++) {
-            let spawnId = Math.floor(Math.random() * validEnemySpawns.length);
-            const [pos] = validEnemySpawns.splice(spawnId, 1);
-            const enemy = (Math.random() < 0.2) ? new StoneEye(pos) : new Mage(pos);
-            state.enemies.push(enemy);
-        }
         
         // Don't spawn enemies where they can't get to you: Forge a path. (unless they're flying)
         for(const enemy of state.enemies) {

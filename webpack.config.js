@@ -10,11 +10,11 @@ module.exports = {
         publicPath: "/dist/",
     },
 
-    // optimization: {
+    optimization: {
     //     splitChunks: {
     //         chunks: 'all',
     //     },
-    // },
+    },
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
@@ -29,6 +29,7 @@ module.exports = {
             // WASM
             {
                 test: /\.wasm$/,
+                include: path.resolve(__dirname, 'src'),
                 use: {
                     loader: 'wasm-loader'
                 }
@@ -36,6 +37,7 @@ module.exports = {
 
             {
                 test: /\.css$/i,
+                include: path.resolve(__dirname, 'src'),
                 use: [
                     'style-loader',
                     "@teamsupercell/typings-for-css-modules-loader",
@@ -48,19 +50,32 @@ module.exports = {
 
             {
                 test: /\.(png|svg|jpg|gif|txt)$/,
+                include: path.resolve(__dirname, 'src'),
                 use: [
                     'file-loader',
                 ]
             },
-            
+
             // Load workers with worker-loader
-            { test: /\.worker\.ts$/, loader: "worker-loader" },
+            {
+                test: /\.worker\.ts$/,
+                include: path.resolve(__dirname, 'src'),
+                loader: "worker-loader"
+            },
 
             // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            {
+                test: /\.tsx?$/,
+                include: path.resolve(__dirname, 'src'),
+                loader: "ts-loader"
+            },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
+            },
         ]
     },
 

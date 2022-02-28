@@ -46,7 +46,7 @@ export default class ShopPhase implements IGamePhase {
 
         this.displayOffset = new Point(
             C.MAP_PIXEL_SIZE / 2 - ShopPhase.shopItemSprite.width() / 2,
-            fullHeight / 2
+            C.MAP_PIXEL_SIZE / 2 - fullHeight / 2
         );
 
         this.wrappedTexts = items.map(item => item === undefined ? [] : wrapText(item.description, 38));

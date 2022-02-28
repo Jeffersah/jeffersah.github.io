@@ -16,11 +16,11 @@ export default class Spider extends Enemy {
         Spider.sprite = assets.getAsset('spider').getRenderable();
     }
 
+    wasNextToPlayer = false;
     constructor(position: Point) {
         super(position);
         this.hp = this.maxHp = 1;
         this.isFlying = false;
-        
         this.goldValue = 3;
     }
 
@@ -28,6 +28,10 @@ export default class Spider extends Enemy {
         const playerLocation = state.player.position;
         const len = HexLength(Point.subtract(playerLocation, this.position));
         if(len === 1) {
+            return [AttackInfo.basicAttack(this, state.player, 1)];
+        }
+        if(len === 2 && this.wasNextToPlayer) {
+            this.wasNextToPlayer = false;
             return [AttackInfo.basicAttack(this, state.player, 1)];
         }
         return [];
@@ -54,8 +58,14 @@ export default class Spider extends Enemy {
             }
         }
 
-        if(minMoves.length === 0) return this.position;
-        return minMoves[Math.floor(Math.random() * minMoves.length)];
+        const dest = minMoves.length === 0 ? this.position : minMoves[Math.floor(Math.random() * minMoves.length)];
+        if(HexLength(Point.subtract(state.player.position, dest)) === 1) {
+            this.wasNextToPlayer = true;
+        }
+        else {
+            this.wasNextToPlayer = false;
+        }
+        return dest;
     }
 
     override getRenderable(): IRenderable {
