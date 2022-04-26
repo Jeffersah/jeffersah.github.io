@@ -30,6 +30,7 @@ import GlslFractalAudioWrapperComponent from './glsl-fracaudio/GlslFractalAudioW
 import SimpleCypherWrapperComponent from './simple-cypher/SimpleCypherWrapperComponent';
 import GlslGeomFracWrapperComponent from './glsl-geomfrac/GlslGeomFracWrapperComponent';
 import { HopliteWrapperComponent } from './hoplite/HopliteWrapperComponent';
+import WaveCollapseComponentWrapper from './wave-collapse/WaveCollapseComponentWrapper';
 
 export interface IProject {
     projectName: string;
@@ -235,5 +236,13 @@ export const AllProjects: IProject[] = [
         projectName: 'hoplite',
         projectTitle: 'Hoplite',
         projectComponent: HopliteWrapperComponent
-    }
+    },
+
+    
+    {
+        projectName: 'wave-collapse',
+        projectTitle: 'Wave Collapse',
+        projectComponent: WaveCollapseComponentWrapper,
+        subCategory: 'Test'
+    },
 ];
