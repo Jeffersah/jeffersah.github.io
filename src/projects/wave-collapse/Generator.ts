@@ -130,7 +130,7 @@ function tryAdjustNeighbor(neighborInfos: ITileNeighborInfo[], cell: WaveCell, n
 }
 
 
-function getPossibilities(waveCell: WaveCell){
+export function getPossibilities(waveCell: WaveCell){
     if(isFinalizedCell(waveCell)) {
         return [waveCell];
     }

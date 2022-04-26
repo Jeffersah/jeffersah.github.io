@@ -6,7 +6,7 @@ import Rect from "../common/position/Rectangle";
 import ITileNeighborInfo, { GenerateNeighborInfo } from "./AdjacencyMap";
 import tileUrl from './assets/isotiles.png'
 import TileInfos, { ITileInfo } from "./assets/TileInfo";
-import { CreateChunk, GenerateChunk, isFinalizedCell, Step, WaveFunction } from "./Generator";
+import { CreateChunk, GenerateChunk, getPossibilities, isFinalizedCell, Step, WaveFunction } from "./Generator";
 
 let spriteSheet: SpriteSheet;
 
@@ -18,17 +18,15 @@ export default function Run() {
 }
 
 function Start(){
-    console.log(TileInfos);
     const neighbors = GenerateNeighborInfo(TileInfos);
-    console.log(neighbors);
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
-    let tiles = CreateChunk(neighbors, 26, 26, 1);
+    let tiles = CreateChunk(neighbors, 40, 40, 1);
 
 
-    let scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, 800, 800, true, undefined);
+    let scalingHelper = new NearestNeighborScalingHelper(canvas, ctx, 1200, 800, true, () => Paint(TileInfos, spriteSheet, tiles, ctx));
 
     tickLoop(TileInfos, neighbors, spriteSheet, tiles, ctx);
 }
@@ -43,23 +41,30 @@ function tickLoop(tileInfos: ITileInfo[], neighborInfos: ITileNeighborInfo[], as
 
 
 function Paint(tileInfos: ITileInfo[], assets: SpriteSheet, cells: WaveFunction, ctx: CanvasRenderingContext2D) {
+    ctx.clearRect(0, 0, 1200, 800);
 
-    let origin = [400, 800];
+    let origin = [600, 800];
 
     for(let z = 0; z < cells[0][0].length; z++){
+        // ctx.globalAlpha = 1-(z / cells[0][0].length);
         for(let x = cells.length - 1; x >= 0; x--) {
             for(let y = cells[x].length - 1; y >= 0; y--) {
-                if(!isFinalizedCell(cells[x][y][z])){
-                    continue;
+                let options = getPossibilities(cells[x][y][z]);
+
+                if(options.length <= 12) {
+                    if(options.length === 0) continue;
+
+                    ctx.globalAlpha = 1 / options.length;
+                    let tx = (x-y) * 16;
+                    let ty = -(x+y) * 8 - z*16;
+                    
+                    for(const cell of options) {
+                        let tileInfo = tileInfos[cell];
+                        let sprite = assets.getSprite(tileInfo.tile[0], tileInfo.tile[1], 32, 32);
+
+                        sprite.draw(ctx, new Rect(tx + origin[0], ty + origin[1], 32, 32), 0);
+                    }
                 }
-                let cell = cells[x][y][z] as number;
-                let tileInfo = tileInfos[cell];
-                let sprite = assets.getSprite(tileInfo.tile[0], tileInfo.tile[1], 32, 32);
-
-                let tx = (x-y) * 16;
-                let ty = -(x+y) * 8 - z*16;
-
-                sprite.draw(ctx, new Rect(tx + origin[0], ty + origin[1], 32, 32), 0);
             }
         }
     }

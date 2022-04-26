@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 const WaveCollapseComponent = React.lazy(() => import(
-    /* webpackChunkName: "raymarch" */
+    /* webpackChunkName: "wave-collapse" */
     /* webpackMode: "lazy" */
     './WaveCollapseComponent'));
 

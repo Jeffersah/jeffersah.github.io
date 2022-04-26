@@ -47,7 +47,7 @@ const TileInfos: ITileInfo[] = [
     {
         tile: [2, 0],
         edges: [0, 1, 0, 1]
-    },/*
+    },
     {
         tile: [3, 0],
         edges: [1, 0, 0, 0],
@@ -71,7 +71,7 @@ const TileInfos: ITileInfo[] = [
         edges: [0, 0, 0, 1],
         bottom: ['any', [1, 2], 'any', [1, 2]],
         top: [[], [], [] , []]
-    },*/
+    },
     {
         tile: [7, 0],
         edges: [1, 1, 1, 1]
