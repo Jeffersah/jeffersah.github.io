@@ -31,6 +31,7 @@ import SimpleCypherWrapperComponent from './simple-cypher/SimpleCypherWrapperCom
 import GlslGeomFracWrapperComponent from './glsl-geomfrac/GlslGeomFracWrapperComponent';
 import { HopliteWrapperComponent } from './hoplite/HopliteWrapperComponent';
 import WaveCollapseComponentWrapper from './wave-collapse/WaveCollapseComponentWrapper';
+import WaveCollapse2ComponentWrapper from './wave-collapse-2/WaveCollapse2ComponentWrapper';
 
 export interface IProject {
     projectName: string;
@@ -243,6 +244,12 @@ export const AllProjects: IProject[] = [
         projectName: 'wave-collapse',
         projectTitle: 'Wave Collapse',
         projectComponent: WaveCollapseComponentWrapper,
+        subCategory: 'Test'
+    },
+    {
+        projectName: 'wave-collapse-2',
+        projectTitle: 'Wave Collapse 2',
+        projectComponent: WaveCollapse2ComponentWrapper,
         subCategory: 'Test'
     },
 ];
