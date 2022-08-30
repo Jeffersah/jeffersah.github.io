@@ -27,14 +27,13 @@ function Start(){
     offscreenCtx.drawImage(spriteSheet.image, 0, 0);
 
     const neighbors = GenerateNeighborInfo(offscreenCanvas, offscreenCtx);
-    console.log("Adj Table:");
-    console.log(neighbors);
 
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
-    let tiles = CreateChunk(neighbors, 24, 24, 3);
+    console.log("Generating!");
+    let tiles = CreateChunk(neighbors, 28, 28, 4);
 
     for(let x = 0; x < tiles.length; x++) {
         for(let z = 0; z < tiles[0][0].length; z++){
@@ -43,8 +42,7 @@ function Start(){
             tiles[x][tiles[0].length - 1][z] = 0;
             PropagateChanges(neighbors, tiles, x, tiles[0].length - 1, z);
         }
-    }
-    
+    }    
     for(let y = 0; y < tiles[0].length; y++) {
         for(let z = 0; z < tiles[0][0].length; z++){
             tiles[0][y][z] = 0;

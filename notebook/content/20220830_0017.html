@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../theme.css" />
+		<style>
+			@keyframes blinkin {
+				0% { opacity: 0; }
+				5% { opacity: 1; }
+				20% { opacity: 0; }
+				100% { opacity: 0; }
+			}
+			.blink {
+				opacity: 0;
+				animation-name: blinkin;
+				animation-iteration-count: infinite;
+				animation-duration: 1s;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>2022-08-30 12:17 AM</h2>
+		<pre class="thought">Amnimal Adventures, PT 1: The Futility of Doubt in the Face of Adverse Gravitational Effects</pre>
+		<div id="gc">
+
+		</div>
+		<a href="../index.html">Back</a>
+
+		<script>
+window.addEventListener("load", () => {
+	const min_duration = 1;
+	const max_duration = 30;
+	const amnimals = ["*big cricket*", "*cricket*", "*tennis*", "*frog*", "*other frog*", "*additional frog*", "*backup frog*","*bark*", "*tweet*", "*Hiss*", "*confident moo*", "*encouraging moo*", "*moo I guess*", "*wet noises*", "*Caw!*", "*Woodpecker*", "*Stonepecker*", "*sand hiss*", "*sand purr*", "*swords coliding*", "*wind noises*", "*tree noises*", "*silence*", "*a tree falling in a forest with nobody around to hear it*"]
+	const container = document.getElementById("gc");
+	for(let i = 0; i < 500; i++){
+		const amninmal = amnimals[Math.floor(Math.random() * amnimals.length)];
+		const duration = min_duration + Math.random() * (max_duration - min_duration);
+		const delay = Math.random() * duration;
+		container.innerHTML += `<span class="blink" style="animation-duration:${duration}s; animation-delay: ${delay}s">${amninmal}</span>`;
+	}
+});
+		</script>
+	</body>
+</html>
