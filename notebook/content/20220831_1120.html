@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../theme.css" />
+	</head>
+	<body style="background:#333;color:#AAA;margin:0;padding:0;inset:0;position:absolute;overflow-y:hidden">
+		<canvas width="800" height="600" id="cvs">
+		</canvas>
+<script>
+window.addEventListener("load", () => {
+
+	const cvs = document.getElementById('cvs');
+	const ctx = cvs.getContext('2d');
+
+	let w = 0;
+	let h = 0;
+
+	const gray_gradient = ctx.createLinearGradient(0, 0, 0, 600);
+	gray_gradient.addColorStop(0, "#000");
+	gray_gradient.addColorStop(0.5, "#111");
+	gray_gradient.addColorStop(1, "#222");
+
+	let t = 0;
+
+	function drawFrame() {
+		if(document.body.clientWidth != w || document.body.clientHeight != h) {
+			w = document.body.clientWidth;
+			h = document.body.clientHeight;
+			cvs.width = w;
+			cvs.height = h;
+			cvs.style.width = w + "px";
+			cvs.style.height = h + "px";
+		}
+
+		t += 1/60;
+
+		ctx.clearRect(0, 0, w, h);
+		ctx.fillStyle = gray_gradient;
+		ctx.fillRect(0, 0, w, h);
+		ctx.beginPath();
+		for(let i = 0; i < w / 4; i++){
+			const x = Math.random() * w;
+			const y = Math.random() * h;
+			const len = 5 + Math.random() * 5;
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + len, y + len);
+		}
+		for(let i = 0; i < w / 12; i++) {
+			const x = Math.random() * w;
+			const y = Math.random() * -20 + h;
+
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + 4, y - 4);
+		}
+		ctx.strokeStyle = 'blue';
+		ctx.stroke();
+
+		ctx.save();
+		ctx.translate(w / 2 + 50, h - 50);
+		ctx.strokeStyle = '#888';
+		ctx.beginPath();
+		ctx.arc(5, 5, 10, 0, 2 * Math.PI);
+		ctx.moveTo(12, 50);
+		ctx.lineTo(5, 35);
+		ctx.lineTo(-2, 50);
+		ctx.moveTo(5, 35);
+		ctx.lineTo(5, 15);
+		ctx.stroke();
+
+		const textbox = (-Math.cos(t / 60) + 1) / 2;
+		ctx.fillStyle = `rgba(200, 200, 200, ${textbox})`;
+		ctx.fillText("I wish it was raining...", 18, 0);
+		
+		ctx.restore();
+
+		requestAnimationFrame(()=>drawFrame());
+	}
+
+	drawFrame();
+});
+</script>
+	</body>
+</html>
