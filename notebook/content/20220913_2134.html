@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../theme.css" />
+	</head>
+	<body>
+		<h2>2022-09-13 09:34 PM</h2>
+		<canvas id="canvas" width="800" height="800" style="width: 800; height: 800;"></canvas>
+<script>
+
+function BounceEdges(p, v) {
+	let bounce = 0;
+	if(p.x > 800) {
+		p.x = 800 - (p.x - 800)
+		v.x = -Math.abs(v.x);
+		bounce = Math.max(bounce, Math.abs(v.x));
+	}
+	else if (p.x < 0) {
+		p.x = -p.x
+		v.x = Math.abs(v.x);
+		bounce = Math.max(bounce, Math.abs(v.x));
+	}
+	
+	if(p.y > 800) {
+		p.y = 800 - (p.y - 800)
+		v.y = -Math.abs(v.y);
+		bounce = Math.max(bounce, Math.abs(v.y));
+	}
+	else if (p.y < 0) {
+		p.y = -p.y
+		v.y = Math.abs(v.y);
+		bounce = Math.max(bounce, Math.abs(v.y));
+	}
+
+	return bounce;
+}
+
+function PMult(p, scalar) {
+	return { x: p.x * scalar, y: p.y * scalar };
+}
+function PAdd(a, b) {
+	return { x: a.x + b.x, y: a.y + b.y };
+}
+
+function Check(r0, p0, r1, p1) {
+	let rt = r0 + r1;
+	
+	let dir = { x: p1.x - p0.x, y: p1.y - p0.y };
+	let lnsq = dir.x * dir.x + dir.y * dir.y;
+	return (lnsq <= rt * rt);
+}
+
+function Colision(m0, v0, m1, v1) {
+	let out0 = PAdd(PMult(v0, (m0 - m1) / (m0 + m1)), PMult(v1, (2*m1) / (m0 + m1)));
+	let out1 = PAdd(PMult(v0, (2*m0) / (m0 + m1)), PMult(v1, (m1-m0) / (m0 + m1)));
+
+	return [out0, out1];
+}
+
+window.addEventListener('load', () => {
+	const canvas = document.getElementById("canvas");
+	const ctx = canvas.getContext('2d');
+
+	let p = { x: 400, y: 400 }
+	let v = { x: 1, y: 0 }
+	let mp = {x: 0, y: 0};
+	let b = { l: false, r: false }
+
+	let targets = [];
+	let particles = [];
+
+	function SpawnParticles(target) {
+		let r = t.r;
+		for(let i = 0; i < target.pc; i++) {
+			particles.push({
+				p: {x: target.p.x + Math.random() * target.r * 2 - target.r, y: target.p.y + Math.random() * target.r * 2 - target.r },
+				v: {x: target.v.x/2 + Math.random() * 4 - 2, y: target.v.y/2 + Math.random() * 4 - 2},
+				r: Math.random() * (target.r / 4) + 3,
+				c: target.c,
+			});
+		}
+	}
+
+	canvas.addEventListener('mousemove', (ev) => {
+		mp.x = ev.offsetX;
+		mp.y = ev.offsetY;
+	});
+	
+	canvas.addEventListener('mousedown', (ev) => {
+		if(ev.button === 0) b.l = true;
+		if(ev.button === 2) b.r = true;
+		ev.preventDefault();
+	});
+	
+	canvas.addEventListener('contextmenu', (ev) => {
+		ev.preventDefault();
+	});
+	
+	canvas.addEventListener('mouseup', (ev) => {
+		if(ev.button === 0) b.l = false;
+		if(ev.button === 2) b.r = false;
+		ev.preventDefault();
+	});
+	
+	canvas.addEventListener('mouseleave', (ev) => {
+		b = { l: false, r: false }
+	});
+
+	let t = 0;
+
+	function Paint() {
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0, 0, 800, 800);
+
+		ctx.fillStyle = '#0000FF';
+		ctx.beginPath();
+		ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
+		ctx.fill();
+
+		targets.forEach(t => {
+			ctx.fillStyle = t.c;
+			ctx.beginPath();
+			ctx.arc(t.p.x, t.p.y, t.r, 0, Math.PI * 2);
+			ctx.fill();
+		});
+
+		particles.forEach(t => {
+			ctx.fillStyle = t.c;
+			ctx.beginPath();
+			ctx.arc(t.p.x, t.p.y, t.r, 0, Math.PI * 2);
+			ctx.fill();
+		});
+	}
+
+	function Tick() {
+		t ++;
+		if(b.l) {
+			let dir = { x: mp.x - p.x, y: mp.y - p.y }
+			let l = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+			v.x += (dir.x / l) * 1.6
+			v.y += (dir.y / l) * 1.6
+		}
+		
+		p = PAdd(p, v);
+
+		BounceEdges(p, v);
+
+		v.x *= 0.99;
+		v.y *= 0.99;
+
+		for(let i = targets.length - 1; i >= 0; i--)
+		{
+			let t = targets[i];
+			
+			if(Check(10, p, t.r, t.p))
+			{
+				let [vp, vt] = Colision(10, v, t.m, t.v);
+				t.v = vt;
+				v = vp;
+			}
+
+			for(let j = i - 1; j >= 0; j --) 
+			{
+				if(Check(t.r, t.p, targets[j].r, targets[j].p))
+				{
+					let [vj, vt] = Colision(targets[j].m, targets[j].v, t.m, t.v);
+					targets[j].v = vj;
+					t.v = vt;
+				}
+			}
+
+			t.p = PAdd(t.p, t.v);
+			t.hp -= BounceEdges(t.p, t.v);
+
+			if(t.hp < 0)
+			{
+				SpawnParticles(t);
+				targets.splice(i, 1);
+				
+				if(t.e !== undefined && t.e !== 0) {
+					for(let j = 0; j < targets.length; j++){
+						let dx = targets[j].p.x - t.p.x;
+						let dy = targets[j].p.y - t.p.y;
+						let lnSq = dx * dx + dy * dy;
+						targets[j].v = PAdd(targets[j].v, PMult({x: dx, y: dy}, t.e / (lnSq * targets[j].m)))
+					}
+				}
+			}
+			else {
+				t.v.x *= .97;
+				t.v.y *= .97;
+			}
+		}
+
+		for(let i = particles.length-1; i >= 0; i--)
+		{
+			let t = particles[i];
+			t.p = PAdd(t.p, t.v);
+			BounceEdges(t.p, t.v);
+			t.v = PMult(t.v, 0.97);
+			t.lt--;
+			t.r -= 0.1;
+			if(t.r <= 0) {
+				particles.splice(i, 1);
+			}
+		}
+
+
+		if(t % 60 === 0) {
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: 0, y: 0},
+				r: 20,
+				m: 5,
+				hp: 5,
+				c: '#883300',
+
+				pc: 10
+			})
+		}
+
+		
+		if(t % 240 === 0) {
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: 0, y: 0},
+				r: 40,
+				m: 10,
+				hp: 10,
+				c: '#888800',
+
+				pc: 20
+			})
+		}
+		
+		if(t % 500 === 0) {
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: Math.random()*4 - 2, y: Math.random()*4 - 2},
+				r: 10,
+				m: 1,
+				hp: 120,
+				c: '#AAAA00',
+				e: 2500,
+
+				pc: 40
+			})
+			
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: Math.random()*4 - 2, y: Math.random()*4 - 2},
+				r: 10,
+				m: 1,
+				hp: 120,
+				c: '#00AAAA',
+				e: -2500,
+
+				pc: 40
+			})
+		}
+		
+		
+		if(t % 2400 === 0) {
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: Math.random()*4 - 2, y: Math.random()*4 - 2},
+				r: 50,
+				m: 40,
+				hp: 80,
+				c: '#FF0000',
+				e: 30000,
+
+				pc: 80
+			})
+		}
+		
+		if(t % 3600*5 === 0) {
+			targets.push({
+				p: {x: Math.random() * 800, y: Math.random() * 800},
+				v: {x: Math.random()*4 - 2, y: Math.random()*4 - 2},
+				r: 80,
+				m: 60,
+				hp: 80,
+				c: '#FFFFFF',
+				e: 80000,
+
+				pc: 400
+			})
+		}
+
+		Paint();
+		requestAnimationFrame(()=>Tick());
+	}
+
+	Tick();
+});
+</script>
+	</body>
+</html>
