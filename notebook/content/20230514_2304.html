@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../theme.css" />
+	</head>
+	<body>
+		<h2>2023-05-14 10:51 PM</h2>
+		<pre class="thought">
+Fun things to do while driving:
+		</pre>
+<ol>
+	<li id="li1"></li>
+	<li id="li2"></li>
+	<li id="li3"></li>
+	<li>Hit a car</li>
+</ol>
+		<a href="../index.html">Back</a>
+
+
+<script>
+window.addEventListener("load", () =>{
+	let options = [
+		"See how hard you can turn",
+		"Make a hundred phone calls",
+		"Record a podcast",
+		"Eat soup",
+		"Pet two dogs",
+		"Jumping Jacks",
+		"Elementary rocketry",
+		"Scream as loud as you can",
+		"See how many blades of grass you can count",
+		"Go on red, stop on green",
+		"Recite poetry",
+		"Origami",
+		"Baking",
+		"Sing along to a song exactly one half beat behind",
+		"Spiral into self-doubt",
+		"<b>WITNESS FIRSTHAND THE MUSIC OF THE SPHERES</b>"
+	]
+
+	let items = [
+		document.getElementById("li1"),
+		document.getElementById("li2"),
+		document.getElementById("li3")
+	]
+	let idx = []
+	for(var i = 0; i < items.length; i++) {
+		let id = Math.floor(Math.random() * options.length);
+		items[i].innerHTML = options[id];
+		options.splice(id, 1);
+	}
+})
+
+
+</script>
+	</body>
+</html>
