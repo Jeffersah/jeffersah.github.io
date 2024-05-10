@@ -24,9 +24,56 @@
 		</div>
 		<script>
 window.addEventListener("load", () => {
-	const min_duration = 1;
+	const min_duration = 2;
 	const max_duration = 30;
-	const amnimals = ["*big cricket*", "*cricket*", "*tennis*", "*frog*", "*other frog*", "*additional frog*", "*backup frog*","*bark*", "*tweet*", "*Hiss*", "*confident moo*", "*encouraging moo*", "*moo I guess*", "*wet noises*", "*Caw!*", "*Woodpecker*", "*Stonepecker*", "*sand hiss*", "*sand purr*", "*swords coliding*", "*wind noises*", "*tree noises*", "*silence*", "*a tree falling in a forest with nobody around to hear it*"]
+	const amnimals = [
+		"*big cricket*", 
+		"*cricket*", 
+		"*criquette*", 
+		"*tennis*", 
+		"*frog*", 
+		"*other frog*", 
+		"*additional frog*", 
+		"*backup frog*",
+		"*sorry about all the frogs*",
+		"*bark*", 
+		"*tweet*", 
+		"*Hiss*", 
+		"*confident moo*", 
+		"*encouraging moo*", 
+		"*moo I guess*", 
+		"*wet noises*", 
+		"*Caw!*", 
+		"*Woodpecker*", 
+		"*Stonepecker*", 
+		"*sand hiss*", 
+		"*sand purr*", 
+		"*swords coliding*", 
+		"*wind noises*", 
+		"*tree noises*", 
+		"*silence*", 
+		"*a tree falling in a forest with nobody around to hear it*",
+		"*not sure what that was*",
+		"*noise*",
+		"*I lied about that last one*",
+		"*heated political discourse*",
+		"*Bees dancing*",
+		"*Javascript noises*",
+		"*Made you look!*",
+		"*200 scorpions*",
+		"*acoustic guitar*",
+		"****",
+		"*speaking in tongues*",
+		"*8d Audio ASMR*",
+		"*distant weeping*",
+		"*checkmate*",
+		"*populist revolution gathering steam*",
+		"*steam*",
+		"*steamed hams (hot pigs)*",
+		"*gorilla*",
+		"*gorilla (speaking ASL)*"
+	]
+		
 	const container = document.getElementById("gc");
 	for(let i = 0; i < 500; i++){
 		const amninmal = amnimals[Math.floor(Math.random() * amnimals.length)];

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../theme.css" />
+	</head>
+	<body>
+		<pre class="thought">
+Predictions for 2024:
+<ul id="pred">
+</ul>
+<button id="more">More</button>
+		</pre>
+<script>
+var places = [
+	"in the sun",
+	"underwater",
+	"under a table",
+	"in a secret government facility",
+	"under New York city",
+	"on a bus",
+	"in a subway",
+	"in a casino",
+	"in an abandoned mall",
+	"in the abyss below space and time",
+	"left of the table salt",
+	"next to {subj}",
+	"in California",
+	"upside-down",
+	"somewhere else"
+]
+
+var nouns = [
+	"the president|president|presidents",
+	"a dog|dog|dogs",
+	"a rat|rat|rats",
+	"a car|car|cars",
+	"a thief|theif|thieves",
+	"a squid|squid|squids",
+	"a house|house|houses",
+	"a clump of dirt|clump of dirt|dirt",
+	"elon musk|elon musk|elon musks",
+	"a fire|fire|flames",
+	"a cube|cube|cubes",
+	"a ball|ball|balls",
+	"a company|company|companies",
+	"a billionaire|billionaire|billionaires",
+	"a computer|computer|computers",
+	"[redacted]|[censored]|[removed]",
+	"a football player|football player|football players",
+	"a bee|bee|bees",
+	"a salt mine|salt mine|salt mines",
+	"a missile|missile|missiles",
+	"a cat video|cat video|cat videos",
+	"Elden Ring|Elden Ring|video games",
+	"a mysterious otherworldly entity|mysterious otherworldly entity|mysterious otherworldly entities",
+	"AI|AI model|AI models",
+	"a room temperature superconductor|room temperature superconductor|room temperature superconductors",
+	"a boat|boat|boats",
+	"a trade union for {nouns}|trade union for {nouns}|trade unions for {nouns}",
+	"a shadowy government agency|shadowy government agency|shadowy government agencies",
+	"someone who hates being {place}|person who hates being {place}|people who hate being {place}",
+	"an alien|alien|aliens",
+	"the Roman Empire|Roman Empire|various historical empires",
+	"a fruit|fruit|fruits"
+];
+
+var templates = [
+	"{subj} knocks over an important {noun}",
+	"first {noun} in space",
+	"yet another {noun} discovered {place}",
+	"100,000 {nouns} escape from their prison {place}",
+	"the final {noun}",
+	"{nouns} discovered where you least expect them",
+	"first {noun} to break the sound barrier",
+	"{subj} falls alseep",
+	"{nouns} all dissappear",
+	"{nouns} appear {place}",
+	"{nouns} no longer have vast influence over everyday people",
+	"{subj} finally conquers all {nouns}",
+	"{nouns} declare independance from a well known {noun}",
+	"great year for {subj}",
+	"terrible year for {subj}",
+	"we all forget about {nouns}",
+	"{subj} and {subj} do battle {place}",
+	"someone trips over {subj}",
+	"{subj} becomes self-aware",
+	"scientists finally discover {subj}",
+	"common prediction \"{pred}\" turns out to be a lie",
+	"{subj} confirmed to be controlled by {subj}",
+	"{subj} discovered {place}",
+	"{subj} emerges from a portal from the distant past",
+	"{subj} emerges from a portal to the distant future",
+	"either \"{pred}\" or \"{pred}\" but not both",
+	"first ever {noun} controlled remotely by {subj} {place}",
+	"{pred}, but only because {pred}",
+	"{subj} falls on {subj}"
+];
+
+var pred = document.getElementById("pred");
+
+function generatePrediction() {
+	var template = templates[Math.floor(Math.random() * templates.length)];
+	var idx = template.indexOf("{");
+	while(idx > -1) {
+		var end = template.indexOf("}");
+		var inner = template.substring(idx+1, end);
+		var replacement = "[?]";
+		switch(inner) {
+			case "subj":
+				replacement = nouns[Math.floor(Math.random() * nouns.length)].split("|")[0];
+				break;
+			case "noun":
+				replacement = nouns[Math.floor(Math.random() * nouns.length)].split("|")[1];
+				break;
+			case "nouns":
+				replacement = nouns[Math.floor(Math.random() * nouns.length)].split("|")[2];
+				break;
+			case "place":
+				replacement = places[Math.floor(Math.random() * places.length)];
+				break;
+			case "pred":
+				replacement = generatePrediction();
+				break;
+		}
+		template = template.substring(0, idx) + replacement + template.substring(end+1);
+		idx = template.indexOf("{");
+	}
+	return template;
+}
+
+for(var i = 0; i < 10; i++){
+	pred.innerHTML += "<li>" + generatePrediction() + "</li>"
+}
+
+document.getElementById("more").addEventListener("click", () => {
+
+	pred.innerHTML += "<hr></hr>";
+for(var i = 0; i < 10; i++){
+	pred.innerHTML += "<li>" + generatePrediction() + "</li>"
+}
+});
+
+</script>
+	</body>
+</html>
